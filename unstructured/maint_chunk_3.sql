@@ -1,0 +1,76 @@
+-- Maintenance Logs Chunk 3/6 (records 41-50)
+INSERT INTO UTILITIES_GRID_RELIABILITY.UNSTRUCTURED.MAINTENANCE_LOG_DOCUMENTS
+(DOCUMENT_ID, ASSET_ID, DOCUMENT_TYPE, DOCUMENT_DATE, TECHNICIAN_NAME, TECHNICIAN_ID,
+ FILE_PATH, FILE_SIZE_BYTES, FILE_FORMAT, MAINTENANCE_TYPE, DURATION_HOURS, COST_USD,
+ FAILURE_OCCURRED, DOCUMENT_TEXT, SUMMARY, ROOT_CAUSE_KEYWORDS, SEVERITY_LEVEL, RECOMMENDED_ACTIONS)
+SELECT 'MAINT-T-SS053-001-20240818-041', 'T-SS053-001', 'INSPECTION_REPORT',
+       '2024-08-18'::DATE, 'Emily Davis', 'TECH9971',
+       '@MAINTENANCE_DOCS_STAGE/MAINT-T-SS053-001-20240818-041.pdf', 3981, 'PDF',
+       'CORRECTIVE', 8.76, 26100.67,
+       TRUE, 'Responded to abnormal readings from T-SS053-001. Investigation revealed turn-to-turn short. Winding Fault identified as primary issue. Performed transformer replacement. Equipment returned to normal operation. Recommend follow-up inspection in 30 days to verify stability.', 'Responded to abnormal readings from T-SS053-001. Investigation revealed turn-to-turn short. Winding Fault identified as primary issue. Performed transformer replacement. Equipment returned to normal operation. Recommend follow-up inspection in 30 days to verify stability.',
+       PARSE_JSON('["Winding Fault", "turn-to-turn short", "ground fault"]'), 'CRITICAL',
+       PARSE_JSON('["Transformer replacement", "Winding repair", "Outage required", "Immediate review by engineering team", "Daily monitoring until stable", "Prepare backup equipment"]')
+UNION ALL SELECT 'MAINT-T-SS096-001-20240606-042', 'T-SS096-001', 'INSPECTION_REPORT',
+       '2024-06-06'::DATE, 'Jennifer Garcia', 'TECH7994',
+       '@MAINTENANCE_DOCS_STAGE/MAINT-T-SS096-001-20240606-042.pdf', 4010, 'PDF',
+       'CORRECTIVE', 11.63, 44803.77,
+       TRUE, 'Maintenance crew dispatched to T-SS096-001 for reported issue. Discovered elevated H2 levels during inspection. Dissolved Gas Anomaly confirmed through diagnostic testing. Completed dga analysis. Load tests performed successfully. Placed asset back online with continuous monitoring recommended.', 'Maintenance crew dispatched to T-SS096-001 for reported issue. Discovered elevated H2 levels during inspection. Dissolved Gas Anomaly confirmed through diagnostic testing. Completed dga analysis. Load tests performed successfully. Placed asset back online with continuous monitoring recommended.',
+       PARSE_JSON('["Dissolved Gas Anomaly", "elevated H2 levels", "high CO/CO2 ratio"]'), 'HIGH',
+       PARSE_JSON('["DGA analysis", "Load reduction", "Immediate inspection", "Increase monitoring frequency", "Schedule follow-up in 2 weeks", "Review similar assets"]')
+UNION ALL SELECT 'MAINT-T-SS033-001-20250215-043', 'T-SS033-001', 'INSPECTION_REPORT',
+       '2025-02-15'::DATE, 'Chris Anderson', 'TECH4858',
+       '@MAINTENANCE_DOCS_STAGE/MAINT-T-SS033-001-20250215-043.pdf', 4002, 'PDF',
+       'CORRECTIVE', 7.31, 43271.03,
+       FALSE, 'Corrective action taken on T-SS033-001 following operations alert. Found evidence of radiator inefficiency. Root cause analysis indicates high oil temperature. Implemented check oil level as remedial measure. Post-repair testing satisfactory. System restored to service.', 'Corrective action taken on T-SS033-001 following operations alert. Found evidence of radiator inefficiency. Root cause analysis indicates high oil temperature. Implemented check oil level as remedial measure. Post-repair testing satisfactory. System restored to service.',
+       PARSE_JSON('["High Oil Temperature", "oil temp above 85\u00b0C", "radiator inefficiency"]'), 'HIGH',
+       PARSE_JSON('["Clean radiators", "Check oil level", "Inspect cooling fans", "Increase monitoring frequency", "Schedule follow-up in 2 weeks", "Review similar assets"]')
+UNION ALL SELECT 'MAINT-T-SS089-001-20241104-044', 'T-SS089-001', 'INSPECTION_REPORT',
+       '2024-11-04'::DATE, 'Jennifer Garcia', 'TECH3324',
+       '@MAINTENANCE_DOCS_STAGE/MAINT-T-SS089-001-20241104-044.pdf', 3853, 'PDF',
+       'PREVENTIVE', 5.86, 6525.78,
+       FALSE, 'Conducted scheduled preventive maintenance on T-SS089-001. Checked all electrical connections, found all secure. Oil level and color satisfactory. Bushings clean with no signs of tracking. Radiators clean and unobstructed. Load tap changer tested - operating normally. Recommended continued monitoring.', 'Conducted scheduled preventive maintenance on T-SS089-001. Checked all electrical connections, found all secure. Oil level and color satisfactory. Bushings clean with no signs of tracking. Radiators clean and unobstructed. Load tap changer tested - operating normally. Recommended continued monitoring.',
+       PARSE_JSON('[]'), 'LOW',
+       PARSE_JSON('["Bushing replacement", "Emergency shutdown", "Load transfer", "Continue standard monitoring", "No immediate action required"]')
+UNION ALL SELECT 'MAINT-T-SS082-001-20250616-045', 'T-SS082-001', 'INSPECTION_REPORT',
+       '2025-06-16'::DATE, 'David Rodriguez', 'TECH8297',
+       '@MAINTENANCE_DOCS_STAGE/MAINT-T-SS082-001-20250616-045.pdf', 3833, 'PDF',
+       'PREVENTIVE', 2.41, 7623.83,
+       FALSE, 'Annual maintenance completed on T-SS082-001. Replaced air filters on cooling system. Cleaned radiator fins. Torque-checked all bolted connections. Oil dielectric test passed. No abnormalities detected. Equipment performing to specification. Next scheduled maintenance in 12 months.', 'Annual maintenance completed on T-SS082-001. Replaced air filters on cooling system. Cleaned radiator fins. Torque-checked all bolted connections. Oil dielectric test passed. No abnormalities detected. Equipment performing to specification. Next scheduled maintenance in 12 months.',
+       PARSE_JSON('[]'), 'LOW',
+       PARSE_JSON('["Clean radiators", "Check oil level", "Inspect cooling fans", "Continue standard monitoring", "No immediate action required"]')
+UNION ALL SELECT 'MAINT-T-SS077-001-20240902-046', 'T-SS077-001', 'INSPECTION_REPORT',
+       '2024-09-02'::DATE, 'Sarah Johnson', 'TECH6277',
+       '@MAINTENANCE_DOCS_STAGE/MAINT-T-SS077-001-20240902-046.pdf', 3839, 'PDF',
+       'PREVENTIVE', 2.13, 11682.5,
+       FALSE, 'Conducted scheduled preventive maintenance on T-SS077-001. Checked all electrical connections, found all secure. Oil level and color satisfactory. Bushings clean with no signs of tracking. Radiators clean and unobstructed. Load tap changer tested - operating normally. Recommended continued monitoring.', 'Conducted scheduled preventive maintenance on T-SS077-001. Checked all electrical connections, found all secure. Oil level and color satisfactory. Bushings clean with no signs of tracking. Radiators clean and unobstructed. Load tap changer tested - operating normally. Recommended continued monitoring.',
+       PARSE_JSON('[]'), 'LOW',
+       PARSE_JSON('["DGA analysis", "Load reduction", "Immediate inspection", "Continue standard monitoring", "No immediate action required"]')
+UNION ALL SELECT 'MAINT-T-SS095-001-20240612-047', 'T-SS095-001', 'INSPECTION_REPORT',
+       '2024-06-12'::DATE, 'Robert Wilson', 'TECH4188',
+       '@MAINTENANCE_DOCS_STAGE/MAINT-T-SS095-001-20240612-047.pdf', 3833, 'PDF',
+       'PREVENTIVE', 3.71, 10811.6,
+       FALSE, 'Annual maintenance completed on T-SS095-001. Replaced air filters on cooling system. Cleaned radiator fins. Torque-checked all bolted connections. Oil dielectric test passed. No abnormalities detected. Equipment performing to specification. Next scheduled maintenance in 12 months.', 'Annual maintenance completed on T-SS095-001. Replaced air filters on cooling system. Cleaned radiator fins. Torque-checked all bolted connections. Oil dielectric test passed. No abnormalities detected. Equipment performing to specification. Next scheduled maintenance in 12 months.',
+       PARSE_JSON('[]'), 'LOW',
+       PARSE_JSON('["Sandblast and repaint", "Seal leaks", "Monitor corrosion rate", "Continue standard monitoring", "No immediate action required"]')
+UNION ALL SELECT 'MAINT-T-SS025-001-20250422-048', 'T-SS025-001', 'INSPECTION_REPORT',
+       '2025-04-22'::DATE, 'John Martinez', 'TECH8538',
+       '@MAINTENANCE_DOCS_STAGE/MAINT-T-SS025-001-20250422-048.pdf', 3831, 'PDF',
+       'PREVENTIVE', 2.28, 13475.57,
+       FALSE, 'Annual maintenance completed on T-SS025-001. Replaced air filters on cooling system. Cleaned radiator fins. Torque-checked all bolted connections. Oil dielectric test passed. No abnormalities detected. Equipment performing to specification. Next scheduled maintenance in 12 months.', 'Annual maintenance completed on T-SS025-001. Replaced air filters on cooling system. Cleaned radiator fins. Torque-checked all bolted connections. Oil dielectric test passed. No abnormalities detected. Equipment performing to specification. Next scheduled maintenance in 12 months.',
+       PARSE_JSON('[]'), 'LOW',
+       PARSE_JSON('["Oil reclamation", "Replace bushings", "Transformer replacement", "Continue standard monitoring", "No immediate action required"]')
+UNION ALL SELECT 'MAINT-T-SS064-001-20250824-049', 'T-SS064-001', 'INSPECTION_REPORT',
+       '2025-08-24'::DATE, 'Robert Wilson', 'TECH8025',
+       '@MAINTENANCE_DOCS_STAGE/MAINT-T-SS064-001-20250824-049.pdf', 3846, 'PDF',
+       'PREVENTIVE', 5.12, 5367.84,
+       FALSE, 'Conducted scheduled preventive maintenance on T-SS064-001. Checked all electrical connections, found all secure. Oil level and color satisfactory. Bushings clean with no signs of tracking. Radiators clean and unobstructed. Load tap changer tested - operating normally. Recommended continued monitoring.', 'Conducted scheduled preventive maintenance on T-SS064-001. Checked all electrical connections, found all secure. Oil level and color satisfactory. Bushings clean with no signs of tracking. Radiators clean and unobstructed. Load tap changer tested - operating normally. Recommended continued monitoring.',
+       PARSE_JSON('[]'), 'LOW',
+       PARSE_JSON('["Replace cooling system", "Reduce load", "Add ventilation", "Continue standard monitoring", "No immediate action required"]')
+UNION ALL SELECT 'MAINT-T-SS032-001-20240513-050', 'T-SS032-001', 'INSPECTION_REPORT',
+       '2024-05-13'::DATE, 'Robert Wilson', 'TECH8685',
+       '@MAINTENANCE_DOCS_STAGE/MAINT-T-SS032-001-20240513-050.pdf', 3996, 'PDF',
+       'CORRECTIVE', 4.92, 29887.71,
+       FALSE, 'Corrective action taken on T-SS032-001 following operations alert. Found evidence of loose components. Root cause analysis indicates excessive vibration. Implemented replace bearings as remedial measure. Post-repair testing satisfactory. System restored to service.', 'Corrective action taken on T-SS032-001 following operations alert. Found evidence of loose components. Root cause analysis indicates excessive vibration. Implemented replace bearings as remedial measure. Post-repair testing satisfactory. System restored to service.',
+       PARSE_JSON('["Excessive Vibration", "abnormal vibration levels", "loose components"]'), 'MEDIUM',
+       PARSE_JSON('["Tighten connections", "Replace bearings", "Balance rotating parts", "Monitor trend over next 30 days", "Include in quarterly review", "Document for analysis"]')
+;

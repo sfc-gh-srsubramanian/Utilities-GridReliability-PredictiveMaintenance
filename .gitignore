@@ -1,0 +1,63 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environment
+.env
+.venv
+secrets.toml
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Large data files (keep metadata, exclude large datasets)
+*.jsonl
+data/generated_maintenance_logs/*.pdf
+data/generated_technical_manuals/*.pdf
+
+# Temporary files
+*.tmp
+*.bak
+*.log
+batch_progress.json
+
+# SQL batch files (keep main scripts, exclude generated chunks)
+load_assets_batch_*.sql
+load_maintenance_batch_*.sql
+load_sensor_batch_*.sql
+maint_logs_*.sql
+visual_chunk_*.sql
+cv_chunk_*.sql
+

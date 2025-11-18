@@ -1,0 +1,76 @@
+-- Maintenance Logs Chunk 5/6 (records 61-70)
+INSERT INTO UTILITIES_GRID_RELIABILITY.UNSTRUCTURED.MAINTENANCE_LOG_DOCUMENTS
+(DOCUMENT_ID, ASSET_ID, DOCUMENT_TYPE, DOCUMENT_DATE, TECHNICIAN_NAME, TECHNICIAN_ID,
+ FILE_PATH, FILE_SIZE_BYTES, FILE_FORMAT, MAINTENANCE_TYPE, DURATION_HOURS, COST_USD,
+ FAILURE_OCCURRED, DOCUMENT_TEXT, SUMMARY, ROOT_CAUSE_KEYWORDS, SEVERITY_LEVEL, RECOMMENDED_ACTIONS)
+SELECT 'MAINT-T-SS086-001-20241206-061', 'T-SS086-001', 'INSPECTION_REPORT',
+       '2024-12-06'::DATE, 'Jennifer Garcia', 'TECH3603',
+       '@MAINTENANCE_DOCS_STAGE/MAINT-T-SS086-001-20241206-061.pdf', 3978, 'PDF',
+       'CORRECTIVE', 5.05, 31670.46,
+       FALSE, 'Maintenance crew dispatched to T-SS086-001 for reported issue. Discovered cracked porcelain during inspection. Bushing Failure confirmed through diagnostic testing. Completed bushing replacement. Load tests performed successfully. Placed asset back online with continuous monitoring recommended.', 'Maintenance crew dispatched to T-SS086-001 for reported issue. Discovered cracked porcelain during inspection. Bushing Failure confirmed through diagnostic testing. Completed bushing replacement. Load tests performed successfully. Placed asset back online with continuous monitoring recommended.',
+       PARSE_JSON('["Bushing Failure", "cracked porcelain", "oil leak at bushing"]'), 'HIGH',
+       PARSE_JSON('["Bushing replacement", "Emergency shutdown", "Load transfer", "Increase monitoring frequency", "Schedule follow-up in 2 weeks", "Review similar assets"]')
+UNION ALL SELECT 'MAINT-T-SS014-001-20240116-062', 'T-SS014-001', 'INSPECTION_REPORT',
+       '2024-01-16'::DATE, 'Sarah Johnson', 'TECH8087',
+       '@MAINTENANCE_DOCS_STAGE/MAINT-T-SS014-001-20240116-062.pdf', 3998, 'PDF',
+       'EMERGENCY', 8.68, 99107.46,
+       TRUE, 'EMERGENCY RESPONSE: T-SS014-001 experienced failure at 21:42. Overload Condition identified as cause. sustained high load was primary factor. Immediate isolation performed. Load transferred to backup transformer. Load redistribution required. Estimated repair time: 48-72 hours. 14,000 customers temporarily affected.', 'EMERGENCY RESPONSE: T-SS014-001 experienced failure at 21:42. Overload Condition identified as cause. sustained high load was primary factor. Immediate isolation performed. Load transferred to backup transformer. Load redistribution required. Estimated repair time: 48-72 hours. 14,000 customers temporarily affected.',
+       PARSE_JSON('["Overload Condition", "sustained high load", "exceeding nameplate rating"]'), 'HIGH',
+       PARSE_JSON('["Load redistribution", "Capacity upgrade", "Parallel operation", "Increase monitoring frequency", "Schedule follow-up in 2 weeks", "Review similar assets"]')
+UNION ALL SELECT 'MAINT-T-SS073-001-20251107-063', 'T-SS073-001', 'INSPECTION_REPORT',
+       '2025-11-07'::DATE, 'Sarah Johnson', 'TECH3138',
+       '@MAINTENANCE_DOCS_STAGE/MAINT-T-SS073-001-20251107-063.pdf', 3817, 'PDF',
+       'PREVENTIVE', 4.45, 7801.56,
+       FALSE, 'Annual maintenance completed on T-SS073-001. Replaced air filters on cooling system. Cleaned radiator fins. Torque-checked all bolted connections. Oil dielectric test passed. No abnormalities detected. Equipment performing to specification. Next scheduled maintenance in 12 months.', 'Annual maintenance completed on T-SS073-001. Replaced air filters on cooling system. Cleaned radiator fins. Torque-checked all bolted connections. Oil dielectric test passed. No abnormalities detected. Equipment performing to specification. Next scheduled maintenance in 12 months.',
+       PARSE_JSON('[]'), 'LOW',
+       PARSE_JSON('["Replace cooling system", "Reduce load", "Add ventilation", "Continue standard monitoring", "No immediate action required"]')
+UNION ALL SELECT 'MAINT-T-SS025-001-20241015-064', 'T-SS025-001', 'INSPECTION_REPORT',
+       '2024-10-15'::DATE, 'Emily Davis', 'TECH1095',
+       '@MAINTENANCE_DOCS_STAGE/MAINT-T-SS025-001-20241015-064.pdf', 3792, 'PDF',
+       'INSPECTION', 1.8, 4828.49,
+       FALSE, 'Walk-through inspection performed on T-SS025-001. Checked for obvious signs of deterioration or damage. All observed parameters normal. Cooling system functioning properly. No unusual sounds or odors noted. Asset appears to be operating satisfactorily. Documentation updated in asset management system.', 'Walk-through inspection performed on T-SS025-001. Checked for obvious signs of deterioration or damage. All observed parameters normal. Cooling system functioning properly. No unusual sounds or odors noted. Asset appears to be operating satisfactorily. Documentation updated in asset management system.',
+       PARSE_JSON('[]'), 'LOW',
+       PARSE_JSON('["Continue routine monitoring", "Continue standard monitoring", "No immediate action required"]')
+UNION ALL SELECT 'MAINT-T-SS078-001-20250725-065', 'T-SS078-001', 'INSPECTION_REPORT',
+       '2025-07-25'::DATE, 'Emily Davis', 'TECH2099',
+       '@MAINTENANCE_DOCS_STAGE/MAINT-T-SS078-001-20250725-065.pdf', 4011, 'PDF',
+       'EMERGENCY', 14.39, 35237.27,
+       TRUE, 'URGENT REPAIR: T-SS078-001 tripped offline unexpectedly. Field investigation found elevated H2 levels. Dissolved Gas Anomaly confirmed as failure mode. Significant damage observed. DGA analysis underway. Parts ordered for expedited delivery. Customer impact: 10,500 accounts. Working around the clock to restore service.', 'URGENT REPAIR: T-SS078-001 tripped offline unexpectedly. Field investigation found elevated H2 levels. Dissolved Gas Anomaly confirmed as failure mode. Significant damage observed. DGA analysis underway. Parts ordered for expedited delivery. Customer impact: 10,500 accounts. Working around the clock to restore service.',
+       PARSE_JSON('["Dissolved Gas Anomaly", "elevated H2 levels", "high CO/CO2 ratio"]'), 'HIGH',
+       PARSE_JSON('["DGA analysis", "Load reduction", "Immediate inspection", "Increase monitoring frequency", "Schedule follow-up in 2 weeks", "Review similar assets"]')
+UNION ALL SELECT 'MAINT-T-SS024-001-20251107-066', 'T-SS024-001', 'INSPECTION_REPORT',
+       '2025-11-07'::DATE, 'Chris Anderson', 'TECH7584',
+       '@MAINTENANCE_DOCS_STAGE/MAINT-T-SS024-001-20251107-066.pdf', 3819, 'PDF',
+       'PREVENTIVE', 4.33, 8728.34,
+       FALSE, 'Annual maintenance completed on T-SS024-001. Replaced air filters on cooling system. Cleaned radiator fins. Torque-checked all bolted connections. Oil dielectric test passed. No abnormalities detected. Equipment performing to specification. Next scheduled maintenance in 12 months.', 'Annual maintenance completed on T-SS024-001. Replaced air filters on cooling system. Cleaned radiator fins. Torque-checked all bolted connections. Oil dielectric test passed. No abnormalities detected. Equipment performing to specification. Next scheduled maintenance in 12 months.',
+       PARSE_JSON('[]'), 'LOW',
+       PARSE_JSON('["Clean radiators", "Check oil level", "Inspect cooling fans", "Continue standard monitoring", "No immediate action required"]')
+UNION ALL SELECT 'MAINT-T-SS033-001-20240729-067', 'T-SS033-001', 'INSPECTION_REPORT',
+       '2024-07-29'::DATE, 'Lisa Thompson', 'TECH4444',
+       '@MAINTENANCE_DOCS_STAGE/MAINT-T-SS033-001-20240729-067.pdf', 3834, 'PDF',
+       'PREVENTIVE', 4.59, 8580.89,
+       FALSE, 'Annual maintenance completed on T-SS033-001. Replaced air filters on cooling system. Cleaned radiator fins. Torque-checked all bolted connections. Oil dielectric test passed. No abnormalities detected. Equipment performing to specification. Next scheduled maintenance in 12 months.', 'Annual maintenance completed on T-SS033-001. Replaced air filters on cooling system. Cleaned radiator fins. Torque-checked all bolted connections. Oil dielectric test passed. No abnormalities detected. Equipment performing to specification. Next scheduled maintenance in 12 months.',
+       PARSE_JSON('[]'), 'LOW',
+       PARSE_JSON('["Assess damage", "Dry out equipment", "Replace damaged parts", "Continue standard monitoring", "No immediate action required"]')
+UNION ALL SELECT 'MAINT-T-SS018-001-20240713-068', 'T-SS018-001', 'INSPECTION_REPORT',
+       '2024-07-13'::DATE, 'Maria Lopez', 'TECH2319',
+       '@MAINTENANCE_DOCS_STAGE/MAINT-T-SS018-001-20240713-068.pdf', 3850, 'PDF',
+       'PREVENTIVE', 5.15, 12617.7,
+       FALSE, 'Conducted scheduled preventive maintenance on T-SS018-001. Checked all electrical connections, found all secure. Oil level and color satisfactory. Bushings clean with no signs of tracking. Radiators clean and unobstructed. Load tap changer tested - operating normally. Recommended continued monitoring.', 'Conducted scheduled preventive maintenance on T-SS018-001. Checked all electrical connections, found all secure. Oil level and color satisfactory. Bushings clean with no signs of tracking. Radiators clean and unobstructed. Load tap changer tested - operating normally. Recommended continued monitoring.',
+       PARSE_JSON('[]'), 'LOW',
+       PARSE_JSON('["Tighten connections", "Replace bearings", "Balance rotating parts", "Continue standard monitoring", "No immediate action required"]')
+UNION ALL SELECT 'MAINT-T-SS038-001-20240528-069', 'T-SS038-001', 'INSPECTION_REPORT',
+       '2024-05-28'::DATE, 'Mike Chen', 'TECH2701',
+       '@MAINTENANCE_DOCS_STAGE/MAINT-T-SS038-001-20240528-069.pdf', 3990, 'PDF',
+       'EMERGENCY', 18.39, 92991.02,
+       TRUE, 'Critical failure event on T-SS038-001. Operations detected ground fault. Emergency shutdown initiated per safety protocol. Assessment revealed winding fault caused the outage. Backup power systems activated. Winding repair in progress. Coordinating with grid operations for load management. ETA to service restoration: 2-3 days.', 'Critical failure event on T-SS038-001. Operations detected ground fault. Emergency shutdown initiated per safety protocol. Assessment revealed winding fault caused the outage. Backup power systems activated. Winding repair in progress. Coordinating with grid operations for load management. ETA to service restoration: 2-3 days.',
+       PARSE_JSON('["Winding Fault", "turn-to-turn short", "ground fault"]'), 'CRITICAL',
+       PARSE_JSON('["Transformer replacement", "Winding repair", "Outage required", "Immediate review by engineering team", "Daily monitoring until stable", "Prepare backup equipment"]')
+UNION ALL SELECT 'MAINT-T-SS088-001-20250527-070', 'T-SS088-001', 'INSPECTION_REPORT',
+       '2025-05-27'::DATE, 'David Rodriguez', 'TECH7970',
+       '@MAINTENANCE_DOCS_STAGE/MAINT-T-SS088-001-20250527-070.pdf', 4001, 'PDF',
+       'EMERGENCY', 15.39, 60646.52,
+       TRUE, 'EMERGENCY RESPONSE: T-SS088-001 experienced failure at 21:42. Overload Condition identified as cause. sustained high load was primary factor. Immediate isolation performed. Load transferred to backup transformer. Load redistribution required. Estimated repair time: 48-72 hours. 10,500 customers temporarily affected.', 'EMERGENCY RESPONSE: T-SS088-001 experienced failure at 21:42. Overload Condition identified as cause. sustained high load was primary factor. Immediate isolation performed. Load transferred to backup transformer. Load redistribution required. Estimated repair time: 48-72 hours. 10,500 customers temporarily affected.',
+       PARSE_JSON('["Overload Condition", "sustained high load", "exceeding nameplate rating"]'), 'HIGH',
+       PARSE_JSON('["Load redistribution", "Capacity upgrade", "Parallel operation", "Increase monitoring frequency", "Schedule follow-up in 2 weeks", "Review similar assets"]')
+;

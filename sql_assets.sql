@@ -1,0 +1,808 @@
+INSERT INTO UTILITIES_GRID_RELIABILITY.RAW.ASSET_MASTER (
+    ASSET_ID, ASSET_TYPE, ASSET_SUBTYPE, MANUFACTURER, MODEL, SERIAL_NUMBER,
+    INSTALL_DATE, EXPECTED_LIFE_YEARS, LOCATION_SUBSTATION, LOCATION_CITY,
+    LOCATION_COUNTY, LOCATION_LAT, LOCATION_LON, VOLTAGE_RATING_KV,
+    CAPACITY_MVA, CRITICALITY_SCORE, CUSTOMERS_AFFECTED, REPLACEMENT_COST_USD,
+    LAST_MAINTENANCE_DATE, STATUS
+) VALUES
+(
+        'T-SS000-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'ABB', 'DTR 25MVA', 'SN-1A094BB0310C',
+        '2011-11-20', 25,
+        'Downtown Miami SS-1', 'Miami', 'Miami-Dade',
+        25.786536, -80.198713, 138,
+        50, 100, 15836,
+        850000, '2025-02-09', 'ACTIVE'
+    ), (
+        'T-SS001-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'ABB', 'DTR 25MVA', 'SN-3C56E4AC481B',
+        '2013-11-19', 25,
+        'Kendall SS-2', 'Kendall', 'Miami-Dade',
+        25.758461, -80.278928, 138,
+        25, 87, 11116,
+        425000, '2024-02-21', 'ACTIVE'
+    ), (
+        'T-SS002-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'ABB', 'TXP 25MVA', 'SN-915A4967FAE0',
+        '2015-11-19', 25,
+        'FTL North SS-3', 'Fort Lauderdale', 'Broward',
+        26.134498, -80.232964, 138,
+        25, 85, 10656,
+        425000, '2025-02-21', 'ACTIVE'
+    ), (
+        'T-SS003-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'ABB', 'DTR 25MVA', 'SN-CB64056694D3',
+        '2002-11-22', 25,
+        'Pembroke SS-1', 'Pembroke Pines', 'Broward',
+        25.957699, -80.361215, 138,
+        25, 81, 9520,
+        425000, '2023-12-22', 'ACTIVE'
+    ), (
+        'T-SS004-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Schneider Electric', 'Minera 25MVA', 'SN-AC209083EBBB',
+        '2015-11-19', 25,
+        'WPB Central SS-2', 'West Palm Beach', 'Palm Beach',
+        26.688081, -80.047854, 138,
+        50, 95, 13506,
+        850000, '2024-02-22', 'ACTIVE'
+    ), (
+        'T-SS005-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'ABB', 'TXP 25MVA', 'SN-4444179F4C33',
+        '2017-11-18', 25,
+        'Boca SS-3', 'Boca Raton', 'Palm Beach',
+        26.338268, -80.143485, 138,
+        50, 75, 7745,
+        850000, '2024-11-03', 'ACTIVE'
+    ), (
+        'T-SS006-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Siemens', 'GEAFOL 50MVA', 'SN-DAFEDD0AF759',
+        '1998-11-23', 25,
+        'Tampa East SS-1', 'Tampa', 'Hillsborough',
+        27.991727, -82.518242, 138,
+        25, 89, 11844,
+        425000, '2025-07-15', 'ACTIVE'
+    ), (
+        'T-SS007-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'GE', 'Prolec 50MVA', 'SN-A454091CD5D2',
+        '2007-11-21', 25,
+        'Brandon SS-2', 'Brandon', 'Hillsborough',
+        27.974723, -82.277332, 138,
+        50, 73, 7139,
+        850000, '2025-09-03', 'ACTIVE'
+    ), (
+        'T-SS008-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Hitachi', 'ONAN 25MVA', 'SN-2BFEDE035208',
+        '1998-11-23', 25,
+        'Orlando Central SS-3', 'Orlando', 'Orange',
+        28.515268, -81.326344, 138,
+        50, 100, 15286,
+        850000, '2025-07-29', 'ACTIVE'
+    ), (
+        'T-SS009-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Hitachi', 'ONAF 50MVA', 'SN-BD416BA177EC',
+        '2008-11-20', 25,
+        'Winter Park SS-1', 'Winter Park', 'Orange',
+        28.566154, -81.308616, 138,
+        25, 72, 6635,
+        425000, '2025-08-07', 'ACTIVE'
+    ), (
+        'T-SS010-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Siemens', 'GEAFOL 50MVA', 'SN-239DEAA8A6E6',
+        '2011-11-20', 25,
+        'Jacksonville East SS-2', 'Jacksonville', 'Duval',
+        30.290239, -81.671161, 138,
+        25, 81, 9410,
+        425000, '2025-02-21', 'ACTIVE'
+    ), (
+        'T-SS011-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Schneider Electric', 'Minera 50MVA', 'SN-5E78973E2410',
+        '2010-11-20', 25,
+        'St. Pete SS-3', 'St. Petersburg', 'Pinellas',
+        27.712283, -82.70011, 138,
+        50, 84, 10319,
+        850000, '2024-01-06', 'ACTIVE'
+    ), (
+        'T-SS012-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Siemens', 'GEAFOL 50MVA', 'SN-FD4C2BF0ABB9',
+        '2012-11-19', 25,
+        'Fort Myers SS-1', 'Fort Myers', 'Lee',
+        26.658682, -81.904556, 138,
+        50, 80, 9069,
+        850000, '2025-03-17', 'ACTIVE'
+    ), (
+        'T-SS013-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'ABB', 'DTR 25MVA', 'SN-2A449216277C',
+        '2006-11-21', 25,
+        'Lakeland SS-2', 'Lakeland', 'Polk',
+        27.908513, -81.908705, 138,
+        25, 71, 6408,
+        425000, '2024-04-19', 'ACTIVE'
+    ), (
+        'T-SS014-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Siemens', 'GEAFOL 50MVA', 'SN-81F4256ACAFF',
+        '2000-11-22', 25,
+        'Melbourne SS-3', 'Melbourne', 'Brevard',
+        28.072616, -80.590244, 138,
+        50, 75, 7641,
+        850000, '2025-01-14', 'ACTIVE'
+    ), (
+        'T-SS015-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Hitachi', 'ONAN 25MVA', 'SN-3F15DF0540A5',
+        '2006-11-21', 25,
+        'Downtown Miami SS-1', 'Miami', 'Miami-Dade',
+        25.721275, -80.216888, 138,
+        50, 100, 17937,
+        850000, '2025-08-21', 'ACTIVE'
+    ), (
+        'T-SS016-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'ABB', 'TXP 50MVA', 'SN-4549E9F86DA1',
+        '2010-11-20', 25,
+        'Kendall SS-2', 'Kendall', 'Miami-Dade',
+        25.684354, -80.268868, 138,
+        50, 87, 11145,
+        850000, '2025-01-16', 'ACTIVE'
+    ), (
+        'T-SS017-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Hitachi', 'ONAF 50MVA', 'SN-BFE5E6A04FE4',
+        '2007-11-21', 25,
+        'FTL North SS-3', 'Fort Lauderdale', 'Broward',
+        26.137206, -80.124247, 138,
+        25, 80, 9091,
+        425000, '2023-12-16', 'ACTIVE'
+    ), (
+        'T-SS018-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Schneider Electric', 'Minera 25MVA', 'SN-F49BBD8FC7B6',
+        '2011-11-20', 25,
+        'Pembroke SS-1', 'Pembroke Pines', 'Broward',
+        25.985964, -80.330714, 138,
+        50, 81, 9497,
+        850000, '2025-05-28', 'ACTIVE'
+    ), (
+        'T-SS019-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Hitachi', 'ONAF 50MVA', 'SN-22888AB1D7FC',
+        '2018-11-18', 25,
+        'WPB Central SS-2', 'West Palm Beach', 'Palm Beach',
+        26.728178, -80.057122, 138,
+        50, 87, 11233,
+        850000, '2024-02-28', 'ACTIVE'
+    ), (
+        'T-SS020-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Siemens', 'GEAFOL 25MVA', 'SN-EBEE5A38E408',
+        '2010-11-20', 25,
+        'Boca SS-3', 'Boca Raton', 'Palm Beach',
+        26.371312, -80.005738, 138,
+        50, 77, 8157,
+        850000, '2025-07-16', 'ACTIVE'
+    ), (
+        'T-SS021-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'ABB', 'TXP 25MVA', 'SN-43C9DE582AEA',
+        '2001-11-22', 25,
+        'Tampa East SS-1', 'Tampa', 'Hillsborough',
+        28.007741, -82.419603, 138,
+        25, 97, 14330,
+        425000, '2023-11-21', 'ACTIVE'
+    ), (
+        'T-SS022-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'ABB', 'TXP 50MVA', 'SN-69F0B4C9CA1C',
+        '2011-11-20', 25,
+        'Brandon SS-2', 'Brandon', 'Hillsborough',
+        27.967143, -82.176377, 138,
+        50, 74, 7266,
+        850000, '2024-02-15', 'ACTIVE'
+    ), (
+        'T-SS023-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Hitachi', 'ONAF 50MVA', 'SN-0124CFDDA234',
+        '2015-11-19', 25,
+        'Orlando Central SS-3', 'Orlando', 'Orange',
+        28.460767, -81.375772, 138,
+        25, 100, 16778,
+        425000, '2023-11-21', 'ACTIVE'
+    ), (
+        'T-SS024-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Hitachi', 'ONAF 50MVA', 'SN-E27952A37892',
+        '1999-11-23', 25,
+        'Winter Park SS-1', 'Winter Park', 'Orange',
+        28.560837, -81.355303, 138,
+        50, 73, 7073,
+        850000, '2025-06-25', 'ACTIVE'
+    ), (
+        'T-SS025-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Siemens', 'GEAFOL 50MVA', 'SN-D2E8EE10DB70',
+        '2010-11-20', 25,
+        'Jacksonville East SS-2', 'Jacksonville', 'Duval',
+        30.251826, -81.646468, 138,
+        25, 85, 10550,
+        425000, '2025-01-21', 'ACTIVE'
+    ), (
+        'T-SS026-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Siemens', 'GEAFOL 25MVA', 'SN-FB463A6F50C7',
+        '2008-11-20', 25,
+        'St. Pete SS-3', 'St. Petersburg', 'Pinellas',
+        27.793697, -82.625451, 138,
+        50, 85, 10698,
+        850000, '2024-01-02', 'ACTIVE'
+    ), (
+        'T-SS027-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Siemens', 'GEAFOL 25MVA', 'SN-F7D23C78D2A1',
+        '2003-11-22', 25,
+        'Fort Myers SS-1', 'Fort Myers', 'Lee',
+        26.655254, -81.908018, 138,
+        50, 76, 8024,
+        850000, '2025-05-05', 'ACTIVE'
+    ), (
+        'T-SS028-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Hitachi', 'ONAN 25MVA', 'SN-45339B85126D',
+        '2000-11-22', 25,
+        'Lakeland SS-2', 'Lakeland', 'Polk',
+        27.990766, -81.910446, 138,
+        50, 70, 6094,
+        850000, '2024-06-04', 'ACTIVE'
+    ), (
+        'T-SS029-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'GE', 'Prolec 50MVA', 'SN-AFAFEA6325E2',
+        '2005-11-21', 25,
+        'Melbourne SS-3', 'Melbourne', 'Brevard',
+        28.124703, -80.51326, 138,
+        25, 68, 5654,
+        425000, '2025-08-19', 'ACTIVE'
+    ), (
+        'T-SS030-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Hitachi', 'ONAN 25MVA', 'SN-E75076784B10',
+        '2010-11-20', 25,
+        'Downtown Miami SS-1', 'Miami', 'Miami-Dade',
+        25.757845, -80.174742, 138,
+        25, 94, 13445,
+        425000, '2024-06-07', 'ACTIVE'
+    ), (
+        'T-SS031-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Hitachi', 'ONAN 25MVA', 'SN-3B4FBC8732D2',
+        '2001-11-22', 25,
+        'Kendall SS-2', 'Kendall', 'Miami-Dade',
+        25.666267, -80.181292, 138,
+        25, 96, 14080,
+        425000, '2023-12-12', 'ACTIVE'
+    ), (
+        'T-SS032-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Hitachi', 'ONAN 25MVA', 'SN-0F0D1F14D10C',
+        '2012-11-19', 25,
+        'FTL North SS-3', 'Fort Lauderdale', 'Broward',
+        26.068855, -80.113176, 138,
+        50, 86, 10891,
+        850000, '2024-04-25', 'ACTIVE'
+    ), (
+        'T-SS033-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Schneider Electric', 'Minera 25MVA', 'SN-94C05DC512D0',
+        '2004-11-21', 25,
+        'Pembroke SS-1', 'Pembroke Pines', 'Broward',
+        26.026762, -80.294241, 138,
+        25, 86, 10915,
+        425000, '2024-12-02', 'ACTIVE'
+    ), (
+        'T-SS034-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'GE', 'Prolec 50MVA', 'SN-341573A02DFB',
+        '2009-11-20', 25,
+        'WPB Central SS-2', 'West Palm Beach', 'Palm Beach',
+        26.726005, -80.115687, 138,
+        50, 89, 11994,
+        850000, '2025-06-16', 'ACTIVE'
+    ), (
+        'T-SS035-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'ABB', 'TXP 50MVA', 'SN-9D00A5F33AA5',
+        '2009-11-20', 25,
+        'Boca SS-3', 'Boca Raton', 'Palm Beach',
+        26.37121, -80.186049, 138,
+        25, 75, 7642,
+        425000, '2024-02-23', 'ACTIVE'
+    ), (
+        'T-SS036-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Hitachi', 'ONAN 25MVA', 'SN-B1B343BCB2C8',
+        '2008-11-20', 25,
+        'Tampa East SS-1', 'Tampa', 'Hillsborough',
+        27.881717, -82.504091, 138,
+        25, 94, 13280,
+        425000, '2025-08-06', 'ACTIVE'
+    ), (
+        'T-SS037-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'ABB', 'TXP 25MVA', 'SN-D4884D74E4AB',
+        '2010-11-20', 25,
+        'Brandon SS-2', 'Brandon', 'Hillsborough',
+        27.963552, -82.093263, 138,
+        25, 77, 8123,
+        425000, '2025-09-15', 'ACTIVE'
+    ), (
+        'T-SS038-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'ABB', 'DTR 25MVA', 'SN-7DEF34CF0C52',
+        '2011-11-20', 25,
+        'Orlando Central SS-3', 'Orlando', 'Orange',
+        28.522537, -81.341252, 138,
+        25, 100, 16013,
+        425000, '2025-01-05', 'ACTIVE'
+    ), (
+        'T-SS039-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Siemens', 'GEAFOL 25MVA', 'SN-0B0C174D43FD',
+        '1998-11-23', 25,
+        'Winter Park SS-1', 'Winter Park', 'Orange',
+        28.715733, -81.432563, 138,
+        50, 73, 6939,
+        850000, '2025-02-11', 'ACTIVE'
+    ), (
+        'T-SS040-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Schneider Electric', 'Minera 25MVA', 'SN-2B43AFCE2A8C',
+        '2002-11-22', 25,
+        'Jacksonville East SS-2', 'Jacksonville', 'Duval',
+        30.308603, -81.601252, 138,
+        25, 92, 12809,
+        425000, '2025-07-10', 'ACTIVE'
+    ), (
+        'T-SS041-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'GE', 'Prolec 50MVA', 'SN-8AF313182DA9',
+        '2004-11-21', 25,
+        'St. Pete SS-3', 'St. Petersburg', 'Pinellas',
+        27.731082, -82.629477, 138,
+        50, 81, 9572,
+        850000, '2024-06-26', 'ACTIVE'
+    ), (
+        'T-SS042-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'ABB', 'DTR 25MVA', 'SN-B6EE0D2192C1',
+        '2015-11-19', 25,
+        'Fort Myers SS-1', 'Fort Myers', 'Lee',
+        26.539343, -81.862977, 138,
+        25, 80, 9164,
+        425000, '2025-08-16', 'ACTIVE'
+    ), (
+        'T-SS043-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'GE', 'Prolec 25MVA', 'SN-20FE040AB308',
+        '2013-11-19', 25,
+        'Lakeland SS-2', 'Lakeland', 'Polk',
+        28.064749, -81.906512, 138,
+        25, 69, 5766,
+        425000, '2025-04-04', 'ACTIVE'
+    ), (
+        'T-SS044-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Schneider Electric', 'Minera 25MVA', 'SN-C0F90A9B7CCA',
+        '2017-11-18', 25,
+        'Melbourne SS-3', 'Melbourne', 'Brevard',
+        28.171873, -80.587851, 138,
+        50, 70, 6132,
+        850000, '2025-04-13', 'ACTIVE'
+    ), (
+        'T-SS045-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Siemens', 'GEAFOL 25MVA', 'SN-B7E3E7F016E8',
+        '2014-11-19', 25,
+        'Downtown Miami SS-1', 'Miami', 'Miami-Dade',
+        25.867808, -80.140177, 138,
+        50, 95, 13671,
+        850000, '2024-04-02', 'ACTIVE'
+    ), (
+        'T-SS046-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Hitachi', 'ONAN 25MVA', 'SN-105CCD6A1DB3',
+        '2013-11-19', 25,
+        'Kendall SS-2', 'Kendall', 'Miami-Dade',
+        25.701691, -80.278568, 138,
+        25, 84, 10489,
+        425000, '2025-02-17', 'ACTIVE'
+    ), (
+        'T-SS047-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Schneider Electric', 'Minera 50MVA', 'SN-A70702249A54',
+        '1998-11-23', 25,
+        'FTL North SS-3', 'Fort Lauderdale', 'Broward',
+        26.109772, -80.199689, 138,
+        25, 81, 9531,
+        425000, '2024-09-02', 'ACTIVE'
+    ), (
+        'T-SS048-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Siemens', 'GEAFOL 50MVA', 'SN-E329428C2B09',
+        '2003-11-22', 25,
+        'Pembroke SS-1', 'Pembroke Pines', 'Broward',
+        26.075164, -80.362393, 138,
+        25, 86, 11029,
+        425000, '2024-09-13', 'ACTIVE'
+    ), (
+        'T-SS049-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Schneider Electric', 'Minera 50MVA', 'SN-6CB90DD8519D',
+        '2006-11-21', 25,
+        'WPB Central SS-2', 'West Palm Beach', 'Palm Beach',
+        26.725253, -80.083411, 138,
+        50, 87, 11326,
+        850000, '2024-03-27', 'ACTIVE'
+    ), (
+        'T-SS050-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Schneider Electric', 'Minera 25MVA', 'SN-550481141EA0',
+        '2018-11-18', 25,
+        'Boca SS-3', 'Boca Raton', 'Palm Beach',
+        26.447601, -80.190791, 138,
+        25, 80, 9050,
+        425000, '2024-12-18', 'ACTIVE'
+    ), (
+        'T-SS051-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'ABB', 'DTR 25MVA', 'SN-4590E3ED54BE',
+        '2007-11-21', 25,
+        'Tampa East SS-1', 'Tampa', 'Hillsborough',
+        27.919465, -82.41295, 138,
+        25, 88, 11532,
+        425000, '2024-11-30', 'ACTIVE'
+    ), (
+        'T-SS052-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Hitachi', 'ONAF 50MVA', 'SN-1D894BB9EF31',
+        '2006-11-21', 25,
+        'Brandon SS-2', 'Brandon', 'Hillsborough',
+        27.98028, -82.238299, 138,
+        25, 70, 6171,
+        425000, '2025-08-20', 'ACTIVE'
+    ), (
+        'T-SS053-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'ABB', 'TXP 25MVA', 'SN-C62664C77A04',
+        '2012-11-19', 25,
+        'Orlando Central SS-3', 'Orlando', 'Orange',
+        28.569781, -81.351613, 138,
+        25, 100, 16580,
+        425000, '2024-02-16', 'ACTIVE'
+    ), (
+        'T-SS054-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Siemens', 'GEAFOL 50MVA', 'SN-052A84CC8CA0',
+        '2002-11-22', 25,
+        'Winter Park SS-1', 'Winter Park', 'Orange',
+        28.605866, -81.37266, 138,
+        25, 67, 5376,
+        425000, '2024-03-13', 'ACTIVE'
+    ), (
+        'T-SS055-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Hitachi', 'ONAN 25MVA', 'SN-1C1DA9BBCF45',
+        '2012-11-19', 25,
+        'Jacksonville East SS-2', 'Jacksonville', 'Duval',
+        30.387139, -81.676096, 138,
+        25, 84, 10332,
+        425000, '2024-08-14', 'ACTIVE'
+    ), (
+        'T-SS056-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Hitachi', 'ONAF 50MVA', 'SN-2328A49DE34D',
+        '2006-11-21', 25,
+        'St. Pete SS-3', 'St. Petersburg', 'Pinellas',
+        27.76865, -82.652261, 138,
+        50, 81, 9566,
+        850000, '2025-03-22', 'ACTIVE'
+    ), (
+        'T-SS057-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'GE', 'Prolec 25MVA', 'SN-4D6ACDCB684F',
+        '2000-11-22', 25,
+        'Fort Myers SS-1', 'Fort Myers', 'Lee',
+        26.634093, -81.776684, 138,
+        50, 78, 8543,
+        850000, '2024-09-07', 'ACTIVE'
+    ), (
+        'T-SS058-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'GE', 'Prolec 50MVA', 'SN-80A1C11B1D65',
+        '2005-11-21', 25,
+        'Lakeland SS-2', 'Lakeland', 'Polk',
+        27.978791, -81.911266, 138,
+        50, 67, 5114,
+        850000, '2025-08-04', 'ACTIVE'
+    ), (
+        'T-SS059-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Hitachi', 'ONAN 25MVA', 'SN-4C095F8E1C6C',
+        '1999-11-23', 25,
+        'Melbourne SS-3', 'Melbourne', 'Brevard',
+        28.038737, -80.712601, 138,
+        25, 68, 5626,
+        425000, '2024-04-15', 'ACTIVE'
+    ), (
+        'T-SS060-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'GE', 'Prolec 25MVA', 'SN-21281AF0828C',
+        '2004-11-21', 25,
+        'Downtown Miami SS-1', 'Miami', 'Miami-Dade',
+        25.745631, -80.161108, 138,
+        50, 94, 13278,
+        850000, '2025-08-08', 'ACTIVE'
+    ), (
+        'T-SS061-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'GE', 'Prolec 50MVA', 'SN-E64847CBDB5F',
+        '1998-11-23', 25,
+        'Kendall SS-2', 'Kendall', 'Miami-Dade',
+        25.654153, -80.289345, 138,
+        25, 97, 14396,
+        425000, '2024-07-26', 'ACTIVE'
+    ), (
+        'T-SS062-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'GE', 'Prolec 25MVA', 'SN-43132A528978',
+        '2004-11-21', 25,
+        'FTL North SS-3', 'Fort Lauderdale', 'Broward',
+        26.052027, -80.170511, 138,
+        50, 91, 12468,
+        850000, '2023-12-08', 'ACTIVE'
+    ), (
+        'T-SS063-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Siemens', 'GEAFOL 50MVA', 'SN-DD77FBF02718',
+        '2010-11-20', 25,
+        'Pembroke SS-1', 'Pembroke Pines', 'Broward',
+        26.076868, -80.305716, 138,
+        25, 76, 7993,
+        425000, '2025-06-30', 'ACTIVE'
+    ), (
+        'T-SS064-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Siemens', 'GEAFOL 50MVA', 'SN-1B3A633DE1F4',
+        '2011-11-20', 25,
+        'WPB Central SS-2', 'West Palm Beach', 'Palm Beach',
+        26.673938, -80.028766, 138,
+        50, 95, 13712,
+        850000, '2024-02-06', 'ACTIVE'
+    ), (
+        'T-SS065-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'GE', 'Prolec 25MVA', 'SN-E7B10B7D2090',
+        '2004-11-21', 25,
+        'Boca SS-3', 'Boca Raton', 'Palm Beach',
+        26.348239, -80.125417, 138,
+        50, 75, 7516,
+        850000, '2024-05-18', 'ACTIVE'
+    ), (
+        'T-SS066-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'ABB', 'TXP 25MVA', 'SN-DBFF4CD700BA',
+        '2014-11-19', 25,
+        'Tampa East SS-1', 'Tampa', 'Hillsborough',
+        27.91195, -82.343412, 138,
+        50, 93, 12940,
+        850000, '2025-01-07', 'ACTIVE'
+    ), (
+        'T-SS067-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'GE', 'Prolec 25MVA', 'SN-507C5EDA5871',
+        '2000-11-22', 25,
+        'Brandon SS-2', 'Brandon', 'Hillsborough',
+        27.899433, -82.291447, 138,
+        50, 70, 6132,
+        850000, '2025-05-05', 'ACTIVE'
+    ), (
+        'T-SS068-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Hitachi', 'ONAF 50MVA', 'SN-2F04F33349BC',
+        '2018-11-18', 25,
+        'Orlando Central SS-3', 'Orlando', 'Orange',
+        28.50833, -81.32757, 138,
+        25, 100, 15350,
+        425000, '2025-06-25', 'ACTIVE'
+    ), (
+        'T-SS069-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Siemens', 'GEAFOL 25MVA', 'SN-9C72B25F1881',
+        '1999-11-23', 25,
+        'Winter Park SS-1', 'Winter Park', 'Orange',
+        28.693809, -81.310633, 138,
+        50, 67, 5395,
+        850000, '2024-02-29', 'ACTIVE'
+    ), (
+        'T-SS070-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Schneider Electric', 'Minera 25MVA', 'SN-34DDD63E8713',
+        '2014-11-19', 25,
+        'Jacksonville East SS-2', 'Jacksonville', 'Duval',
+        30.423773, -81.659381, 138,
+        25, 89, 11741,
+        425000, '2024-12-06', 'ACTIVE'
+    ), (
+        'T-SS071-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'ABB', 'TXP 50MVA', 'SN-93783B0CB347',
+        '2014-11-19', 25,
+        'St. Pete SS-3', 'St. Petersburg', 'Pinellas',
+        27.761873, -82.578409, 138,
+        25, 78, 8512,
+        425000, '2023-11-19', 'ACTIVE'
+    ), (
+        'T-SS072-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'ABB', 'TXP 50MVA', 'SN-9F1CB04710D1',
+        '2013-11-19', 25,
+        'Fort Myers SS-1', 'Fort Myers', 'Lee',
+        26.640862, -81.869951, 138,
+        50, 73, 7198,
+        850000, '2024-01-21', 'ACTIVE'
+    ), (
+        'T-SS073-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Siemens', 'GEAFOL 25MVA', 'SN-870D2B1AE918',
+        '2000-11-22', 25,
+        'Lakeland SS-2', 'Lakeland', 'Polk',
+        28.045515, -81.924078, 138,
+        25, 71, 6598,
+        425000, '2024-08-21', 'ACTIVE'
+    ), (
+        'T-SS074-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'GE', 'Prolec 50MVA', 'SN-F08312D0407E',
+        '2003-11-22', 25,
+        'Melbourne SS-3', 'Melbourne', 'Brevard',
+        28.100216, -80.645524, 138,
+        25, 68, 5669,
+        425000, '2025-01-17', 'ACTIVE'
+    ), (
+        'T-SS075-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'ABB', 'TXP 50MVA', 'SN-D9FD554031D9',
+        '2013-11-19', 25,
+        'Downtown Miami SS-1', 'Miami', 'Miami-Dade',
+        25.864737, -80.104033, 138,
+        25, 93, 12955,
+        425000, '2024-06-23', 'ACTIVE'
+    ), (
+        'T-SS076-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Schneider Electric', 'Minera 50MVA', 'SN-4EF2E715225B',
+        '2015-11-19', 25,
+        'Kendall SS-2', 'Kendall', 'Miami-Dade',
+        25.711769, -80.248868, 138,
+        50, 87, 11112,
+        850000, '2025-02-26', 'ACTIVE'
+    ), (
+        'T-SS077-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Siemens', 'GEAFOL 50MVA', 'SN-A43892B5143E',
+        '2002-11-22', 25,
+        'FTL North SS-3', 'Fort Lauderdale', 'Broward',
+        26.175321, -80.225237, 138,
+        50, 82, 9780,
+        850000, '2025-01-05', 'ACTIVE'
+    ), (
+        'T-SS078-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'GE', 'Prolec 50MVA', 'SN-5EECE1D25331',
+        '1998-11-23', 25,
+        'Pembroke SS-1', 'Pembroke Pines', 'Broward',
+        26.078218, -80.286895, 138,
+        50, 86, 10884,
+        850000, '2023-11-22', 'ACTIVE'
+    ), (
+        'T-SS079-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Hitachi', 'ONAF 50MVA', 'SN-3A7D7CDD6EAC',
+        '2006-11-21', 25,
+        'WPB Central SS-2', 'West Palm Beach', 'Palm Beach',
+        26.630131, -80.056177, 138,
+        25, 99, 14905,
+        425000, '2025-06-21', 'ACTIVE'
+    ), (
+        'T-SS080-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'GE', 'Prolec 25MVA', 'SN-38E27CC2090B',
+        '2002-11-22', 25,
+        'Boca SS-3', 'Boca Raton', 'Palm Beach',
+        26.303077, -80.095416, 138,
+        50, 82, 9781,
+        850000, '2025-09-08', 'ACTIVE'
+    ), (
+        'T-SS081-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Schneider Electric', 'Minera 50MVA', 'SN-A443488E3886',
+        '2015-11-19', 25,
+        'Tampa East SS-1', 'Tampa', 'Hillsborough',
+        27.947466, -82.409443, 138,
+        50, 86, 10963,
+        850000, '2024-07-28', 'ACTIVE'
+    ), (
+        'T-SS082-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Hitachi', 'ONAN 25MVA', 'SN-1C417FDFDC65',
+        '2003-11-22', 25,
+        'Brandon SS-2', 'Brandon', 'Hillsborough',
+        27.911287, -82.325544, 138,
+        50, 76, 7818,
+        850000, '2024-03-06', 'ACTIVE'
+    ), (
+        'T-SS083-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'ABB', 'DTR 25MVA', 'SN-2B04E3B7962E',
+        '2013-11-19', 25,
+        'Orlando Central SS-3', 'Orlando', 'Orange',
+        28.636536, -81.377437, 138,
+        50, 90, 12264,
+        850000, '2025-10-16', 'ACTIVE'
+    ), (
+        'T-SS084-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Hitachi', 'ONAN 25MVA', 'SN-FD57E3879C29',
+        '2009-11-20', 25,
+        'Winter Park SS-1', 'Winter Park', 'Orange',
+        28.594384, -81.350248, 138,
+        50, 71, 6551,
+        850000, '2024-08-02', 'ACTIVE'
+    ), (
+        'T-SS085-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'GE', 'Prolec 50MVA', 'SN-CC1172FE8167',
+        '2018-11-18', 25,
+        'Jacksonville East SS-2', 'Jacksonville', 'Duval',
+        30.318447, -81.770796, 138,
+        25, 81, 9521,
+        425000, '2024-12-14', 'ACTIVE'
+    ), (
+        'T-SS086-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Schneider Electric', 'Minera 50MVA', 'SN-9DBE5A2AD14B',
+        '2002-11-22', 25,
+        'St. Pete SS-3', 'St. Petersburg', 'Pinellas',
+        27.796428, -82.624737, 138,
+        50, 80, 9025,
+        850000, '2024-12-19', 'ACTIVE'
+    ), (
+        'T-SS087-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Siemens', 'GEAFOL 50MVA', 'SN-E6D60D0E2F91',
+        '2004-11-21', 25,
+        'Fort Myers SS-1', 'Fort Myers', 'Lee',
+        26.560278, -81.862127, 138,
+        50, 77, 8174,
+        850000, '2023-11-24', 'ACTIVE'
+    ), (
+        'T-SS088-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Siemens', 'GEAFOL 50MVA', 'SN-70E11A3F1C95',
+        '2005-11-21', 25,
+        'Lakeland SS-2', 'Lakeland', 'Polk',
+        28.007171, -82.003877, 138,
+        50, 71, 6595,
+        850000, '2024-04-04', 'ACTIVE'
+    ), (
+        'T-SS089-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'GE', 'Prolec 50MVA', 'SN-8A5ECECE1C8F',
+        '2004-11-21', 25,
+        'Melbourne SS-3', 'Melbourne', 'Brevard',
+        28.087468, -80.651164, 138,
+        25, 76, 7934,
+        425000, '2024-08-03', 'ACTIVE'
+    ), (
+        'T-SS090-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Hitachi', 'ONAF 50MVA', 'SN-1A228986A0AB',
+        '1999-11-23', 25,
+        'Downtown Miami SS-1', 'Miami', 'Miami-Dade',
+        25.717919, -80.26094, 138,
+        50, 100, 16714,
+        850000, '2024-07-22', 'ACTIVE'
+    ), (
+        'T-SS091-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Siemens', 'GEAFOL 50MVA', 'SN-172CCAF249BA',
+        '2008-11-20', 25,
+        'Kendall SS-2', 'Kendall', 'Miami-Dade',
+        25.707648, -80.340205, 138,
+        25, 90, 12210,
+        425000, '2023-12-13', 'ACTIVE'
+    ), (
+        'T-SS092-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Hitachi', 'ONAF 50MVA', 'SN-7EFFE7B90DA4',
+        '2004-11-21', 25,
+        'FTL North SS-3', 'Fort Lauderdale', 'Broward',
+        26.0792, -80.262438, 138,
+        25, 80, 9173,
+        425000, '2025-02-19', 'ACTIVE'
+    ), (
+        'T-SS093-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Siemens', 'GEAFOL 25MVA', 'SN-BB6AE36233DD',
+        '2009-11-20', 25,
+        'Pembroke SS-1', 'Pembroke Pines', 'Broward',
+        25.957722, -80.278734, 138,
+        25, 83, 10156,
+        425000, '2025-09-22', 'ACTIVE'
+    ), (
+        'T-SS094-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Schneider Electric', 'Minera 25MVA', 'SN-6DDDF00B93DE',
+        '2000-11-22', 25,
+        'WPB Central SS-2', 'West Palm Beach', 'Palm Beach',
+        26.666422, -79.951234, 138,
+        50, 84, 10231,
+        850000, '2024-08-19', 'ACTIVE'
+    ), (
+        'T-SS095-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Hitachi', 'ONAN 25MVA', 'SN-C7A0BD239210',
+        '2020-11-17', 25,
+        'Boca SS-3', 'Boca Raton', 'Palm Beach',
+        26.39683, -80.114912, 138,
+        50, 82, 9812,
+        850000, '2024-05-29', 'ACTIVE'
+    ), (
+        'T-SS096-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Siemens', 'GEAFOL 25MVA', 'SN-D1DFAE5D01DD',
+        '2004-11-21', 25,
+        'Tampa East SS-1', 'Tampa', 'Hillsborough',
+        27.905384, -82.514157, 138,
+        25, 91, 12478,
+        425000, '2024-08-08', 'ACTIVE'
+    ), (
+        'T-SS097-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Hitachi', 'ONAF 50MVA', 'SN-E80603E3DE6F',
+        '2007-11-21', 25,
+        'Brandon SS-2', 'Brandon', 'Hillsborough',
+        27.94017, -82.315998, 138,
+        25, 72, 6656,
+        425000, '2024-03-26', 'ACTIVE'
+    ), (
+        'T-SS098-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'ABB', 'TXP 50MVA', 'SN-5ED5D5A89D05',
+        '2015-11-19', 25,
+        'Orlando Central SS-3', 'Orlando', 'Orange',
+        28.610378, -81.467712, 138,
+        25, 91, 12595,
+        425000, '2024-06-29', 'ACTIVE'
+    ), (
+        'T-SS099-001', 'TRANSFORMER', 'POWER_TRANSFORMER',
+        'Hitachi', 'ONAF 50MVA', 'SN-F9C51E1BC997',
+        '2003-11-22', 25,
+        'Winter Park SS-1', 'Winter Park', 'Orange',
+        28.569801, -81.314798, 138,
+        50, 73, 6935,
+        850000, '2024-01-29', 'ACTIVE'
+    )

@@ -1,0 +1,416 @@
+# ==============================================================================
+# AI-DRIVEN GRID RELIABILITY & PREDICTIVE MAINTENANCE
+# Cortex Analyst Semantic Model
+#
+# Purpose: Define business logic and relationships for natural language queries
+# Used by: Snowflake Intelligence Agent and Cortex Analyst
+#
+# Author: FPL AI/ML Team
+# Date: 2025-11-15
+# Version: 1.0
+# ==============================================================================
+
+name: Grid Reliability Predictive Maintenance
+description: >
+  Semantic model for FPL's AI-driven grid reliability and predictive maintenance system.
+  Enables natural language queries about asset health, failure predictions, and maintenance optimization.
+
+connection:
+  database: UTILITIES_GRID_RELIABILITY
+  schema: ANALYTICS
+
+# ==============================================================================
+# DATA TABLES
+# ==============================================================================
+
+tables:
+  - name: ASSET_HEALTH
+    base_table: VW_ASSET_HEALTH_DASHBOARD
+    description: Current health status and risk scores for all active transformer assets
+    columns:
+      - name: ASSET_ID
+        description: Unique asset identifier
+        data_type: string
+        unique: true
+        
+      - name: ASSET_TYPE
+        description: Type of asset (TRANSFORMER, BREAKER, etc.)
+        data_type: string
+        
+      - name: LOCATION_SUBSTATION
+        description: Substation where asset is located
+        data_type: string
+        
+      - name: LOCATION_CITY
+        description: City location
+        data_type: string
+        
+      - name: LOCATION_COUNTY
+        description: County location in Florida
+        data_type: string
+        
+      - name: LOCATION_LAT
+        description: Latitude coordinate
+        data_type: number
+        
+      - name: LOCATION_LON
+        description: Longitude coordinate
+        data_type: number
+        
+      - name: CUSTOMERS_AFFECTED
+        description: Number of customers impacted if asset fails
+        data_type: number
+        
+      - name: CRITICALITY_SCORE
+        description: Business criticality score (0-100)
+        data_type: number
+        
+      - name: RISK_SCORE
+        description: Composite risk score (0-100, higher is riskier)
+        data_type: number
+        
+      - name: FAILURE_PROBABILITY
+        description: Probability of failure in next 30 days (0-1)
+        data_type: number
+        
+      - name: PREDICTED_RUL_DAYS
+        description: Predicted remaining useful life in days
+        data_type: number
+        
+      - name: CONFIDENCE
+        description: Model confidence score (0-1)
+        data_type: number
+        
+      - name: ALERT_LEVEL
+        description: Alert severity (LOW, MEDIUM, HIGH, CRITICAL)
+        data_type: string
+        
+      - name: RISK_CATEGORY
+        description: Risk category (LOW, MEDIUM, HIGH, CRITICAL)
+        data_type: string
+        
+      - name: DAYS_SINCE_MAINTENANCE
+        description: Days since last maintenance
+        data_type: number
+        
+      - name: ASSET_AGE_YEARS
+        description: Age of asset in years
+        data_type: number
+        
+      - name: PREDICTION_TIMESTAMP
+        description: When prediction was made
+        data_type: timestamp
+
+  - name: HIGH_RISK_ASSETS
+    base_table: VW_HIGH_RISK_ASSETS
+    description: Assets with risk scores above 70 requiring attention
+    columns:
+      - name: ASSET_ID
+        description: Unique asset identifier
+        data_type: string
+        unique: true
+        
+      - name: LOCATION_SUBSTATION
+        description: Substation name
+        data_type: string
+        
+      - name: LOCATION_CITY
+        description: City location
+        data_type: string
+        
+      - name: LOCATION_COUNTY
+        description: County location
+        data_type: string
+        
+      - name: RISK_SCORE
+        description: Composite risk score (71-100)
+        data_type: number
+        
+      - name: FAILURE_PROBABILITY
+        description: Probability of failure in next 30 days
+        data_type: number
+        
+      - name: PREDICTED_RUL_DAYS
+        description: Estimated days until failure
+        data_type: number
+        
+      - name: ALERT_LEVEL
+        description: Alert severity level
+        data_type: string
+        
+      - name: CUSTOMERS_AFFECTED
+        description: Customers impacted by potential failure
+        data_type: number
+        
+      - name: CRITICALITY_SCORE
+        description: Business criticality (0-100)
+        data_type: number
+        
+      - name: DAYS_SINCE_MAINTENANCE
+        description: Days since last maintenance activity
+        data_type: number
+        
+      - name: ESTIMATED_SAIDI_IMPACT
+        description: Potential SAIDI points if failure occurs
+        data_type: number
+        
+      - name: RECOMMENDED_ACTION_TIMELINE
+        description: Recommended maintenance timeline
+        data_type: string
+        
+      - name: WORK_ORDER_PRIORITY
+        description: Work order priority (1=highest)
+        data_type: number
+
+  - name: RELIABILITY_METRICS
+    base_table: VW_RELIABILITY_METRICS
+    description: System-wide reliability metrics and SAIDI/SAIFI impact
+    columns:
+      - name: METRIC_TYPE
+        description: Type of metric
+        data_type: string
+        
+      - name: TOTAL_CUSTOMERS_AT_RISK
+        description: Total customers affected by high-risk assets
+        data_type: number
+        
+      - name: HIGH_RISK_ASSET_COUNT
+        description: Number of assets with high risk scores
+        data_type: number
+        
+      - name: POTENTIAL_SAIDI_POINTS
+        description: Potential SAIDI impact if all high-risk assets fail
+        data_type: number
+
+  - name: COST_AVOIDANCE
+    base_table: VW_COST_AVOIDANCE_REPORT
+    description: Financial impact and cost avoidance from predictive maintenance
+    columns:
+      - name: HIGH_RISK_ASSETS
+        description: Number of high-risk assets identified
+        data_type: number
+        
+      - name: TOTAL_CUSTOMERS_PROTECTED
+        description: Total customers protected from outages
+        data_type: number
+        
+      - name: EMERGENCY_REPAIR_COST_AVOIDANCE
+        description: Avoided emergency repair costs (USD)
+        data_type: number
+        
+      - name: PREVENTIVE_MAINTENANCE_COST
+        description: Cost of preventive maintenance (USD)
+        data_type: number
+        
+      - name: NET_COST_AVOIDANCE
+        description: Net financial benefit (USD)
+        data_type: number
+        
+      - name: SAIDI_IMPACT_PREVENTED
+        description: SAIDI points prevented
+        data_type: number
+
+# ==============================================================================
+# DIMENSIONS (For Grouping and Filtering)
+# ==============================================================================
+
+dimensions:
+  - name: location_county
+    description: Florida county where asset is located
+    expr: LOCATION_COUNTY
+    data_type: string
+    
+  - name: location_city
+    description: City where asset is located
+    expr: LOCATION_CITY
+    data_type: string
+    
+  - name: location_substation
+    description: Substation name
+    expr: LOCATION_SUBSTATION
+    data_type: string
+    
+  - name: asset_type
+    description: Type of grid asset
+    expr: ASSET_TYPE
+    data_type: string
+    
+  - name: risk_category
+    description: Risk level category (LOW, MEDIUM, HIGH, CRITICAL)
+    expr: RISK_CATEGORY
+    data_type: string
+    
+  - name: alert_level
+    description: Alert severity level
+    expr: ALERT_LEVEL
+    data_type: string
+    
+  - name: recommended_timeline
+    description: Recommended maintenance timeline
+    expr: RECOMMENDED_ACTION_TIMELINE
+    data_type: string
+
+# ==============================================================================
+# MEASURES (Aggregations and Calculations)
+# ==============================================================================
+
+measures:
+  - name: total_assets
+    description: Total number of assets
+    expr: COUNT(DISTINCT ASSET_ID)
+    data_type: number
+    
+  - name: high_risk_asset_count
+    description: Number of assets with risk score >= 71
+    expr: COUNT_IF(RISK_SCORE >= 71)
+    data_type: number
+    
+  - name: critical_asset_count
+    description: Number of assets with risk score >= 86
+    expr: COUNT_IF(RISK_SCORE >= 86)
+    data_type: number
+    
+  - name: average_risk_score
+    description: Average risk score across all assets
+    expr: AVG(RISK_SCORE)
+    data_type: number
+    
+  - name: average_failure_probability
+    description: Average failure probability across all assets
+    expr: AVG(FAILURE_PROBABILITY)
+    data_type: number
+    
+  - name: total_customers_at_risk
+    description: Total customers affected by high-risk assets
+    expr: SUM(CUSTOMERS_AFFECTED)
+    data_type: number
+    
+  - name: estimated_saidi_impact
+    description: Estimated SAIDI impact from high-risk assets
+    expr: SUM(ESTIMATED_SAIDI_IMPACT)
+    data_type: number
+    
+  - name: average_days_since_maintenance
+    description: Average days since last maintenance
+    expr: AVG(DAYS_SINCE_MAINTENANCE)
+    data_type: number
+    
+  - name: average_asset_age
+    description: Average asset age in years
+    expr: AVG(ASSET_AGE_YEARS)
+    data_type: number
+
+# ==============================================================================
+# SYNONYMS (Natural Language Mappings)
+# ==============================================================================
+
+synonyms:
+  - terms: ["transformer", "transformers", "power transformer"]
+    maps_to: 
+      dimension: asset_type
+      value: "TRANSFORMER"
+      
+  - terms: ["high risk", "highest risk", "risky", "dangerous"]
+    maps_to:
+      dimension: risk_category
+      value: "HIGH"
+      
+  - terms: ["critical", "emergency", "urgent"]
+    maps_to:
+      dimension: risk_category
+      value: "CRITICAL"
+      
+  - terms: ["failure", "fail", "break down", "outage"]
+    maps_to:
+      measure: average_failure_probability
+      
+  - terms: ["customers", "people affected", "residents impacted"]
+    maps_to:
+      measure: total_customers_at_risk
+      
+  - terms: ["SAIDI", "reliability index", "service availability"]
+    maps_to:
+      measure: estimated_saidi_impact
+      
+  - terms: ["maintenance", "servicing", "inspection"]
+    maps_to:
+      measure: average_days_since_maintenance
+      
+  - terms: ["Miami", "Miami-Dade"]
+    maps_to:
+      dimension: location_county
+      value: "Miami-Dade"
+      
+  - terms: ["Tampa", "Hillsborough"]
+    maps_to:
+      dimension: location_county
+      value: "Hillsborough"
+      
+  - terms: ["Orlando"]
+    maps_to:
+      dimension: location_county
+      value: "Orange"
+
+# ==============================================================================
+# SAMPLE QUERIES (For Testing and Documentation)
+# ==============================================================================
+
+sample_queries:
+  - question: "Which substations have the highest risk?"
+    sql: |
+      SELECT LOCATION_SUBSTATION, AVG(RISK_SCORE) as AVG_RISK
+      FROM ASSET_HEALTH
+      GROUP BY LOCATION_SUBSTATION
+      ORDER BY AVG_RISK DESC
+      LIMIT 10
+      
+  - question: "How many critical assets are there in Miami-Dade county?"
+    sql: |
+      SELECT COUNT(*) as CRITICAL_ASSETS
+      FROM HIGH_RISK_ASSETS
+      WHERE LOCATION_COUNTY = 'Miami-Dade'
+        AND RISK_SCORE >= 86
+        
+  - question: "What is the total SAIDI impact if all high-risk assets fail?"
+    sql: |
+      SELECT SUM(ESTIMATED_SAIDI_IMPACT) as TOTAL_SAIDI_IMPACT
+      FROM HIGH_RISK_ASSETS
+      
+  - question: "Show me assets that need maintenance in the next 7 days"
+    sql: |
+      SELECT ASSET_ID, LOCATION_SUBSTATION, RISK_SCORE, PREDICTED_RUL_DAYS
+      FROM HIGH_RISK_ASSETS
+      WHERE RECOMMENDED_ACTION_TIMELINE = 'IMMEDIATE (0-7 days)'
+      ORDER BY RISK_SCORE DESC
+      
+  - question: "What is the average failure probability by county?"
+    sql: |
+      SELECT LOCATION_COUNTY, AVG(FAILURE_PROBABILITY) as AVG_FAILURE_PROB
+      FROM ASSET_HEALTH
+      GROUP BY LOCATION_COUNTY
+      ORDER BY AVG_FAILURE_PROB DESC
+      
+  - question: "How much money are we saving with predictive maintenance?"
+    sql: |
+      SELECT NET_COST_AVOIDANCE, SAIDI_IMPACT_PREVENTED
+      FROM COST_AVOIDANCE
+      LIMIT 1
+
+# ==============================================================================
+# BUSINESS RULES
+# ==============================================================================
+
+business_rules:
+  - name: high_risk_threshold
+    description: Assets with risk score >= 71 are considered high risk
+    
+  - name: critical_threshold
+    description: Assets with risk score >= 86 require immediate action
+    
+  - name: saidi_calculation
+    description: SAIDI = (Customer-Minutes of Interruption) / Total Customers (5,800,000)
+    
+  - name: work_order_priority
+    description: Priority 1 = CRITICAL (0-7 days), Priority 2 = HIGH (7-14 days), Priority 3 = MEDIUM (14-30 days)
+
+
