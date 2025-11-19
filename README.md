@@ -1,4 +1,4 @@
-# AI-Driven Grid Reliability & Predictive Maintenance for FPL
+# AI-Driven Grid Reliability & Predictive Maintenance
 
 > **Enterprise-Grade Predictive Maintenance Solution for Electric Utility Transmission & Distribution Assets**
 
@@ -30,7 +30,7 @@
 
 ### **The Challenge**
 
-Florida Power & Light (FPL), one of the largest electric utilities in the United States, faces critical challenges in maintaining grid reliability while managing costs:
+One of the largest electric utilities in the United States faces critical challenges in maintaining grid reliability while managing costs:
 
 1. **Unplanned Outages**: Equipment failures result in 200-250 unplanned outages annually, impacting millions of customers
 2. **High Maintenance Costs**: Reactive maintenance costs 3-5x more than planned preventive maintenance
@@ -40,7 +40,7 @@ Florida Power & Light (FPL), one of the largest electric utilities in the United
 
 ### **The Opportunity**
 
-By leveraging Snowflake's AI Data Cloud to integrate real-time OT sensor data with static IT asset data, FPL can:
+By leveraging Snowflake's AI Data Cloud to integrate real-time OT sensor data with static IT asset data, the utility can:
 
 - **Predict failures 7-30 days in advance** with 85%+ accuracy
 - **Reduce unplanned outages by 30-40%** through proactive maintenance
@@ -1031,7 +1031,7 @@ ORDER BY MAINTENANCE_DATE DESC;
 2. Add real failure labels for supervised learning
 3. Deploy Snowpipe for continuous data ingestion
 4. Set up Tasks for automated model retraining
-5. Integrate with FPL's production SCADA systems
+5. Integrate with the utility's production SCADA systems
 6. Add alerting (email, SMS) for CRITICAL assets
 
 ### **For Further Development**
@@ -1061,7 +1061,7 @@ This project is proprietary and confidential. Unauthorized copying, distribution
 **Inspired by:**
 - Real-world utility challenges
 - Industry best practices in predictive maintenance
-- FPL's commitment to grid reliability
+- Leading utilities' commitment to grid reliability
 
 ---
 
