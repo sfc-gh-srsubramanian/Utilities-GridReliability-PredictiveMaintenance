@@ -364,20 +364,20 @@ GRANT USAGE ON CORTEX SEARCH SERVICE UTILITIES_GRID_RELIABILITY.ANALYTICS.ASSET_
 ### Business Analysts & Executives
 ```sql
 -- Read-only access for reporting and dashboards
-GRANT ROLE GRID_ANALYST TO USER john.smith@fpl.com;
-GRANT ROLE GRID_ANALYST TO USER susan.executive@fpl.com;
+GRANT ROLE GRID_ANALYST TO USER john.smith@utility.com;
+GRANT ROLE GRID_ANALYST TO USER susan.executive@utility.com;
 ```
 
 ### Operations Managers
 ```sql
 -- Read-only access with Cortex Search
-GRANT ROLE GRID_ANALYST TO USER mike.operations@fpl.com;
+GRANT ROLE GRID_ANALYST TO USER mike.operations@utility.com;
 ```
 
 ### Data Engineers
 ```sql
 -- Full data management capabilities
-GRANT ROLE GRID_DATA_ENGINEER TO USER sarah.dataeng@fpl.com;
+GRANT ROLE GRID_DATA_ENGINEER TO USER sarah.dataeng@utility.com;
 
 -- Also give analyst role for easy querying
 GRANT ROLE GRID_ANALYST TO ROLE GRID_DATA_ENGINEER;
@@ -386,7 +386,7 @@ GRANT ROLE GRID_ANALYST TO ROLE GRID_DATA_ENGINEER;
 ### ML Engineers / Data Scientists
 ```sql
 -- ML development access
-GRANT ROLE GRID_ML_ENGINEER TO USER alex.datascientist@fpl.com;
+GRANT ROLE GRID_ML_ENGINEER TO USER alex.datascientist@utility.com;
 
 -- Also give analyst role for reporting
 GRANT ROLE GRID_ANALYST TO ROLE GRID_ML_ENGINEER;
@@ -440,7 +440,7 @@ INSERT INTO RAW.ASSET_MASTER VALUES (...);
 ### 4. Audit & Monitoring
 ```sql
 -- View who has what role
-SHOW GRANTS TO USER john.smith@fpl.com;
+SHOW GRANTS TO USER john.smith@utility.com;
 
 -- View role hierarchy
 SHOW GRANTS OF ROLE GRID_ANALYST;

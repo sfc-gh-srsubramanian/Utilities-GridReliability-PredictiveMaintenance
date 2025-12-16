@@ -1,5 +1,5 @@
 -- ========================================================
--- FPL Grid Reliability: Sensor Data Load for Snowsight
+-- Grid Reliability: Sensor Data Load for Snowsight
 -- ========================================================
 -- Run this in Snowsight after uploading JSON files
 -- ========================================================

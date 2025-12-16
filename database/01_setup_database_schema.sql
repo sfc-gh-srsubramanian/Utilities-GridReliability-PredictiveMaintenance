@@ -2,11 +2,11 @@
  * AI-DRIVEN GRID RELIABILITY & PREDICTIVE MAINTENANCE
  * Database Setup Script - Part 1: Core Schema
  * 
- * Purpose: Create complete database schema for FPL Grid Reliability system
+ * Purpose: Create complete database schema for Grid Reliability system
  * Database: UTILITIES_GRID_RELIABILITY
  * Warehouse: XS (GRID_RELIABILITY_WH)
  * 
- * Author: FPL AI/ML Team
+ * Author: Grid Reliability AI/ML Team
  * Date: 2025-11-15
  * Version: 1.0
  ******************************************************************************/
@@ -16,7 +16,7 @@
 -- =============================================================================
 
 CREATE DATABASE IF NOT EXISTS UTILITIES_GRID_RELIABILITY
-    COMMENT = 'FPL Grid Reliability and Predictive Maintenance AI System';
+    COMMENT = 'Grid Reliability and Predictive Maintenance AI System';
 
 USE DATABASE UTILITIES_GRID_RELIABILITY;
 

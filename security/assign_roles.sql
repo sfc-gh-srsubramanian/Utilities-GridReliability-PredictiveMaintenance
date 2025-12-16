@@ -9,7 +9,7 @@
  * 2. Uncomment the appropriate GRANT statements
  * 3. Run as ACCOUNTADMIN or a role with GRANT privileges
  * 
- * Author: FPL AI/ML Team
+ * Author: Grid Reliability AI/ML Team
  * Date: 2025-11-15
  * Version: 1.0
  ******************************************************************************/
@@ -45,38 +45,38 @@ SHOW ROLES LIKE 'GRID_%';
 -- -----------------------------------------------------------------------------
 
 -- Example: Assign to analyst
--- GRANT ROLE GRID_ANALYST TO USER john.smith@fpl.com;
--- GRANT ROLE GRID_ANALYST TO USER susan.executive@fpl.com;
--- GRANT ROLE GRID_ANALYST TO USER mike.operations@fpl.com;
+-- GRANT ROLE GRID_ANALYST TO USER john.smith@utility.com;
+-- GRANT ROLE GRID_ANALYST TO USER susan.executive@utility.com;
+-- GRANT ROLE GRID_ANALYST TO USER mike.operations@utility.com;
 
 -- Set as default role (optional)
--- ALTER USER john.smith@fpl.com SET DEFAULT_ROLE = GRID_ANALYST;
+-- ALTER USER john.smith@utility.com SET DEFAULT_ROLE = GRID_ANALYST;
 
 -- -----------------------------------------------------------------------------
 -- GRID_DATA_ENGINEER - For Data Engineers, ETL Developers
 -- -----------------------------------------------------------------------------
 
 -- Example: Assign to data engineer
--- GRANT ROLE GRID_DATA_ENGINEER TO USER sarah.dataeng@fpl.com;
+-- GRANT ROLE GRID_DATA_ENGINEER TO USER sarah.dataeng@utility.com;
 
 -- Also give analyst role for easy querying
--- GRANT ROLE GRID_ANALYST TO USER sarah.dataeng@fpl.com;
+-- GRANT ROLE GRID_ANALYST TO USER sarah.dataeng@utility.com;
 
 -- Set as default role
--- ALTER USER sarah.dataeng@fpl.com SET DEFAULT_ROLE = GRID_DATA_ENGINEER;
+-- ALTER USER sarah.dataeng@utility.com SET DEFAULT_ROLE = GRID_DATA_ENGINEER;
 
 -- -----------------------------------------------------------------------------
 -- GRID_ML_ENGINEER - For Data Scientists, ML Engineers
 -- -----------------------------------------------------------------------------
 
 -- Example: Assign to ML engineer
--- GRANT ROLE GRID_ML_ENGINEER TO USER alex.datascientist@fpl.com;
+-- GRANT ROLE GRID_ML_ENGINEER TO USER alex.datascientist@utility.com;
 
 -- Also give analyst role for reporting
--- GRANT ROLE GRID_ANALYST TO USER alex.datascientist@fpl.com;
+-- GRANT ROLE GRID_ANALYST TO USER alex.datascientist@utility.com;
 
 -- Set as default role
--- ALTER USER alex.datascientist@fpl.com SET DEFAULT_ROLE = GRID_ML_ENGINEER;
+-- ALTER USER alex.datascientist@utility.com SET DEFAULT_ROLE = GRID_ML_ENGINEER;
 
 -- =============================================================================
 -- ROLE HIERARCHY (OPTIONAL)
@@ -98,7 +98,7 @@ SHOW ROLES LIKE 'GRID_%';
 -- =============================================================================
 
 -- Check what roles a user has
--- SHOW GRANTS TO USER john.smith@fpl.com;
+-- SHOW GRANTS TO USER john.smith@utility.com;
 
 -- Check who has a specific role
 -- SHOW GRANTS OF ROLE GRID_ANALYST;
@@ -123,7 +123,7 @@ SHOW ROLES LIKE 'GRID_%';
 -- =============================================================================
 
 -- To remove a role from a user
--- REVOKE ROLE GRID_ANALYST FROM USER john.smith@fpl.com;
+-- REVOKE ROLE GRID_ANALYST FROM USER john.smith@utility.com;
 
 -- =============================================================================
 -- MONITORING & AUDIT
@@ -166,27 +166,27 @@ ORDER BY QUERY_COUNT DESC;
 -- Copy and modify this template for your actual users:
 /*
 -- Business Analysts
-GRANT ROLE GRID_ANALYST TO USER analyst1@fpl.com;
-GRANT ROLE GRID_ANALYST TO USER analyst2@fpl.com;
-ALTER USER analyst1@fpl.com SET DEFAULT_ROLE = GRID_ANALYST;
+GRANT ROLE GRID_ANALYST TO USER analyst1@utility.com;
+GRANT ROLE GRID_ANALYST TO USER analyst2@utility.com;
+ALTER USER analyst1@utility.com SET DEFAULT_ROLE = GRID_ANALYST;
 
 -- Data Engineers
-GRANT ROLE GRID_DATA_ENGINEER TO USER dataeng1@fpl.com;
-GRANT ROLE GRID_ANALYST TO USER dataeng1@fpl.com;
-ALTER USER dataeng1@fpl.com SET DEFAULT_ROLE = GRID_DATA_ENGINEER;
+GRANT ROLE GRID_DATA_ENGINEER TO USER dataeng1@utility.com;
+GRANT ROLE GRID_ANALYST TO USER dataeng1@utility.com;
+ALTER USER dataeng1@utility.com SET DEFAULT_ROLE = GRID_DATA_ENGINEER;
 
 -- ML Engineers
-GRANT ROLE GRID_ML_ENGINEER TO USER mleng1@fpl.com;
-GRANT ROLE GRID_ANALYST TO USER mleng1@fpl.com;
-ALTER USER mleng1@fpl.com SET DEFAULT_ROLE = GRID_ML_ENGINEER;
+GRANT ROLE GRID_ML_ENGINEER TO USER mleng1@utility.com;
+GRANT ROLE GRID_ANALYST TO USER mleng1@utility.com;
+ALTER USER mleng1@utility.com SET DEFAULT_ROLE = GRID_ML_ENGINEER;
 
 -- Operations Managers
-GRANT ROLE GRID_ANALYST TO USER ops.manager@fpl.com;
-ALTER USER ops.manager@fpl.com SET DEFAULT_ROLE = GRID_ANALYST;
+GRANT ROLE GRID_ANALYST TO USER ops.manager@utility.com;
+ALTER USER ops.manager@utility.com SET DEFAULT_ROLE = GRID_ANALYST;
 
 -- Executives (Read-Only)
-GRANT ROLE GRID_ANALYST TO USER executive@fpl.com;
-ALTER USER executive@fpl.com SET DEFAULT_ROLE = GRID_ANALYST;
+GRANT ROLE GRID_ANALYST TO USER executive@utility.com;
+ALTER USER executive@utility.com SET DEFAULT_ROLE = GRID_ANALYST;
 */
 
 -- =============================================================================

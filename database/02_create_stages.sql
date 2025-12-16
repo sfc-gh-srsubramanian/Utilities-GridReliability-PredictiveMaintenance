@@ -5,7 +5,7 @@
  * Purpose: Create external stages for data ingestion
  * Prerequisites: 01_setup_database_schema.sql must be run first
  * 
- * Author: FPL AI/ML Team
+ * Author: Grid Reliability AI/ML Team
  * Date: 2025-11-15
  * Version: 1.0
  ******************************************************************************/

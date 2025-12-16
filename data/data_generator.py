@@ -10,7 +10,7 @@ Purpose: Generate realistic synthetic data for transformer monitoring demo
 - Maintenance history
 - Historical failure events
 
-Author: FPL AI/ML Team
+Author: Grid Reliability AI/ML Team
 Date: 2025-11-15
 Version: 1.0
 

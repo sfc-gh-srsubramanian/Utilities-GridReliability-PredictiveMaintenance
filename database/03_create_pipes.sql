@@ -5,7 +5,7 @@
  * Purpose: Create Snowpipes for continuous data ingestion
  * Prerequisites: 01_setup_database_schema.sql and 02_create_stages.sql
  * 
- * Author: FPL AI/ML Team
+ * Author: Grid Reliability AI/ML Team
  * Date: 2025-11-15
  * Version: 1.0
  ******************************************************************************/

@@ -7,7 +7,7 @@
  *          2. Visual inspection data (photos, videos, LiDAR)
  *          3. Technical manuals & specifications (PDFs)
  * 
- * Author: FPL AI/ML Team
+ * Author: Grid Reliability AI/ML Team
  * Date: 2025-11-18
  * Version: 1.0
  ******************************************************************************/

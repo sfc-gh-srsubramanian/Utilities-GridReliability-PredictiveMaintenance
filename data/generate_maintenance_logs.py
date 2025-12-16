@@ -326,7 +326,7 @@ def create_pdf_document(doc_metadata, asset, output_path):
     # Footer
     story.append(Spacer(1, 0.5*inch))
     footer = Paragraph(
-        f"<font size=8>FPL Confidential | Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')} | Document ID: {doc_metadata['DOCUMENT_ID']}</font>",
+        f"<font size=8>Utility Confidential | Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')} | Document ID: {doc_metadata['DOCUMENT_ID']}</font>",
         ParagraphStyle('Footer', parent=styles['Normal'], fontSize=8, textColor=colors.grey, alignment=TA_CENTER)
     )
     story.append(footer)

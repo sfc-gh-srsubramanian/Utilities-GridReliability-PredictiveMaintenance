@@ -1,7 +1,7 @@
-# 🎊 FPL Grid Reliability Project - Final Status
+# 🎊 Grid Reliability Project - Final Status
 
 **Project**: AI-Driven Grid Reliability & Predictive Maintenance  
-**Client**: Florida Power & Light (FPL)  
+**Client**: One of the Largest Utilities in the United States  
 **Platform**: Snowflake AI Data Cloud  
 **Status**: ✅ **PRODUCTION READY**  
 **Date**: November 18, 2025
@@ -186,7 +186,7 @@ GROUP BY 1,2,4,5;
 - `semantic_model/*.yaml` ← Cortex Analyst semantic model
 
 ### **Architecture**
-- `docs/FPL_Grid_Architecture.drawio` ← Editable diagram (draw.io XML)
+- `docs/Grid_Architecture.drawio` ← Editable diagram (draw.io XML)
 
 ---
 

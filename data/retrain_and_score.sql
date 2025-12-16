@@ -1,5 +1,5 @@
 -- ========================================================
--- FPL Grid Reliability: Retrain ML Models & Generate Predictions
+-- Grid Reliability: Retrain ML Models & Generate Predictions
 -- ========================================================
 -- Run this after loading the full sensor dataset
 -- ========================================================

@@ -2,7 +2,7 @@
 
 ## 1. Overview
 
-This document describes the technical architecture of FPL's AI-driven grid reliability and predictive maintenance system built on the Snowflake AI Data Cloud platform.
+This document describes the technical architecture of an AI-driven grid reliability and predictive maintenance system built on the Snowflake AI Data Cloud platform.
 
 ## 2. Architecture Principles
 
@@ -440,6 +440,6 @@ GRANT ALL ON DATABASE UTILITIES_GRID_RELIABILITY TO ROLE GRID_ADMIN;
 
 **Document Version**: 1.0  
 **Last Updated**: 2025-11-15  
-**Owner**: FPL AI/ML Team
+**Owner**: Grid Reliability AI/ML Team
 
 

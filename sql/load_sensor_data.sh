@@ -1,6 +1,6 @@
 #!/bin/bash
 # ========================================================
-# FPL Grid Reliability: Automated Sensor Data Load
+# Grid Reliability: Automated Sensor Data Load
 # ========================================================
 # Usage: ./load_sensor_data.sh
 # Estimated Time: 10-15 seconds
@@ -9,7 +9,7 @@
 set -e  # Exit on error
 
 echo "=========================================="
-echo "FPL Grid Reliability - Sensor Data Load"
+echo "Grid Reliability - Sensor Data Load"
 echo "=========================================="
 echo ""
 

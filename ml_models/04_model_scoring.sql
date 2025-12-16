@@ -5,7 +5,7 @@
  * Purpose: Apply trained models to current asset data to generate predictions
  * Generates risk scores and alerts for high-risk assets
  * 
- * Author: FPL AI/ML Team
+ * Author: Grid Reliability AI/ML Team
  * Date: 2025-11-15
  * Version: 1.0
  ******************************************************************************/

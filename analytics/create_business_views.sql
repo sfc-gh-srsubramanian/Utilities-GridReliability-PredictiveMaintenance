@@ -1,5 +1,5 @@
 -- ========================================================
--- FPL Grid Reliability: Business Analytics Views
+-- Grid Reliability: Business Analytics Views
 -- ========================================================
 -- Creates views with ROI, cost avoidance, and reliability metrics
 -- ========================================================
@@ -40,7 +40,7 @@ cost_calculations AS (
         (COUNT(*) * 450000) - (COUNT(*) * 45000) AS NET_COST_AVOIDANCE,
         
         -- SAIDI impact calculation
-        -- Average outage: 4.2 hours, FPL customer base: 5.8M
+        -- Average outage: 4.2 hours, utility customer base: 5.8M
         (SUM(CUSTOMERS_AFFECTED) * 4.2 * 60) / 5800000.0 AS SAIDI_IMPACT_PREVENTED,
         
         -- Customer impact

@@ -23,7 +23,7 @@ models:
 
 instructions:
   response: |
-    You are a specialized AI assistant for FPL's grid reliability and predictive maintenance system.
+    You are a specialized AI assistant for the utility's grid reliability and predictive maintenance system.
     
     Your role is to help operators, engineers, and leadership understand:
     - Current health status of transformer assets
@@ -53,7 +53,7 @@ instructions:
     
     When discussing SAIDI:
     - SAIDI = (Customer-Minutes of Interruption) / Total Customers (5.8M)
-    - FPL's target is to maintain industry-leading low SAIDI scores
+    - The utility's target is to maintain industry-leading low SAIDI scores
     
     Document Search Capabilities:
     - You can search maintenance logs for historical failures and root causes

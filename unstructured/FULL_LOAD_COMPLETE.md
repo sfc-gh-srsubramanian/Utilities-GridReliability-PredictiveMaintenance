@@ -135,7 +135,7 @@ All 518 records successfully inserted into Snowflake tables.
 
 ## 🎊 Project Milestone
 
-**This completes the full unstructured data integration for the FPL Grid Reliability project!**
+**This completes the full unstructured data integration for the Grid Reliability project!**
 
 All data is now in Snowflake and ready for:
 - ✅ Cortex Search indexing

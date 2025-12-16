@@ -5,7 +5,7 @@ Streamlit Dashboard
 Purpose: Interactive dashboard for monitoring transformer health and failure predictions
 Features: Asset health heatmap, risk alerts, sensor trends, work order generation, ROI calculator
 
-Author: FPL AI/ML Team
+Author: Grid Reliability AI/ML Team
 Date: 2025-11-15
 Version: 1.0
 
@@ -343,7 +343,7 @@ def main():
     session = get_snowflake_session()
     
     # Sidebar
-    st.sidebar.image("https://via.placeholder.com/200x80/1f77b4/ffffff?text=FPL+Grid", 
+    st.sidebar.image("https://via.placeholder.com/200x80/1f77b4/ffffff?text=Grid+Reliability", 
                      use_container_width=True)
     st.sidebar.title("Navigation")
     page = st.sidebar.radio(
@@ -674,7 +674,7 @@ def main():
         
         total_customers = num_failures * avg_customers
         customer_minutes = total_customers * avg_outage_hours * 60
-        saidi_impact = customer_minutes / 5800000  # FPL customer base
+        saidi_impact = customer_minutes / 5800000  # Utility customer base
         
         st.markdown("### Scenario Results")
         col1, col2, col3 = st.columns(3)

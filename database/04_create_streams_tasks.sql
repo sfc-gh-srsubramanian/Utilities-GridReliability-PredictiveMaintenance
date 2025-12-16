@@ -5,7 +5,7 @@
  * Purpose: Create change data capture streams and scheduled tasks for automation
  * Prerequisites: Scripts 01, 02, and 03 must be run first
  * 
- * Author: FPL AI/ML Team
+ * Author: Grid Reliability AI/ML Team
  * Date: 2025-11-15
  * Version: 1.0
  ******************************************************************************/

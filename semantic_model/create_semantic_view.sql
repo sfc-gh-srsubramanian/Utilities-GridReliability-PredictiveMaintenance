@@ -5,7 +5,7 @@
  * Purpose: Create semantic view and upload semantic model for Cortex Analyst
  * Prerequisites: All ANALYTICS views must be created
  * 
- * Author: FPL AI/ML Team
+ * Author: Grid Reliability AI/ML Team
  * Date: 2025-11-15
  * Version: 1.0
  ******************************************************************************/

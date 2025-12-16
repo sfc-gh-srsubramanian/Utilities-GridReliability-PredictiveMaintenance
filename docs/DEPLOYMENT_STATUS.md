@@ -1,6 +1,6 @@
 # 🚀 DEPLOYMENT STATUS - Grid Reliability & Predictive Maintenance
 
-**Project:** AI-Driven Grid Reliability & Predictive Maintenance for FPL  
+**Project:** AI-Driven Grid Reliability & Predictive Maintenance  
 **Database:** UTILITIES_GRID_RELIABILITY  
 **Warehouse:** COMPUTE_WH (XS)  
 **Last Updated:** November 17, 2025  

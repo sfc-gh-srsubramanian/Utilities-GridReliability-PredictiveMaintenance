@@ -5,7 +5,7 @@
  * Purpose: Create views that compute engineered features for ML models
  * These features combine sensor readings with asset characteristics
  * 
- * Author: FPL AI/ML Team
+ * Author: Grid Reliability AI/ML Team
  * Date: 2025-11-15
  * Version: 1.0
  ******************************************************************************/

@@ -1,5 +1,5 @@
 -- ========================================================
--- FPL Grid Reliability: Bulk Sensor Data Load
+-- Grid Reliability: Bulk Sensor Data Load
 -- ========================================================
 -- Purpose: Load all 432,000 sensor readings from JSON files
 -- Estimated Time: 10-15 seconds with SnowSQL

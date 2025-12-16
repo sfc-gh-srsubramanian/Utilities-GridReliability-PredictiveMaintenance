@@ -2,7 +2,7 @@
 
 ## Demo Duration: 15-20 minutes
 
-## Audience: FPL Leadership & Florida PSC
+## Audience: Utility Leadership & State Regulatory Commission
 
 ---
 
@@ -23,7 +23,7 @@
 
 #### Talking Points:
 
-**"FPL manages over 5,000 critical substation assets across Florida."**
+**"The utility manages over 5,000 critical substation assets."**
 
 - Show map visualization on dashboard
 - Highlight density in major metropolitan areas
@@ -296,7 +296,7 @@ Payback period: 1.2 months
    - Stronger PSC regulatory position
 
 2. **Financial Impact**
-   - $25M+ annual cost avoidance (proven at FPL gas turbines)
+   - $25M+ annual cost avoidance (proven at utility gas turbines)
    - 30-40% maintenance cost reduction
    - Extended asset life (5-7 additional years)
 
@@ -409,7 +409,7 @@ AND p.PREDICTION_TIMESTAMP >= DATEADD(month, -1, CURRENT_DATE());
 
 **Demo Script Version**: 1.0  
 **Last Updated**: 2025-11-15  
-**Owner**: FPL AI/ML Team
+**Owner**: Grid Reliability AI/ML Team
 
 **Rehearsal Notes:**
 - Practice timing (15-20 min target)

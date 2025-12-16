@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-Florida Power & Light (FPL) proposes implementing an AI-driven predictive maintenance system for T&D and substation assets using the Snowflake AI Data Cloud. This investment will sustain FPL's position as the nation's most reliable utility while delivering $25M+ in annual cost avoidance and measurably improving regulatory performance metrics (SAIDI/SAIFI).
+One of the largest electric utilities in the United States proposes implementing an AI-driven predictive maintenance system for T&D and substation assets using the Snowflake AI Data Cloud. This investment will sustain the utility's position as one of the nation's most reliable utilities while delivering $25M+ in annual cost avoidance and measurably improving regulatory performance metrics (SAIDI/SAIFI).
 
 **Investment Required**: $2.5M over 24 months  
 **Annual Benefit**: $25.6M recurring  
@@ -13,18 +13,18 @@ Florida Power & Light (FPL) proposes implementing an AI-driven predictive mainte
 
 ## 1. Strategic Context
 
-### 1.1 FPL's Reliability Imperative
+### 1.1 The Utility's Reliability Imperative
 
-FPL's competitive advantage and regulatory standing are fundamentally tied to service reliability:
+The utility's competitive advantage and regulatory standing are fundamentally tied to service reliability:
 
-- **Customer Expectation**: FPL customers experience among the lowest SAIDI scores nationally
-- **Regulatory Scrutiny**: Florida PSC closely monitors reliability metrics in rate cases
+- **Customer Expectation**: Customers experience among the lowest SAIDI scores nationally
+- **Regulatory Scrutiny**: State Public Service Commission closely monitors reliability metrics in rate cases
 - **Brand Value**: "Most Reliable Utility" recognition drives customer satisfaction and retention
 - **Economic Development**: Regional businesses cite power reliability as key location factor
 
 ### 1.2 The Reliability Challenge
 
-Despite industry-leading performance, FPL faces increasing reliability pressures:
+Despite industry-leading performance, the utility faces increasing reliability pressures:
 
 **Aging Infrastructure:**
 - 40% of transformers >20 years old
@@ -37,9 +37,9 @@ Despite industry-leading performance, FPL faces increasing reliability pressures
 - Condition-based inspection is labor-intensive and subjective
 
 **Climate & Load Growth:**
-- Florida heat waves increasing thermal stress
+- Extreme weather events increasing thermal stress
 - EV adoption and electrification driving load growth
-- Hurricane frequency requiring more resilient infrastructure
+- Severe weather frequency requiring more resilient infrastructure
 
 **Data Silos:**
 - OT sensor data trapped in SCADA systems
@@ -60,9 +60,9 @@ Utilities implementing AI-driven predictive maintenance achieve:
 - **5-7 year** extension of asset lifespan (IEEE Transactions, 2023)
 - **15-25% improvement** in maintenance workforce productivity (Accenture, 2024)
 
-### 2.2 FPL Precedent
+### 2.2 Proven Success
 
-FPL has already proven this value:
+The utility has already proven this value:
 
 **Gas Turbine Fleet PdM Program (2018-2024):**
 - Predictive models for 24 gas turbines
@@ -151,7 +151,7 @@ Applying 85% confidence factor:        $25.6M annual benefit
 
 ### 3.2 SAIDI/SAIFI Improvement Value
 
-**Current FPL Performance (2024):**
+**Current Utility Performance (2024):**
 - SAIDI: 65 minutes (among best in nation)
 - SAIFI: 0.85 interruptions per customer
 - Total customers: 5.8M
@@ -451,9 +451,9 @@ Payback extends to 1.9 months (still <2 months)
 | Duke Energy | Generation assets | Custom/Azure | 30% cost reduction |
 | Southern Company | Transformers (pilot) | AWS | Early stage |
 | Exelon | Generation + T&D | Custom | 25% cost reduction |
-| **FPL Target** | **Enterprise T&D** | **Snowflake** | **40% cost reduction** |
+| **Utility Target** | **Enterprise T&D** | **Snowflake** | **40% cost reduction** |
 
-**FPL Differentiators:**
+**Key Differentiators:**
 - Comprehensive IT/OT convergence
 - Enterprise-scale deployment (not pilot)
 - Unified AI platform (Snowflake)
@@ -465,7 +465,7 @@ Payback extends to 1.9 months (still <2 months)
 
 ### Why Now?
 
-1. **Proven Technology**: FPL gas turbine PdM success de-risks approach
+1. **Proven Technology**: Gas turbine PdM success de-risks approach
 2. **Aging Assets**: 40% of fleet >20 years, failure risk increasing
 3. **AI Maturity**: Snowflake platform removes prior constraints
 4. **Competitive Advantage**: First-mover advantage in utility AI
@@ -488,7 +488,7 @@ By Month 24:
 - $24.35M net annual benefit
 - 23.6-minute SAIDI improvement
 - 544,000 fewer customer interruptions per year
-- FPL maintains position as America's most reliable utility
+- The utility maintains position as one of America's most reliable utilities
 
 ---
 
@@ -513,8 +513,8 @@ By Month 24:
 
 **Document Version**: 1.0  
 **Date**: 2025-11-15  
-**Prepared By**: FPL AI/ML Strategy Team  
-**Classification**: FPL Internal - Business Confidential
+**Prepared By**: Grid Reliability AI/ML Strategy Team  
+**Classification**: Utility Internal - Business Confidential
 
 **Approvals Required**:
 - [ ] CFO (Financial)

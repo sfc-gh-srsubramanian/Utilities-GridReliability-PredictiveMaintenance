@@ -8,7 +8,7 @@
  * Note: This uses Snowflake's built-in ML capabilities
  * Requires Python 3.11 and Snowflake ML libraries
  * 
- * Author: FPL AI/ML Team
+ * Author: Grid Reliability AI/ML Team
  * Date: 2025-11-15
  * Version: 1.0
  ******************************************************************************/

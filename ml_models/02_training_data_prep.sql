@@ -5,7 +5,7 @@
  * Purpose: Create labeled training datasets from historical data
  * Labels failures that occurred within 30 days of snapshot
  * 
- * Author: FPL AI/ML Team
+ * Author: Grid Reliability AI/ML Team
  * Date: 2025-11-15
  * Version: 1.0
  ******************************************************************************/
