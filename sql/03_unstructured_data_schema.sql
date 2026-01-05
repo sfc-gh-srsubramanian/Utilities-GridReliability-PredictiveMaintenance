@@ -198,7 +198,7 @@ SELECT
     a.ASSET_TYPE,
     a.MANUFACTURER,
     a.MODEL,
-    a.AGE_YEARS,
+    DATEDIFF(day, a.INSTALL_DATE, CURRENT_DATE()) / 365.25 AS AGE_YEARS,
     a.CRITICALITY_SCORE,
     
     -- Maintenance history (structured)
@@ -243,7 +243,7 @@ LEFT JOIN (
 ) sr ON a.ASSET_ID = sr.ASSET_ID AND sr.rn = 1
 WHERE a.STATUS = 'ACTIVE'
 GROUP BY 
-    a.ASSET_ID, a.ASSET_TYPE, a.MANUFACTURER, a.MODEL, a.AGE_YEARS, 
+    a.ASSET_ID, a.ASSET_TYPE, a.MANUFACTURER, a.MODEL, a.INSTALL_DATE,
     a.CRITICALITY_SCORE, sr.OIL_TEMPERATURE_C, sr.LOAD_CURRENT_A, sr.VIBRATION_MM_S;
 
 -- =============================================================================
