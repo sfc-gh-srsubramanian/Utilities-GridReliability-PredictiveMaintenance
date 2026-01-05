@@ -765,12 +765,14 @@ ORDER BY d.RISK_SCORE DESC, d.CUSTOMERS_AFFECTED DESC;
 -- View: VW_RELIABILITY_METRICS
 -- Purpose: SAIDI/SAIFI calculations
 -- -----------------------------------------------------------------------------
-CREATE OR REPLACE VIEW VW_RELIABILITY_METRICS AS
+-- Note: This view is recreated in 07_business_views.sql with more comprehensive metrics
+-- Keeping this simpler version for backward compatibility during migration
+CREATE OR REPLACE VIEW VW_RELIABILITY_METRICS_SIMPLE AS
 WITH current_risk AS (
     SELECT 
-        SUM(CUSTOMERS_AFFECTED) as TOTAL_CUSTOMERS_AT_RISK,
+        COALESCE(SUM(CUSTOMERS_AFFECTED), 0) as TOTAL_CUSTOMERS_AT_RISK,
         COUNT(*) as HIGH_RISK_ASSET_COUNT,
-        SUM(CUSTOMERS_AFFECTED * 4.2 * 60) / 5800000.0 as POTENTIAL_SAIDI_IMPACT
+        COALESCE(SUM(CUSTOMERS_AFFECTED * 4.2 * 60) / NULLIF(5800000.0, 0), 0) as POTENTIAL_SAIDI_IMPACT
     FROM VW_HIGH_RISK_ASSETS
 )
 SELECT 

@@ -95,20 +95,20 @@ reliability_calcs AS (
         
         -- Potential SAIDI impact if high-risk assets fail
         -- Formula: (customers affected * outage hours * 60) / total customers
-        ((SELECT SUM(a.CUSTOMERS_AFFECTED) 
+        COALESCE(((SELECT SUM(a.CUSTOMERS_AFFECTED) 
           FROM ML.MODEL_PREDICTIONS p
           JOIN RAW.ASSET_MASTER a ON p.ASSET_ID = a.ASSET_ID
-          WHERE p.RISK_SCORE >= 51) * 4.2 * 60) / 5800000.0 AS POTENTIAL_SAIDI_POINTS,
+          WHERE p.RISK_SCORE >= 51) * 4.2 * 60) / NULLIF(TOTAL_CUSTOMERS_SERVED, 0), 0) AS POTENTIAL_SAIDI_POINTS,
         
         -- Potential SAIFI impact (number of interruptions)
         -- Assuming each failure affects 1 interruption per customer
-        ((SELECT SUM(a.CUSTOMERS_AFFECTED) 
+        COALESCE((SELECT SUM(a.CUSTOMERS_AFFECTED) 
           FROM ML.MODEL_PREDICTIONS p
           JOIN RAW.ASSET_MASTER a ON p.ASSET_ID = a.ASSET_ID
-          WHERE p.RISK_SCORE >= 51)) / 5800000.0 AS POTENTIAL_SAIFI_POINTS,
+          WHERE p.RISK_SCORE >= 51) / NULLIF(TOTAL_CUSTOMERS_SERVED, 0), 0) AS POTENTIAL_SAIFI_POINTS,
         
         -- Fleet health score (0-100, inverse of average risk)
-        100 - (SELECT AVG(RISK_SCORE) FROM ML.MODEL_PREDICTIONS) AS FLEET_HEALTH_SCORE
+        COALESCE(100 - (SELECT AVG(RISK_SCORE) FROM ML.MODEL_PREDICTIONS), 100) AS FLEET_HEALTH_SCORE
         
     FROM asset_stats
 )
