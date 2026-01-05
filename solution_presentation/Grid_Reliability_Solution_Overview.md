@@ -63,6 +63,8 @@ The Grid Reliability Platform transforms raw operational data into actionable as
 
 The platform implements a modern **Medallion Architecture** across Snowflake:
 
+![Medallion Architecture](images/medallion_architecture.png)
+
 **RAW Layer** - Data ingestion from all asset touchpoints:
 - SCADA sensor data (temperature, load, vibration, acoustic, DGA)
 - Asset master data (transformers, circuit breakers, substations)
@@ -146,6 +148,8 @@ The platform implements a modern **Medallion Architecture** across Snowflake:
 
 ### Machine Learning Models
 
+![ML Models Pipeline](images/ml_models.png)
+
 **Failure Prediction (XGBoost Classifier)**
 - Predicts probability of failure in next 30/60/90 days
 - Features: sensor trends, maintenance history, asset age, criticality
@@ -162,6 +166,8 @@ The platform implements a modern **Medallion Architecture** across Snowflake:
 - Output: Predicted RUL in days
 
 ### Unstructured Data Integration
+
+![Unstructured Data Integration](images/unstructured_integration.png)
 
 **80 Maintenance Log Documents**
 - NLP-ready text extraction from technician reports
