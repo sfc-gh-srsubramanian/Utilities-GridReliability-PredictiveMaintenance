@@ -457,13 +457,18 @@ CREATE OR REPLACE TABLE FAILURE_TYPE_REFERENCE (
     AVG_REPAIR_COST_USD NUMBER(12,2)
 );
 
-INSERT INTO FAILURE_TYPE_REFERENCE VALUES
-('WINDING_FAIL', 'Winding Failure', 'Insulation breakdown in transformer winding', PARSE_JSON('["Thermal stress", "Electrical stress", "Moisture ingress"]'), 425000),
-('BUSHING_FAULT', 'Bushing Fault', 'Bushing insulation failure', PARSE_JSON('["Contamination", "Moisture", "Mechanical damage"]'), 85000),
-('OIL_LEAK', 'Oil Leak', 'Loss of transformer oil', PARSE_JSON('["Gasket failure", "Corrosion", "Physical damage"]'), 45000),
-('TAP_CHANGER', 'Tap Changer Failure', 'On-load tap changer malfunction', PARSE_JSON('["Contact wear", "Mechanical wear", "Contamination"]'), 125000),
-('COOLING_FAIL', 'Cooling System Failure', 'Cooling fan or pump failure', PARSE_JSON('["Motor failure", "Mechanical wear", "Control circuit"]'), 35000),
-('CORE_FAIL', 'Core Failure', 'Magnetic core damage', PARSE_JSON('["Core overheating", "Manufacturing defect"]'), 450000);
+INSERT INTO FAILURE_TYPE_REFERENCE 
+SELECT 'WINDING_FAIL', 'Winding Failure', 'Insulation breakdown in transformer winding', PARSE_JSON('["Thermal stress", "Electrical stress", "Moisture ingress"]'), 425000
+UNION ALL
+SELECT 'BUSHING_FAULT', 'Bushing Fault', 'Bushing insulation failure', PARSE_JSON('["Contamination", "Moisture", "Mechanical damage"]'), 85000
+UNION ALL
+SELECT 'OIL_LEAK', 'Oil Leak', 'Loss of transformer oil', PARSE_JSON('["Gasket failure", "Corrosion", "Physical damage"]'), 45000
+UNION ALL
+SELECT 'TAP_CHANGER', 'Tap Changer Failure', 'On-load tap changer malfunction', PARSE_JSON('["Contact wear", "Mechanical wear", "Contamination"]'), 125000
+UNION ALL
+SELECT 'COOLING_FAIL', 'Cooling System Failure', 'Cooling fan or pump failure', PARSE_JSON('["Motor failure", "Mechanical wear", "Control circuit"]'), 35000
+UNION ALL
+SELECT 'CORE_FAIL', 'Core Failure', 'Magnetic core damage', PARSE_JSON('["Core overheating", "Manufacturing defect"]'), 450000;
 
 -- =============================================================================
 -- SECTION 9: PERMISSIONS AND ROLES
