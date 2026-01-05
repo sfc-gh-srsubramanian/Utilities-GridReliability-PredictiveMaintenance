@@ -61,3 +61,7 @@ maint_logs_*.sql
 visual_chunk_*.sql
 cv_chunk_*.sql
 
+# Project documentation (keep local, exclude from remote)
+REORGANIZATION_PLAN.md
+REORGANIZATION_COMPLETE.md
+
