@@ -202,8 +202,8 @@ SELECT
     a.CRITICALITY_SCORE,
     
     -- Maintenance history (structured)
-    COUNT(DISTINCT m.RECORD_ID) as TOTAL_MAINTENANCE_COUNT,
-    SUM(m.COST) as TOTAL_MAINTENANCE_COST,
+    COUNT(DISTINCT m.MAINTENANCE_ID) as TOTAL_MAINTENANCE_COUNT,
+    SUM(m.COST_USD) as TOTAL_MAINTENANCE_COST,
     
     -- Maintenance logs (unstructured - text features)
     COUNT(DISTINCT ml.DOCUMENT_ID) as INSPECTION_REPORT_COUNT,
