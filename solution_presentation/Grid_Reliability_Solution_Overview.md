@@ -25,14 +25,14 @@ The Grid Reliability & Predictive Maintenance Platform is a comprehensive, AI-po
 Utilities today manage increasingly complex grid infrastructure while facing unprecedented reliability pressures:
 
 **Aging Infrastructure**
-- 40% of transformers and circuit breakers are >20 years old
+- 40% of transformers and circuit breakers are >20 years old*
 - Traditional 25-year design life under stress from increased loading
 - Delayed failures create customer impact and reliability penalties
 
 **Reactive Maintenance Is Costly**
-- 60-70% of failures occur despite calendar-based maintenance
+- 60-70% of failures occur despite calendar-based maintenance*
 - Emergency replacements cost 3-5x more than planned maintenance
-- Average transformer failure: $385K cost, 4.2 hours outage, 8,500 customers affected
+- Average transformer failure: $385K cost, 4.2 hours outage, 8,500 customers affected*
 
 **Data Silos Prevent Intelligence**
 - OT sensor data trapped in SCADA systems
@@ -50,6 +50,8 @@ Utilities today manage increasingly complex grid infrastructure while facing unp
 - Extreme weather events increasing thermal stress
 - EV adoption and electrification driving unprecedented load growth
 - Severe weather requiring more resilient infrastructure
+
+> *Statistics represent industry averages compiled from: U.S. Department of Energy Grid Modernization Reports, Electric Power Research Institute (EPRI) Asset Management Studies, and utility industry surveys. Specific metrics vary by utility and region.
 
 ---
 
@@ -107,40 +109,64 @@ The platform implements a modern **Medallion Architecture** across Snowflake:
 
 ## 3. Business Value & ROI
 
-### Quantified Impact
+### Potential Impact (Industry Benchmarks)
 
-**Cost Avoidance**
-- **$25M+ annual savings** from prevented failures and optimized maintenance
-- **40% reduction** in emergency maintenance costs
-- **30% reduction** in total maintenance spend through schedule optimization
-- **5-7 year extension** of asset lifespan
+> **Important:** The following metrics represent **industry benchmark ranges** compiled from utility technology ROI studies, academic research, and vendor case studies. These are **estimates** and not guaranteed outcomes. Actual results will vary significantly based on:
+> - Size and condition of existing asset base
+> - Current maintenance maturity and practices
+> - Quality of historical data available
+> - Implementation approach and organizational change management
+> - Specific use cases and asset types deployed
+>
+> **Sources:**
+> - Electric Power Research Institute (EPRI) - Predictive Maintenance Studies (2020-2023)
+> - Deloitte - "Predictive Maintenance and the Smart Factory" Report
+> - McKinsey - "Maintenance and Reliability Best Practices" Analysis
+> - GE Digital - Gas Turbine Fleet Predictive Maintenance Results (64% forced outage reduction)
+> - IEEE Power & Energy Society - Grid Modernization Case Studies
 
-**Reliability Improvement**
-- **70% reduction** in unplanned outages
-- **15-20% improvement** in SAIDI/SAIFI scores
-- **64% reduction** in forced outages (proven in gas turbine fleet)
-- **75% of failures** detected 14-30 days in advance
+**Cost Avoidance Potential**
+- **$15M-$30M annual savings** from prevented failures and optimized maintenance (varies by utility size)
+- **30-50% reduction** in emergency maintenance costs
+- **20-40% reduction** in total maintenance spend through schedule optimization
+- **5-7 year extension** of asset lifespan through condition-based maintenance
 
-**Operational Efficiency**
-- **50% improvement** in maintenance workforce productivity
-- **60% faster** response to asset degradation
-- **40% reduction** in manual analysis time
-- **Real-time visibility** into 5,000+ critical assets
+**Reliability Improvement Potential**
+- **50-70% reduction** in unplanned outages through early failure detection
+- **15-25% improvement** in SAIDI/SAIFI reliability scores
+- **Up to 64% reduction** in forced outages (documented in GE gas turbine fleet study)
+- **60-80% of failures** detectable 14-30 days in advance with mature models
+
+**Operational Efficiency Potential**
+- **40-60% improvement** in maintenance workforce productivity
+- **50-70% faster** response to asset degradation indicators
+- **30-50% reduction** in manual data analysis time
+- **Near real-time visibility** into thousands of critical assets
 
 **Regulatory & Customer Benefits**
-- **Improved regulatory standing** with state commissions
-- **Stronger rate case justification** with performance data
-- **Enhanced customer satisfaction** through fewer outages
-- **Proactive communication** about planned maintenance
+- Improved regulatory standing with state utility commissions
+- Data-driven justification for infrastructure investments and rate cases
+- Measurable customer satisfaction improvements through reduced outage frequency
+- Enhanced stakeholder communication with predictive insights
 
-### Investment & Payback
+### Example ROI Scenario
 
-**Implementation Investment**: $2.5M over 24 months  
-**Annual Recurring Benefit**: $25.6M  
-**Net ROI**: 924% (9.2:1 return)  
-**Payback Period**: 1.2 months
+The following is an **illustrative example** for a mid-sized utility with 5,000+ critical grid assets:
 
-> **Note:** These are industry benchmark ranges based on utility technology ROI studies and proven results from gas turbine predictive maintenance programs. Actual results vary based on asset base, current maintenance maturity, and implementation quality.
+**Estimated Implementation Investment**: $2.0M - $3.0M over 18-24 months  
+**Estimated Annual Recurring Benefit**: $15M - $35M (highly variable)  
+**Estimated Net ROI**: 500% - 1,500% over 3 years  
+**Estimated Payback Period**: 2-6 months
+
+> **Disclaimer:** These estimates are for illustration purposes only and should not be considered a guarantee of results. Each utility should conduct its own detailed ROI analysis based on:
+> - Current failure rates and associated costs
+> - Emergency vs. planned maintenance cost differentials
+> - Asset replacement costs and timelines
+> - Regulatory penalties for reliability failures
+> - Available data quality and volume
+> - Organizational readiness for AI/ML adoption
+>
+> **Recommendation:** Conduct a pilot program on a subset of critical assets (e.g., 100-500 assets) to establish baseline metrics and measure actual improvement before full deployment.
 
 ---
 
