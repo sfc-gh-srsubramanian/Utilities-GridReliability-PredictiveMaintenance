@@ -30,15 +30,13 @@ USE SCHEMA UNSTRUCTURED;
 
 -- Stage for maintenance logs and inspection reports
 CREATE OR REPLACE STAGE MAINTENANCE_DOCS_STAGE
-    COMMENT = 'Storage for maintenance logs, inspection reports, and field notes'
-    DIRECTORY = (ENABLE = TRUE)
-    FILE_FORMAT = (TYPE = 'PDF');
+    COMMENT = 'Storage for maintenance logs, inspection reports, and field notes (PDFs, docs, etc.)'
+    DIRECTORY = (ENABLE = TRUE);
 
 -- Stage for technical manuals and specifications
 CREATE OR REPLACE STAGE TECHNICAL_MANUALS_STAGE
-    COMMENT = 'Storage for equipment manuals, procedures, and technical specs'
-    DIRECTORY = (ENABLE = TRUE)
-    FILE_FORMAT = (TYPE = 'PDF');
+    COMMENT = 'Storage for equipment manuals, procedures, and technical specs (PDFs, docs, etc.)'
+    DIRECTORY = (ENABLE = TRUE);
 
 -- Stage for visual inspection data
 CREATE OR REPLACE STAGE VISUAL_INSPECTION_STAGE
