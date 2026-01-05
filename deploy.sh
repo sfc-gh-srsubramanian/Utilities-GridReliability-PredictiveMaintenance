@@ -111,7 +111,7 @@ execute_sql() {
     echo -e "${YELLOW}▶ ${description}...${NC}"
     
     if [ "$SQL_CMD" = "snow sql" ]; then
-        snow sql -f "$file" -c "$CONNECTION" --enable-template NONE
+        snow sql -f "$file" -c "$CONNECTION" --enable-templating NONE
     else
         snowsql -c "$CONNECTION" -f "$file" -D "db_name=${DATABASE}" -D "wh_name=${WAREHOUSE}"
     fi
