@@ -429,18 +429,18 @@ $$;
 -- SECTION 7: DATA QUALITY CONSTRAINTS
 -- =============================================================================
 
--- Add check constraints for data quality
-ALTER TABLE RAW.SENSOR_READINGS ADD CONSTRAINT CHK_TEMP_RANGE 
-    CHECK (OIL_TEMPERATURE_C IS NULL OR (OIL_TEMPERATURE_C BETWEEN -50 AND 200));
-
-ALTER TABLE RAW.SENSOR_READINGS ADD CONSTRAINT CHK_HUMIDITY_RANGE 
-    CHECK (HUMIDITY_PCT IS NULL OR (HUMIDITY_PCT BETWEEN 0 AND 100));
-
-ALTER TABLE RAW.ASSET_MASTER ADD CONSTRAINT CHK_CRITICALITY_RANGE 
-    CHECK (CRITICALITY_SCORE IS NULL OR (CRITICALITY_SCORE BETWEEN 0 AND 100));
-
-ALTER TABLE ML.MODEL_PREDICTIONS ADD CONSTRAINT CHK_RISK_SCORE_RANGE 
-    CHECK (RISK_SCORE IS NULL OR (RISK_SCORE BETWEEN 0 AND 100));
+-- Note: Snowflake regular tables don't support CHECK constraints.
+-- Data quality validation should be implemented using:
+-- 1. Application-level validation before data insertion
+-- 2. ETL/ELT validation in data pipelines
+-- 3. Snowflake Streams + Tasks for monitoring and alerting
+-- 4. dbt tests or similar data quality frameworks
+--
+-- Expected data ranges (for documentation):
+-- - OIL_TEMPERATURE_C: -50 to 200
+-- - HUMIDITY_PCT: 0 to 100
+-- - CRITICALITY_SCORE: 0 to 100
+-- - RISK_SCORE: 0 to 100
 
 -- =============================================================================
 -- SECTION 8: INITIAL DATA SETUP
