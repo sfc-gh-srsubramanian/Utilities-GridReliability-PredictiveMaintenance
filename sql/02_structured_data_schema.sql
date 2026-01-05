@@ -132,9 +132,8 @@ CREATE OR REPLACE TABLE SENSOR_READINGS (
 COMMENT = 'Time-series sensor data from OT systems - high volume table'
 CLUSTER BY (READING_TIMESTAMP, ASSET_ID);
 
--- Index for common queries
-CREATE INDEX IF NOT EXISTS IDX_SENSOR_ASSET_TIME 
-ON SENSOR_READINGS(ASSET_ID, READING_TIMESTAMP);
+-- Note: Snowflake regular tables don't support indexes. 
+-- CLUSTER BY provides query optimization instead.
 
 -- -----------------------------------------------------------------------------
 -- Table: MAINTENANCE_HISTORY
