@@ -234,7 +234,7 @@ ORDER BY CRITICALITY_SCORE DESC, PREDICTED_RUL_DAYS ASC;
 
 ### **Quick Links**
 - 📖 [Solution Overview](solution_presentation/Grid_Reliability_Solution_Overview.md) - Executive summary, business value, use cases
-- 🚀 [Quick Start Guide](docs/guides/QUICK_START.md) - Get started in 15 minutes
+- 🚀 [Quick Start Guide](docs/guides/QUICKSTART.md) - Get started in 15 minutes
 - 📘 [Deployment Guide](docs/guides/DEPLOYMENT_GUIDE.md) - Detailed deployment instructions
 - 🏗️ [Architecture Guide](docs/architecture/ARCHITECTURE.md) - Technical architecture deep dive
 - 💼 [Business Case](docs/business/BUSINESS_CASE.md) - ROI analysis and business justification

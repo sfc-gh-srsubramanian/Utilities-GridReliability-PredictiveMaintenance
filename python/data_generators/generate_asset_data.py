@@ -290,7 +290,7 @@ def generate_sensor_readings(
                 "LOAD_CURRENT_A": round(load_current + np.random.normal(0, 10), 2),
                 "LOAD_VOLTAGE_KV": round(138 + np.random.normal(0, 1.5), 2),
                 "AMBIENT_TEMP_C": round(ambient_temp, 2),
-                "HUMIDITY_PCT": round(70 + 15 * np.sin((month - 1) * np.pi / 6) + np.random.normal(0, 5), 2),
+                "HUMIDITY_PCT": round(np.clip(70 + 15 * np.sin((month - 1) * np.pi / 6) + np.random.normal(0, 5), 0, 100), 2),
                 "VIBRATION_MM_S": round(baseline["vibration_base"] + np.random.normal(0, 0.5), 4),
                 "ACOUSTIC_DB": round(baseline["acoustic_base"] + np.random.normal(0, 2), 2),
                 "DISSOLVED_H2_PPM": round(max(0, baseline["h2_base"] + np.random.normal(0, 10)), 2),
