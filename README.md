@@ -70,6 +70,7 @@ snow connection add default
 - ✅ Cortex Search services for document intelligence
 - ✅ Semantic views for natural language queries
 - ✅ Grid Intelligence Agent (optional)
+- ✅ **Interactive Streamlit Dashboard** with 6 pages
 
 **Step 2: Validate the Deployment**
 ```bash
@@ -141,6 +142,15 @@ snow connection add default
 - 🤖 **Snowflake Intelligence Agent** - Natural language queries across structured + unstructured data
 - 🔍 **Cortex Search Services** - Semantic search across maintenance logs and technical manuals
 - 📊 **Semantic Views** - Business-friendly data model for analytics
+
+### **Interactive Dashboard**
+- 🎨 **Streamlit in Snowflake Dashboard** - 6-page interactive web application
+  - 📊 **Overview Page** - Executive KPIs, risk distribution, financial metrics
+  - 🗺️ **Asset Map** - Geographic heatmap with color-coded risk scores
+  - ⚠️ **High-Risk Alerts** - Real-time critical asset notifications
+  - 📈 **Asset Details** - Individual asset analysis with 30-day sensor trends
+  - 💰 **ROI Calculator** - Financial impact analysis and scenario modeling
+  - 📋 **Work Orders** - Automated maintenance work order generation
 
 ---
 
@@ -236,6 +246,7 @@ ORDER BY CRITICALITY_SCORE DESC, PREDICTED_RUL_DAYS ASC;
 - 📖 [Solution Overview](solution_presentation/Grid_Reliability_Solution_Overview.md) - Executive summary, business value, use cases
 - 🚀 [Quick Start Guide](docs/guides/QUICKSTART.md) - Get started in 15 minutes
 - 📘 [Deployment Guide](docs/guides/DEPLOYMENT_GUIDE.md) - Detailed deployment instructions
+- 🎨 [Streamlit Dashboard Guide](docs/guides/STREAMLIT_DASHBOARD_GUIDE.md) - Interactive dashboard user guide
 - 🏗️ [Architecture Guide](docs/architecture/ARCHITECTURE.md) - Technical architecture deep dive
 - 💼 [Business Case](docs/business/BUSINESS_CASE.md) - ROI analysis and business justification
 - 🎬 [Demo Script](docs/business/DEMO_SCRIPT.md) - Step-by-step demo walkthrough

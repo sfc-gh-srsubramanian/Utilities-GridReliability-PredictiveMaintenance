@@ -106,41 +106,42 @@ snowsql -q "PUT file://$(pwd)/semantic_model/grid_reliability_semantic.yaml @ANA
 
 ---
 
-## Step 6: Dashboard (5 minutes)
+## Step 6: Dashboard (Already Deployed! ✅)
 
-```bash
-cd dashboard
-pip install streamlit pandas plotly snowflake-connector-python snowflake-snowpark-python
+The **Streamlit in Snowflake Dashboard** is automatically deployed by `deploy.sh` (Phase 8).
 
-# Create config file
-mkdir -p .streamlit
-cat > .streamlit/secrets.toml << EOF
-[snowflake]
-account = "your_account"
-user = "your_user"  
-password = "your_password"
-warehouse = "GRID_RELIABILITY_WH"
-database = "UTILITIES_GRID_RELIABILITY"
-schema = "ANALYTICS"
-role = "GRID_OPERATOR"
-EOF
+**Access the Dashboard:**
 
-# Launch
-streamlit run grid_reliability_dashboard.py
-```
+1. **From Snowflake UI:**
+   - Navigate to: **Projects** → **Streamlit**
+   - Click on: **`GRID_RELIABILITY_DASHBOARD`**
 
-✅ **Verify**: Browser opens to http://localhost:8501 with dashboard
+2. **Or use Direct URL:**
+   ```
+   https://<your-account>.snowflakecomputing.com/streamlit/UTILITIES_GRID_RELIABILITY.ANALYTICS.GRID_RELIABILITY_DASHBOARD
+   ```
+
+**Dashboard Features:**
+- 📊 **Overview** - Executive KPIs, risk distribution, financial metrics
+- 🗺️ **Asset Map** - Geographic heatmap with color-coded risk scores
+- ⚠️ **High-Risk Alerts** - Real-time critical asset notifications
+- 📈 **Asset Details** - 30-day sensor trends for individual assets
+- 💰 **ROI Calculator** - Financial impact analysis
+- 📋 **Work Orders** - Automated maintenance work order generation
+
+✅ **Verify**: Dashboard opens in browser with all 6 pages accessible
 
 ---
 
 ## 🎯 Quick Demo
 
 ### Dashboard Demo (3 minutes)
-1. Open dashboard → Overview page
-2. See 100 assets, ~10-15 high-risk
-3. Navigate to Asset Map → See geographic distribution
-4. Click High-Risk Alerts → See critical assets
-5. Click ROI Calculator → See $25M+ savings
+1. Open dashboard in Snowflake → Overview page
+2. See 100 assets, all currently at 100 risk score (expected with demo data)
+3. Navigate to Asset Map → See geographic distribution across Florida
+4. Click High-Risk Alerts → See 100 critical assets with predictions
+5. Click Asset Details → Select asset and view 30-day sensor trends
+6. Click ROI Calculator → See financial impact and scenario modeling
 
 ### Intelligence Agent Demo (2 minutes)
 1. Snowflake UI → Projects → Intelligence

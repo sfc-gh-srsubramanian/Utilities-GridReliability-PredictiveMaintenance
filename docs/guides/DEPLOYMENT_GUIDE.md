@@ -286,27 +286,39 @@ role = "GRID_OPERATOR"
 
 **Alternative**: For Streamlit in Snowflake (SPCS), no configuration needed.
 
-#### Step 5.3: Launch Dashboard
+#### Step 5.3: Access Streamlit Dashboard (Automatically Deployed)
 
+The **Streamlit in Snowflake Dashboard** is automatically deployed by `deploy.sh` in Phase 8.
+
+**To Access:**
+
+1. **Snowflake UI Method:**
+   - Navigate to: **Projects** → **Streamlit**
+   - Click: **`GRID_RELIABILITY_DASHBOARD`**
+
+2. **Direct URL:**
+   ```
+   https://<your-account>.snowflakecomputing.com/streamlit/UTILITIES_GRID_RELIABILITY.ANALYTICS.GRID_RELIABILITY_DASHBOARD
+   ```
+
+**What Was Deployed:**
+- Dashboard file uploaded to: `@UTILITIES_GRID_RELIABILITY.ANALYTICS.STREAMLIT_STAGE`
+- Streamlit app created: `GRID_RELIABILITY_DASHBOARD`
+- Permissions granted to: `GRID_OPERATOR`, `GRID_ANALYST`, `GRID_ADMIN`
+
+**Manual Redeploy (if needed):**
 ```bash
-cd dashboard
-streamlit run grid_reliability_dashboard.py
-```
-
-**Or deploy to Streamlit in Snowflake**:
-
-```sql
--- Create Streamlit app in Snowflake
-CREATE STREAMLIT GRID_RELIABILITY_DASHBOARD
-  ROOT_LOCATION = '@<your_stage>/dashboard'
-  MAIN_FILE = 'grid_reliability_dashboard.py'
-  QUERY_WAREHOUSE = GRID_RELIABILITY_WH;
+cd python/dashboard
+snow sql -c <connection> -q "PUT file://grid_reliability_dashboard.py @UTILITIES_GRID_RELIABILITY.ANALYTICS.STREAMLIT_STAGE AUTO_COMPRESS=FALSE OVERWRITE=TRUE"
+cd ../..
+snow sql -c <connection> -f sql/10_streamlit_dashboard.sql
 ```
 
 **Checkpoint**: You should now have:
-- ✅ Dashboard running (locally or in Snowflake)
+- ✅ Dashboard running in Streamlit in Snowflake
 - ✅ All 6 pages functional: Overview, Asset Map, High-Risk Alerts, Asset Details, ROI Calculator, Work Orders
-- ✅ Real-time data from Snowflake
+- ✅ Real-time data from Snowflake (5-minute cache)
+- ✅ Role-based access control enabled
 
 ---
 
