@@ -133,9 +133,8 @@ echo -e "${BLUE}═══ Phase 2: Data Schemas ═══${NC}"
 execute_sql "sql/02_structured_data_schema.sql" "Creating structured data tables"
 execute_sql "sql/03_unstructured_data_schema.sql" "Creating unstructured data tables"
 
-echo -e "${BLUE}═══ Phase 3: ML Pipeline ═══${NC}"
-execute_sql "sql/04_ml_feature_engineering.sql" "Setting up feature engineering"
-execute_sql "sql/05_ml_training_prep.sql" "Preparing training data (table structure)"
+echo -e "${BLUE}═══ Phase 3: ML Pipeline Setup ═══${NC}"
+execute_sql "sql/04_ml_feature_engineering.sql" "Creating feature engineering views"
 execute_sql "sql/06_ml_models.sql" "Creating ML training procedures"
 execute_sql "sql/06b_update_score_assets.sql" "Creating ML scoring procedure"
 
