@@ -65,3 +65,6 @@ cv_chunk_*.sql
 REORGANIZATION_PLAN.md
 REORGANIZATION_COMPLETE.md
 
+
+# Generated SQL scripts (dynamically created during deployment)
+python/data_generators/load_unstructured_data_full.sql
