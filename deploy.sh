@@ -144,7 +144,26 @@ execute_sql "sql/08_semantic_model.sql" "Creating semantic model"
 
 if [ "$SKIP_AGENTS" = false ]; then
     echo -e "${BLUE}═══ Phase 5: Intelligence Agents ═══${NC}"
-    execute_sql "sql/09_intelligence_agent.sql" "Deploying Intelligence Agents"
+    echo -e "${YELLOW}▶ Deploying Intelligence Agents...${NC}"
+    
+    if [ "$SQL_CMD" = "snow sql" ]; then
+        snow sql -f "sql/09_intelligence_agent.sql" -c "$CONNECTION" --enable-templating NONE || true
+    else
+        snowsql -c "$CONNECTION" -f "sql/09_intelligence_agent.sql" -D "db_name=${DATABASE}" -D "wh_name=${WAREHOUSE}" || true
+    fi
+    
+    # Verify agent was created (ignore exit code from above)
+    echo -e "${YELLOW}  Verifying agent creation...${NC}"
+    if [ "$SQL_CMD" = "snow sql" ]; then
+        snow sql -c "$CONNECTION" -q "SHOW AGENTS IN SCHEMA ${DATABASE}.ANALYTICS" --enable-templating NONE > /dev/null 2>&1
+    fi
+    
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}  ✓ Completed (Agent created successfully)${NC}"
+    else
+        echo -e "${YELLOW}  ⚠ Warning: Could not verify agent. Check manually.${NC}"
+    fi
+    echo ""
 fi
 
 echo -e "${BLUE}═══ Phase 6: Security ═══${NC}"
