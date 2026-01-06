@@ -170,6 +170,25 @@ echo -e "${BLUE}═══ Phase 6: Security ═══${NC}"
 execute_sql "sql/10_security_roles.sql" "Configuring security roles"
 
 echo -e "${BLUE}═══ Phase 7: Data Loading ═══${NC}"
+
+# Upload structured data files to Snowflake stages
+echo -e "${YELLOW}▶ Uploading structured data files to Snowflake stages...${NC}"
+if [ "$SQL_CMD" = "snow sql" ]; then
+    snow sql -c "$CONNECTION" -q "
+        USE DATABASE ${DATABASE};
+        USE SCHEMA RAW;
+        PUT file://generated_data/*.csv @ASSET_DATA_STAGE AUTO_COMPRESS=TRUE OVERWRITE=TRUE;
+        PUT file://generated_data/*.json @SENSOR_DATA_STAGE AUTO_COMPRESS=TRUE OVERWRITE=TRUE;
+    " --enable-templating NONE > /dev/null 2>&1
+fi
+
+if [ $? -eq 0 ]; then
+    echo -e "${GREEN}  ✓ Files uploaded to stages${NC}"
+else
+    echo -e "${RED}  ✗ Failed to upload files${NC}"
+    exit 1
+fi
+
 execute_sql "sql/11_load_structured_data.sql" "Loading structured data"
 
 # Generate and load unstructured data using Python
