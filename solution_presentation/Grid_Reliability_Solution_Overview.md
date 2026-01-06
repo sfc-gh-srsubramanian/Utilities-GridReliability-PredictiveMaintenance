@@ -219,10 +219,15 @@ The following is an **illustrative example** for a mid-sized utility with 5,000+
 
 ### Snowflake Intelligence Agents
 
-**Grid Intelligence Agent**
+**Grid Reliability Intelligence Agent**
 - Natural language queries across structured and unstructured data
 - Integrated with Cortex Search for document retrieval
 - Semantic model for business-friendly queries
+
+**Cortex Search Services (3 Total):**
+- DOCUMENT_SEARCH_SERVICE - Unified search across all document types
+- MAINTENANCE_LOG_SEARCH - Dedicated search for maintenance logs
+- TECHNICAL_MANUAL_SEARCH - Dedicated search for technical manuals
 
 **Example Questions:**
 - "Which transformers have high failure probability and recent maintenance logs indicating oil degradation?"
@@ -233,10 +238,11 @@ The following is an **illustrative example** for a mid-sized utility with 5,000+
 
 ### Semantic Views
 
-**GRID_ASSET_RELIABILITY_VIEW**
+**GRID_RELIABILITY_ANALYTICS**
 - Asset health, sensor readings, ML predictions, maintenance history
 - Business-friendly column names and aggregations
 - Optimized for natural language queries
+- Enables Cortex Analyst text-to-SQL conversion
 
 ---
 
