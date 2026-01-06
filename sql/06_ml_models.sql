@@ -144,7 +144,7 @@ def train_models(session: snowpark.Session) -> str:
                 TRAINING_DATE, MODEL_OBJECT, FEATURE_SCHEMA, HYPERPARAMETERS,
                 TRAINING_METRICS, STATUS, CREATED_BY
             )
-            VALUES (
+            SELECT 
                 '{model_id}',
                 'Transformer Failure Classifier',
                 'CLASSIFICATION',
@@ -157,7 +157,6 @@ def train_models(session: snowpark.Session) -> str:
                 PARSE_JSON('{json.dumps(xgb_metrics)}'),
                 'PRODUCTION',
                 'TRAIN_PROCEDURE'
-            )
         """).collect()
         
         # Save feature importance
@@ -215,7 +214,7 @@ def train_models(session: snowpark.Session) -> str:
                 TRAINING_DATE, MODEL_OBJECT, FEATURE_SCHEMA, HYPERPARAMETERS,
                 TRAINING_METRICS, STATUS, CREATED_BY
             )
-            VALUES (
+            SELECT
                 '{model_id}',
                 'Transformer Anomaly Detector',
                 'ANOMALY',
@@ -228,7 +227,6 @@ def train_models(session: snowpark.Session) -> str:
                 PARSE_JSON('{json.dumps(iso_metrics)}'),
                 'PRODUCTION',
                 'TRAIN_PROCEDURE'
-            )
         """).collect()
         
         results["models"]["isolation_forest"] = {
@@ -277,7 +275,7 @@ def train_models(session: snowpark.Session) -> str:
                     TRAINING_DATE, MODEL_OBJECT, FEATURE_SCHEMA, HYPERPARAMETERS,
                     TRAINING_METRICS, STATUS, CREATED_BY
                 )
-                VALUES (
+                SELECT
                     '{model_id}',
                     'Transformer RUL Predictor',
                     'REGRESSION',
@@ -290,7 +288,6 @@ def train_models(session: snowpark.Session) -> str:
                     PARSE_JSON('{json.dumps(lr_metrics)}'),
                     'PRODUCTION',
                     'TRAIN_PROCEDURE'
-                )
             """).collect()
             
             results["models"]["linear_rul"] = {
