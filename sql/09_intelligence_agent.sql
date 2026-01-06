@@ -570,11 +570,11 @@ and Miami-Dade County (most high-risk assets and customer exposure)."
 -- SCRIPT COMPLETE
 -- =============================================================================
 
-SELECT 'Intelligence Agent created successfully!' as STATUS;
-SELECT 'Agent Name: Grid Reliability Intelligence Agent' as AGENT;
-SELECT 'Model: Auto (Snowflake selects best model)' as MODEL;
-SELECT 'Access: Snowflake UI → Projects → Intelligence → Agents' as HOW_TO_USE;
-SELECT 'Tools: Cortex Analyst (Text-to-SQL) + 3x Cortex Search Services (Documents)' as CAPABILITIES;
-SELECT 'Features: Query structured analytics + Search maintenance logs & technical manuals' as FEATURES;
+SELECT 'Intelligence Agent created successfully' as STATUS;
+SELECT 'Grid Reliability Intelligence Agent' as AGENT_NAME;
+SELECT 'Auto (Snowflake selects best model)' as ORCHESTRATION_MODEL;
+SELECT 'Snowflake UI - Projects - Intelligence - Agents' as HOW_TO_ACCESS;
+SELECT 'Cortex Analyst Text-to-SQL + 3 Cortex Search Services' as AGENT_TOOLS;
+SELECT 'Query structured analytics + Search maintenance logs and technical manuals' as CAPABILITIES;
 
 
