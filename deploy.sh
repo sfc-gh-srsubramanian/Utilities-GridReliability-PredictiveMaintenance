@@ -171,7 +171,46 @@ execute_sql "sql/10_security_roles.sql" "Configuring security roles"
 
 echo -e "${BLUE}═══ Phase 7: Data Loading ═══${NC}"
 execute_sql "sql/11_load_structured_data.sql" "Loading structured data"
-execute_sql "sql/12_load_unstructured_data.sql" "Loading unstructured data"
+
+# Generate and load unstructured data using Python
+echo -e "${YELLOW}▶ Generating unstructured data files...${NC}"
+cd python/data_generators
+
+# Run all data generators
+echo -e "${YELLOW}  → Generating maintenance logs...${NC}"
+python3 generate_maintenance_logs.py > /dev/null 2>&1
+echo -e "${YELLOW}  → Generating technical manuals...${NC}"
+python3 generate_technical_manuals.py > /dev/null 2>&1
+echo -e "${YELLOW}  → Generating visual inspections...${NC}"
+python3 generate_visual_inspections.py > /dev/null 2>&1
+echo -e "${GREEN}  ✓ Data files generated${NC}"
+
+echo -e "${YELLOW}  → Creating SQL loading script...${NC}"
+python3 load_unstructured_full.py > /dev/null 2>&1
+if [ $? -eq 0 ]; then
+    echo -e "${GREEN}  ✓ Generated unstructured data SQL${NC}"
+    
+    echo -e "${YELLOW}▶ Loading unstructured data into Snowflake...${NC}"
+    if [ "$SQL_CMD" = "snow sql" ]; then
+        snow sql -f load_unstructured_data_full.sql -c "$CONNECTION" --enable-templating NONE
+    else
+        snowsql -c "$CONNECTION" -f load_unstructured_data_full.sql
+    fi
+    
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}  ✓ Unstructured data loaded${NC}"
+    else
+        echo -e "${RED}  ✗ Failed to load unstructured data${NC}"
+        exit 1
+    fi
+else
+    echo -e "${RED}  ✗ Failed to generate unstructured data SQL${NC}"
+    exit 1
+fi
+cd ../..
+
+# Create Cortex Search Services
+execute_sql "sql/12_load_unstructured_data.sql" "Creating Cortex Search Services"
 
 echo ""
 echo -e "${GREEN}╔════════════════════════════════════════════════════════════════╗${NC}"
