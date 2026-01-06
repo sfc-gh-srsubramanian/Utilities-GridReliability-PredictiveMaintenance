@@ -78,3 +78,6 @@ technical_manuals_metadata.json
 visual_inspections_metadata.json
 cv_detections.json
 load_unstructured_data_full.sql
+
+# Generated data files (recreated during deployment)
+generated_data/
