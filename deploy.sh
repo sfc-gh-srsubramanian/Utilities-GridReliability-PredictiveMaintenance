@@ -291,9 +291,20 @@ echo -e "${BLUE}═══ Phase 9: Streamlit Dashboard Deployment ═══${NC}
 # First, create the stage and Streamlit app definition
 execute_sql "sql/10_streamlit_dashboard.sql" "Creating Streamlit Stage and App"
 
-# Then, upload the dashboard file to the stage
-echo -e "${YELLOW}▶ Uploading Streamlit dashboard file...${NC}"
+# Then, upload the environment file and dashboard file to the stage
+echo -e "${YELLOW}▶ Uploading Streamlit environment and dashboard files...${NC}"
 cd python/dashboard
+
+# Upload environment.yml (contains package dependencies like plotly, numpy)
+snow sql -c "$CONNECTION" -q "PUT file://environment.yml @UTILITIES_GRID_RELIABILITY.ANALYTICS.STREAMLIT_STAGE AUTO_COMPRESS=FALSE OVERWRITE=TRUE" --enable-templating NONE
+if [ $? -eq 0 ]; then
+    echo -e "${GREEN}  ✓ Environment file uploaded${NC}"
+else
+    echo -e "${RED}  ✗ Failed to upload environment file${NC}"
+    echo -e "${YELLOW}  ⚠️  Dashboard may not have required packages${NC}"
+fi
+
+# Upload Python dashboard file
 snow sql -c "$CONNECTION" -q "PUT file://grid_reliability_dashboard.py @UTILITIES_GRID_RELIABILITY.ANALYTICS.STREAMLIT_STAGE AUTO_COMPRESS=FALSE OVERWRITE=TRUE" --enable-templating NONE
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}  ✓ Dashboard file uploaded${NC}"

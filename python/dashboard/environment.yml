@@ -1,0 +1,14 @@
+# Snowflake Environment Specification for Streamlit App
+# This file specifies the Python packages required by the Grid Reliability Dashboard
+
+name: streamlit
+channels:
+  - snowflake
+dependencies:
+  - python=3.11
+  - streamlit
+  - snowflake-snowpark-python
+  - pandas
+  - numpy
+  - plotly
+

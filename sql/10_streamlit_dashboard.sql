@@ -32,6 +32,8 @@ CREATE STAGE IF NOT EXISTS STREAMLIT_STAGE
 -- ============================================================================
 -- CREATE STREAMLIT APP
 -- ============================================================================
+-- Note: The environment.yml file specifies required Python packages (plotly, numpy, etc.)
+-- It must be uploaded to the stage before creating the Streamlit app
 
 CREATE OR REPLACE STREAMLIT UTILITIES_GRID_RELIABILITY.ANALYTICS.GRID_RELIABILITY_DASHBOARD
   ROOT_LOCATION = '@UTILITIES_GRID_RELIABILITY.ANALYTICS.STREAMLIT_STAGE'
