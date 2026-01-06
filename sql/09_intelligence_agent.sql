@@ -567,22 +567,9 @@ and Miami-Dade County (most high-risk assets and customer exposure)."
 */
 
 -- =============================================================================
--- DEPLOYMENT COMPLETE
+-- Intelligence Agent Deployment Complete
+-- Access: Snowflake UI > Projects > Intelligence > Agents
+-- Agent: Grid Reliability Intelligence Agent
 -- =============================================================================
-/*
-Intelligence Agent successfully deployed!
-
-Agent Name: Grid Reliability Intelligence Agent  
-Orchestration Model: Auto (Snowflake selects best)
-Access: Snowflake UI > Projects > Intelligence > Agents
-Tools: Cortex Analyst (Text-to-SQL) + 3 Cortex Search Services
-Capabilities: Query structured analytics + Search maintenance logs and manuals
-
-Sample Questions:
-- "What's the status of our grid assets today?"
-- "Show me all critical assets in Miami-Dade county"
-- "Find maintenance logs for transformer T-SS047-001"
-- "What do technical manuals say about oil temperature thresholds?"
-*/
 
 
