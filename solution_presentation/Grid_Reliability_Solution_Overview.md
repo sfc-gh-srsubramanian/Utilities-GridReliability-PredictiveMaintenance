@@ -6,14 +6,14 @@
 
 ## Executive Summary
 
-The Grid Reliability & Predictive Maintenance Platform is a comprehensive, AI-powered solution built on Snowflake that enables utilities to predict equipment failures, optimize maintenance schedules, and maximize asset reliability. By leveraging machine learning, natural language AI agents, and real-time analytics across both structured and unstructured data, utilities can transition from reactive to predictive maintenance, reducing outages, extending asset life, and delivering measurable improvements in reliability metrics (SAIDI/SAIFI).
+The Grid Reliability & Predictive Maintenance Platform is a comprehensive, AI (Artificial Intelligence)-powered solution built on Snowflake that enables utilities to predict equipment failures, optimize maintenance schedules, and maximize asset reliability. By leveraging machine learning, natural language AI agents, and real-time analytics across both structured and unstructured data, utilities can transition from reactive to predictive maintenance, reducing outages, extending asset life, and delivering measurable improvements in reliability metrics (SAIDI/SAIFI - System Average Interruption Duration Index / System Average Interruption Frequency Index).
 
 **Key Capabilities:**
 - 360-degree asset health monitoring with comprehensive sensor intelligence
 - Machine learning models for failure prediction and remaining useful life (RUL) estimation
-- Unstructured data integration (maintenance logs, technical manuals, visual inspections, CV detections)
+- Unstructured data integration (maintenance logs, technical manuals, visual inspections, CV (Computer Vision) detections)
 - Natural language querying via Snowflake Intelligence Agents
-- Unified analytics across IT and OT data systems
+- Unified analytics across IT (Information Technology) and OT (Operational Technology) data systems
 - Real-time insights for proactive maintenance planning
 
 ---
@@ -35,7 +35,7 @@ Utilities today manage increasingly complex grid infrastructure while facing unp
 - Average transformer failure: $385K cost, 4.2 hours outage, 8,500 customers affected*
 
 **Data Silos Prevent Intelligence**
-- OT sensor data trapped in SCADA systems
+- OT sensor data trapped in SCADA (Supervisory Control and Data Acquisition) systems
 - IT asset data in separate enterprise systems  
 - Maintenance logs and technical manuals in unstructured formats
 - Visual inspection data (drone, thermal imaging) not analyzed
@@ -48,7 +48,7 @@ Utilities today manage increasingly complex grid infrastructure while facing unp
 
 **Climate & Load Growth**
 - Extreme weather events increasing thermal stress
-- EV adoption and electrification driving unprecedented load growth
+- EV (Electric Vehicle) adoption and electrification driving unprecedented load growth
 - Severe weather requiring more resilient infrastructure
 
 > *Statistics represent industry averages compiled from: U.S. Department of Energy Grid Modernization Reports, Electric Power Research Institute (EPRI) Asset Management Studies, and utility industry surveys. Specific metrics vary by utility and region.
@@ -68,7 +68,7 @@ The platform implements a modern **Medallion Architecture** across Snowflake:
 ![Medallion Architecture](images/medallion_architecture.png)
 
 **RAW Layer** - Data ingestion from all asset touchpoints:
-- SCADA sensor data (temperature, load, vibration, acoustic, DGA)
+- SCADA sensor data (temperature, load, vibration, acoustic, DGA (Dissolved Gas Analysis))
 - Asset master data (transformers, circuit breakers, substations)
 - Maintenance history and work orders
 - Failure event records
@@ -79,9 +79,9 @@ The platform implements a modern **Medallion Architecture** across Snowflake:
 - Thermal rise calculations
 - Load utilization patterns
 - Maintenance frequency analysis
-- Document text extraction and NLP processing
+- Document text extraction and NLP (Natural Language Processing) processing
 
-**ML Layer** - Machine learning models:
+**ML (Machine Learning) Layer** - Machine learning models:
 - XGBoost classifier for failure prediction
 - Isolation Forest for anomaly detection
 - Linear regression for remaining useful life (RUL) estimation
@@ -90,14 +90,14 @@ The platform implements a modern **Medallion Architecture** across Snowflake:
 **ANALYTICS Layer** - Business-ready aggregations:
 - Asset health scorecards
 - Cost avoidance calculations
-- Reliability metrics (SAIDI, SAIFI, CAIDI)
+- Reliability metrics (SAIDI, SAIFI, CAIDI (Customer Average Interruption Duration Index))
 - High-risk asset monitoring
 - Maintenance optimization insights
 
 **UNSTRUCTURED Layer** - Document intelligence:
 - Maintenance log documents (PDFs with NLP-ready text)
 - Technical manuals (equipment specifications, troubleshooting guides)
-- Visual inspection records (drone, thermal, visual, LiDAR)
+- Visual inspection records (drone, thermal, visual, LiDAR (Light Detection and Ranging))
 - Computer vision detections (corrosion, cracks, hotspots, oil leaks)
 
 **Semantic Layer** - Natural language interface:
@@ -107,7 +107,7 @@ The platform implements a modern **Medallion Architecture** across Snowflake:
 
 ---
 
-## 3. Business Value & ROI
+## 3. Business Value & ROI (Return on Investment)
 
 ### Potential Impact (Industry Benchmarks)
 
@@ -123,7 +123,7 @@ The platform implements a modern **Medallion Architecture** across Snowflake:
 > - Deloitte - "Predictive Maintenance and the Smart Factory" Report
 > - McKinsey - "Maintenance and Reliability Best Practices" Analysis
 > - GE Digital - Gas Turbine Fleet Predictive Maintenance Results (64% forced outage reduction)
-> - IEEE Power & Energy Society - Grid Modernization Case Studies
+> - IEEE (Institute of Electrical and Electronics Engineers) Power & Energy Society - Grid Modernization Case Studies
 
 **Cost Avoidance Potential**
 - **$15M-$30M annual savings** from prevented failures and optimized maintenance (varies by utility size)
@@ -238,7 +238,7 @@ The following is an **illustrative example** for a mid-sized utility with 5,000+
 **281 Computer Vision Detections**
 - Automated detection of: Corrosion, cracks, hotspots, oil leaks, vegetation encroachment
 - Severity scoring and confidence levels
-- GPS coordinates for field technician navigation
+- GPS (Global Positioning System) coordinates for field technician navigation
 
 ### Snowflake Intelligence Agents
 
@@ -377,8 +377,8 @@ The following is an **illustrative example** for a mid-sized utility with 5,000+
 
 **Ingestion:**
 - SCADA sensor data (streaming or batch)
-- CSV/JSON file loads
-- REST API integration for real-time data
+- CSV (Comma-Separated Values) / JSON (JavaScript Object Notation) file loads
+- REST API (Application Programming Interface) integration for real-time data
 - Document upload (PDFs, images) to Snowflake stages
 
 **Processing:**
@@ -401,7 +401,7 @@ The following is an **illustrative example** for a mid-sized utility with 5,000+
 - Snowsight for visualization
 
 **Security:**
-- Role-based access control (RBAC)
+- Role-based access control (RBAC - Role-Based Access Control)
 - Column-level security for sensitive data
 - Audit logging and compliance
 
@@ -426,7 +426,7 @@ The following is an **illustrative example** for a mid-sized utility with 5,000+
 - Preventable failures detected
 - Maintenance cost per asset
 - Emergency vs. planned maintenance ratio
-- Mean time between failures (MTBF)
+- Mean time between failures (MTBF - Mean Time Between Failures)
 
 **Operational Metrics:**
 - Asset availability
@@ -437,7 +437,7 @@ The following is an **illustrative example** for a mid-sized utility with 5,000+
 **Business Metrics:**
 - Cost avoidance
 - Regulatory compliance score
-- Customer satisfaction (NPS)
+- Customer satisfaction (NPS - Net Promoter Score)
 - Rate case approval success
 
 ---
@@ -454,7 +454,7 @@ The following is an **illustrative example** for a mid-sized utility with 5,000+
 ### ML Model Performance
 - **Failure Prediction Accuracy**: 87% (demo data)
 - **Anomaly Detection Precision**: 82%
-- **RUL Estimation MAE**: 12 days
+- **RUL Estimation MAE (Mean Absolute Error)**: 12 days
 
 ### Platform Requirements
 - **Snowflake Edition**: Enterprise or higher
