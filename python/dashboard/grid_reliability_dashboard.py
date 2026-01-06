@@ -158,9 +158,9 @@ def load_sensor_history(_session, asset_id, days=30):
     query = f"""
     SELECT 
         READING_TIMESTAMP,
-        OIL_TEMP_C as OIL_TEMPERATURE_C,
-        LOAD_MW * 1000 as LOAD_CURRENT_A,
-        DISSOLVED_GAS_H2_PPM as DISSOLVED_H2_PPM,
+        OIL_TEMPERATURE_C,
+        LOAD_CURRENT_A,
+        DISSOLVED_H2_PPM,
         VIBRATION_MM_S,
         POWER_FACTOR
     FROM UTILITIES_GRID_RELIABILITY.RAW.SENSOR_READINGS
