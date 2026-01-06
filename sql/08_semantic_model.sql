@@ -136,8 +136,8 @@ $$;
 -- Show semantic view structure
 DESCRIBE SEMANTIC VIEW GRID_RELIABILITY_ANALYTICS;
 
--- Show all tables in semantic view
-SHOW TABLES IN SEMANTIC VIEW GRID_RELIABILITY_ANALYTICS;
+-- Note: SHOW TABLES IN SEMANTIC VIEW is not a valid Snowflake command
+-- The structure is visible in the DESCRIBE output above
 
 -- Documentation for users
 SELECT 
