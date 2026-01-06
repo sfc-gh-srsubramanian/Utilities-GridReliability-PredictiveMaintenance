@@ -68,3 +68,13 @@ REORGANIZATION_COMPLETE.md
 
 # Generated SQL scripts (dynamically created during deployment)
 python/data_generators/load_unstructured_data_full.sql
+
+# Generated data files
+python/data_generators/generated_*
+*.pdf
+*.json
+maintenance_logs_metadata.json
+technical_manuals_metadata.json
+visual_inspections_metadata.json
+cv_detections.json
+load_unstructured_data_full.sql

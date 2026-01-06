@@ -232,6 +232,25 @@ cd ../..
 execute_sql "sql/12_load_unstructured_data.sql" "Creating Cortex Search Services"
 
 echo ""
+echo -e "${BLUE}═══ Phase 8: Streamlit Dashboard Deployment ═══${NC}"
+
+echo -e "${YELLOW}▶ Uploading Streamlit dashboard file...${NC}"
+cd python/dashboard
+snow sql -c "$CONNECTION" -q "PUT file://grid_reliability_dashboard.py @UTILITIES_GRID_RELIABILITY.ANALYTICS.STREAMLIT_STAGE AUTO_COMPRESS=FALSE OVERWRITE=TRUE" --enable-templating NONE
+if [ $? -eq 0 ]; then
+    echo -e "${GREEN}  ✓ Dashboard file uploaded${NC}"
+else
+    echo -e "${RED}  ✗ Failed to upload dashboard file${NC}"
+    echo -e "${YELLOW}  ⚠️  Continuing deployment...${NC}"
+fi
+cd ../..
+
+execute_sql "sql/10_streamlit_dashboard.sql" "Deploying Streamlit Dashboard"
+
+echo -e "${GREEN}  ✓ Streamlit Dashboard deployed${NC}"
+echo -e "${BLUE}  ℹ️  Access dashboard via Snowflake UI: Apps → Streamlit${NC}"
+
+echo ""
 echo -e "${GREEN}╔════════════════════════════════════════════════════════════════╗${NC}"
 echo -e "${GREEN}║              ✓ DEPLOYMENT COMPLETED SUCCESSFULLY               ║${NC}"
 echo -e "${GREEN}╚════════════════════════════════════════════════════════════════╝${NC}"
