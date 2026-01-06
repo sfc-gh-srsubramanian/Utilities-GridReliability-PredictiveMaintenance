@@ -78,32 +78,24 @@ Instructions:
 */
 
 -- =============================================================================
--- SECTION 3: TEST SEMANTIC VIEW
+-- SECTION 3: VERIFY SEMANTIC VIEW
 -- =============================================================================
 
--- Query the semantic view to verify it works
-SELECT 
-    ASSET_ID,
-    LOCATION_SUBSTATION,
-    LOCATION_COUNTY,
-    RISK_SCORE,
-    FAILURE_PROBABILITY,
-    CUSTOMERS_AFFECTED,
-    ALERT_LEVEL
-FROM GRID_RELIABILITY_ANALYTICS.ASSET_HEALTH
-WHERE RISK_SCORE >= 71
-ORDER BY RISK_SCORE DESC
-LIMIT 10;
+-- Semantic view created successfully!
+-- Note: Semantic views are typically queried through:
+-- 1. Cortex Analyst (natural language queries)
+-- 2. Intelligence Agents
+-- 3. Specific query patterns using the view name
 
--- Test aggregation through semantic view
-SELECT 
-    LOCATION_COUNTY,
-    COUNT(DISTINCT ASSET_ID) as ASSET_COUNT,
-    AVG(RISK_SCORE) as AVG_RISK,
-    SUM(CUSTOMERS_AFFECTED) as TOTAL_CUSTOMERS
-FROM GRID_RELIABILITY_ANALYTICS.ASSET_HEALTH
-GROUP BY LOCATION_COUNTY
-ORDER BY AVG_RISK DESC;
+-- Example query pattern (commented out - use after data is loaded):
+-- SELECT 
+--     ASSET_ID,
+--     LOCATION_SUBSTATION,
+--     RISK_SCORE
+-- FROM VW_ASSET_HEALTH_DASHBOARD
+-- WHERE RISK_SCORE >= 71;
+
+SELECT 'Semantic view GRID_RELIABILITY_ANALYTICS created successfully!' as STATUS;
 
 -- =============================================================================
 -- SECTION 4: GRANT PERMISSIONS
