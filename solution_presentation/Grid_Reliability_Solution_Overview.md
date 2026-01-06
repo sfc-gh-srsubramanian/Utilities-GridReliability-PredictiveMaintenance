@@ -137,6 +137,29 @@ The platform implements a modern **Medallion Architecture** across Snowflake:
 - **Up to 64% reduction** in forced outages (documented in GE gas turbine fleet study)
 - **60-80% of failures** detectable 14-30 days in advance with mature models
 
+### Industry Context: SAIDI/SAIFI Benchmarks
+
+**U.S. National Averages (2023, EIA):**
+- **SAIDI:** 118.4 minutes/customer/year
+- **SAIFI:** 0.999 interruptions/customer/year
+
+**This Platform's 15-25% Improvement:**
+- **SAIDI:** 118 → 89-100 minutes (18-29 min. reduction/customer)
+- **SAIFI:** 1.0 → 0.75-0.85 interruptions (15-25% fewer outages)
+
+**State Performance Benchmarks (2023, EIA):**
+| Performance Tier | State | SAIDI (min) | SAIFI |
+|-----------------|-------|-------------|-------|
+| Best | District of Columbia | 33.3 | - |
+| Top Quartile | Connecticut | 164.6 | 0.87 |
+| National Average | U.S. Average | 118.4 | 1.00 |
+| Bottom Quartile | Maine | 1,863 | 3.31 |
+
+**Top Utility Example:**
+- Salt River Project (AZ): 69.3 min SAIDI, 0.69 SAIFI - Ranked #3 nationwide
+
+*Source: U.S. Energy Information Administration (EIA) Form EIA-861, 2023*
+
 **Operational Efficiency Potential**
 - **40-60% improvement** in maintenance workforce productivity
 - **50-70% faster** response to asset degradation indicators
