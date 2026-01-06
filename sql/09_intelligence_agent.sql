@@ -161,16 +161,47 @@ instructions:
       answer: "I'll analyze risk scores and failure rates across these three manufacturers."
     - question: "Which substations should I prioritize for inspection this month?"
       answer: "I'll rank substations by total risk exposure and customer impact."
+    - question: "Find maintenance logs for transformer T-SS047-001"
+      answer: "I'll search maintenance documentation for this specific transformer."
+    - question: "What do the technical manuals say about oil temperature thresholds?"
+      answer: "I'll search technical documentation for oil temperature specifications."
+    - question: "Show me recent maintenance reports mentioning overheating"
+      answer: "I'll search maintenance logs for documents discussing overheating issues."
+    - question: "Find all maintenance logs from last month with high severity"
+      answer: "I'll search maintenance documentation filtered by date and severity level."
+    - question: "What are the installation procedures for ABB transformers?"
+      answer: "I'll search technical manuals for ABB installation procedures."
 
 tools:
   - tool_spec:
       type: "cortex_analyst_text_to_sql"
       name: "query_analytics"
       description: "Converts natural language to SQL queries for grid reliability analysis"
+  - tool_spec:
+      type: "cortex_search"
+      name: "search_documents"
+      description: "Searches maintenance logs and technical manuals"
+  - tool_spec:
+      type: "cortex_search"
+      name: "search_maintenance_logs"
+      description: "Searches maintenance logs by asset, technician, or issue"
+  - tool_spec:
+      type: "cortex_search"
+      name: "search_technical_manuals"
+      description: "Searches technical manuals and equipment documentation"
 
 tool_resources:
   query_analytics:
     semantic_view: "UTILITIES_GRID_RELIABILITY.ANALYTICS.GRID_RELIABILITY_ANALYTICS"
+  search_documents:
+    name: "UTILITIES_GRID_RELIABILITY.UNSTRUCTURED.DOCUMENT_SEARCH_SERVICE"
+    max_results: 10
+  search_maintenance_logs:
+    name: "UTILITIES_GRID_RELIABILITY.UNSTRUCTURED.MAINTENANCE_LOG_SEARCH"
+    max_results: 10
+  search_technical_manuals:
+    name: "UTILITIES_GRID_RELIABILITY.UNSTRUCTURED.TECHNICAL_MANUAL_SEARCH"
+    max_results: 10
 $$;
 
 -- =============================================================================
@@ -184,8 +215,16 @@ GRANT USAGE ON AGENT ANALYTICS."Grid Reliability Intelligence Agent" TO ROLE GRI
 GRANT USAGE ON AGENT ANALYTICS."Grid Reliability Intelligence Agent" TO ROLE GRID_ANALYST;
 GRANT USAGE ON AGENT ANALYTICS."Grid Reliability Intelligence Agent" TO ROLE GRID_ML_ENGINEER;
 
--- Grant usage on semantic view (already granted in 08_semantic_model.sql)
--- Additional grants can be added here if needed
+-- Grant usage on Cortex Search Services for document search
+GRANT USAGE ON CORTEX SEARCH SERVICE UNSTRUCTURED.DOCUMENT_SEARCH_SERVICE TO ROLE GRID_OPERATOR;
+GRANT USAGE ON CORTEX SEARCH SERVICE UNSTRUCTURED.DOCUMENT_SEARCH_SERVICE TO ROLE GRID_ANALYST;
+GRANT USAGE ON CORTEX SEARCH SERVICE UNSTRUCTURED.DOCUMENT_SEARCH_SERVICE TO ROLE GRID_ML_ENGINEER;
+
+GRANT USAGE ON CORTEX SEARCH SERVICE UNSTRUCTURED.MAINTENANCE_LOG_SEARCH TO ROLE GRID_OPERATOR;
+GRANT USAGE ON CORTEX SEARCH SERVICE UNSTRUCTURED.MAINTENANCE_LOG_SEARCH TO ROLE GRID_ANALYST;
+
+GRANT USAGE ON CORTEX SEARCH SERVICE UNSTRUCTURED.TECHNICAL_MANUAL_SEARCH TO ROLE GRID_ANALYST;
+GRANT USAGE ON CORTEX SEARCH SERVICE UNSTRUCTURED.TECHNICAL_MANUAL_SEARCH TO ROLE GRID_ML_ENGINEER;
 
 -- =============================================================================
 -- SECTION 4: TEST THE AGENT - SAMPLE QUESTIONS
@@ -553,6 +592,7 @@ SELECT 'Intelligence Agent created successfully!' as STATUS;
 SELECT 'Agent Name: Grid Reliability Intelligence Agent' as AGENT;
 SELECT 'Model: Auto (Snowflake selects best model)' as MODEL;
 SELECT 'Access: Snowflake UI → Projects → Intelligence → Agents' as HOW_TO_USE;
-SELECT 'Tools: Cortex Analyst (Text-to-SQL via Semantic View)' as CAPABILITIES;
+SELECT 'Tools: Cortex Analyst (Text-to-SQL) + 3x Cortex Search Services (Documents)' as CAPABILITIES;
+SELECT 'Features: Query structured analytics + Search maintenance logs & technical manuals' as FEATURES;
 
 

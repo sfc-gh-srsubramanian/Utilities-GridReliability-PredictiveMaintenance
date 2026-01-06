@@ -204,14 +204,10 @@ SELECT
     FILE_PATH
 FROM TECHNICAL_MANUALS;
 
--- Note: Cortex Search Services commented out - requires Cortex Intelligence features
--- Uncomment and deploy separately when Cortex features are enabled in your account
-
-/*
 -- Create Cortex Search Service for documents
 CREATE OR REPLACE CORTEX SEARCH SERVICE DOCUMENT_SEARCH_SERVICE
 ON SEARCH_TEXT
-ATTRIBUTES DOCUMENT_TYPE, ASSET_ID, AUTHOR, CATEGORY, SEVERITY_LEVEL, FAILURE_OCCURRED::VARCHAR, DOC_DATE
+ATTRIBUTES DOCUMENT_TYPE, ASSET_ID, AUTHOR, CATEGORY, SEVERITY_LEVEL, DOC_DATE
 WAREHOUSE = GRID_RELIABILITY_WH
 TARGET_LAG = '1 hour'
 AS (
@@ -223,13 +219,11 @@ AS (
         AUTHOR,
         CATEGORY,
         SEVERITY_LEVEL,
-        FAILURE_OCCURRED::VARCHAR as FAILURE_OCCURRED,
-        DOC_DATE,
-        FILE_PATH
+        DOC_DATE
     FROM DOCUMENT_SEARCH_INDEX
 );
 
--- Create specialized search services  
+-- Create specialized search service for maintenance logs
 CREATE OR REPLACE CORTEX SEARCH SERVICE MAINTENANCE_LOG_SEARCH
 ON SEARCH_TEXT
 ATTRIBUTES ASSET_ID, AUTHOR, CATEGORY, SEVERITY_LEVEL, DOC_DATE
@@ -240,14 +234,15 @@ AS (
         ID,
         SEARCH_TEXT,
         ASSET_ID,
-        AUTHOR as TECHNICIAN,
-        CATEGORY as MAINTENANCE_TYPE,
+        AUTHOR,
+        CATEGORY,
         SEVERITY_LEVEL,
-        DOC_DATE as MAINTENANCE_DATE
+        DOC_DATE
     FROM DOCUMENT_SEARCH_INDEX
     WHERE DOCUMENT_TYPE = 'MAINTENANCE_LOG'
 );
 
+-- Create specialized search service for technical manuals  
 CREATE OR REPLACE CORTEX SEARCH SERVICE TECHNICAL_MANUAL_SEARCH
 ON SEARCH_TEXT
 ATTRIBUTES AUTHOR, CATEGORY, DOC_DATE
@@ -257,26 +252,28 @@ AS (
     SELECT 
         ID,
         SEARCH_TEXT,
-        AUTHOR as MANUFACTURER,
-        CATEGORY as MANUAL_TYPE,
-        DOC_DATE as PUBLICATION_DATE
+        AUTHOR,
+        CATEGORY,
+        DOC_DATE
     FROM DOCUMENT_SEARCH_INDEX
     WHERE DOCUMENT_TYPE = 'TECHNICAL_MANUAL'
 );
 
 -- Grant permissions to Cortex Search services
 GRANT USAGE ON CORTEX SEARCH SERVICE DOCUMENT_SEARCH_SERVICE TO ROLE GRID_ANALYST;
+GRANT USAGE ON CORTEX SEARCH SERVICE DOCUMENT_SEARCH_SERVICE TO ROLE GRID_OPERATOR;
 GRANT USAGE ON CORTEX SEARCH SERVICE MAINTENANCE_LOG_SEARCH TO ROLE GRID_ANALYST;
+GRANT USAGE ON CORTEX SEARCH SERVICE MAINTENANCE_LOG_SEARCH TO ROLE GRID_OPERATOR;
 GRANT USAGE ON CORTEX SEARCH SERVICE TECHNICAL_MANUAL_SEARCH TO ROLE GRID_ANALYST;
-*/
+GRANT USAGE ON CORTEX SEARCH SERVICE TECHNICAL_MANUAL_SEARCH TO ROLE GRID_OPERATOR;
 
 -- =============================================================================
 -- COMPLETION STATUS
 -- =============================================================================
 
 SELECT '✅ Unstructured data loading complete!' AS STATUS;
-SELECT 'ℹ️  Cortex Search services commented out - enable separately when needed' AS SEARCH_STATUS;
+SELECT '✅ Cortex Search services deployed!' AS SEARCH_STATUS;
 
--- Next Step: Deploy Cortex Search and Intelligence Agents when Cortex features are enabled
--- Uncomment the Cortex Search Service sections above and run sql/09_intelligence_agent.sql
+-- Next Step: Test the Intelligence Agent with document search capabilities
+-- Navigate to: Snowflake UI → Projects → Intelligence → Agents → Grid Reliability Intelligence Agent
 
