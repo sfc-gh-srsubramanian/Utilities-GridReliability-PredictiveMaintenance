@@ -135,8 +135,9 @@ execute_sql "sql/03_unstructured_data_schema.sql" "Creating unstructured data ta
 
 echo -e "${BLUE}═══ Phase 3: ML Pipeline ═══${NC}"
 execute_sql "sql/04_ml_feature_engineering.sql" "Setting up feature engineering"
-execute_sql "sql/05_ml_training_prep.sql" "Preparing training data"
-execute_sql "sql/06_ml_models.sql" "Creating ML models and scoring"
+execute_sql "sql/05_ml_training_prep.sql" "Preparing training data (table structure)"
+execute_sql "sql/06_ml_models.sql" "Creating ML training procedures"
+execute_sql "sql/06b_update_score_assets.sql" "Creating ML scoring procedure"
 
 echo -e "${BLUE}═══ Phase 4: Analytics Layer ═══${NC}"
 execute_sql "sql/07_business_views.sql" "Creating business analytics views"
@@ -236,7 +237,57 @@ echo -e "${YELLOW}▶ Populating reference data (SCADA_EVENTS, WEATHER_DATA)...$
 execute_sql "sql/13_populate_reference_data.sql" "Loading reference data"
 
 echo ""
-echo -e "${BLUE}═══ Phase 8: Streamlit Dashboard Deployment ═══${NC}"
+echo -e "${BLUE}═══ Phase 8: ML Training & Scoring ═══${NC}"
+
+echo -e "${YELLOW}▶ Preparing training data (generating labeled samples)...${NC}"
+execute_sql "sql/05_ml_training_prep.sql" "Generating ML training data"
+
+echo -e "${YELLOW}▶ Training ML models (this may take 2-3 minutes)...${NC}"
+if [ "$SQL_CMD" = "snow sql" ]; then
+    snow sql -c "$CONNECTION" -q "
+        USE DATABASE ${DATABASE};
+        USE WAREHOUSE ${WAREHOUSE};
+        CALL ML.TRAIN_FAILURE_PREDICTION_MODELS();
+    " --enable-templating NONE
+else
+    snowsql -c "$CONNECTION" -q "
+        USE DATABASE ${DATABASE};
+        USE WAREHOUSE ${WAREHOUSE};
+        CALL ML.TRAIN_FAILURE_PREDICTION_MODELS();
+    "
+fi
+
+if [ $? -eq 0 ]; then
+    echo -e "${GREEN}  ✓ ML models trained successfully${NC}"
+else
+    echo -e "${RED}  ✗ ML training failed${NC}"
+    echo -e "${YELLOW}  ⚠️  Continuing deployment...${NC}"
+fi
+
+echo -e "${YELLOW}▶ Generating predictions for all assets...${NC}"
+if [ "$SQL_CMD" = "snow sql" ]; then
+    snow sql -c "$CONNECTION" -q "
+        USE DATABASE ${DATABASE};
+        USE WAREHOUSE ${WAREHOUSE};
+        CALL ML.SCORE_ASSETS();
+    " --enable-templating NONE
+else
+    snowsql -c "$CONNECTION" -q "
+        USE DATABASE ${DATABASE};
+        USE WAREHOUSE ${WAREHOUSE};
+        CALL ML.SCORE_ASSETS();
+    "
+fi
+
+if [ $? -eq 0 ]; then
+    echo -e "${GREEN}  ✓ Predictions generated successfully${NC}"
+else
+    echo -e "${RED}  ✗ Prediction generation failed${NC}"
+    echo -e "${YELLOW}  ⚠️  Continuing deployment...${NC}"
+fi
+
+echo ""
+echo -e "${BLUE}═══ Phase 9: Streamlit Dashboard Deployment ═══${NC}"
 
 # First, create the stage and Streamlit app definition
 execute_sql "sql/10_streamlit_dashboard.sql" "Creating Streamlit Stage and App"
