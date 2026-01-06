@@ -1,5 +1,5 @@
 # ⚡ Grid Reliability & Predictive Maintenance Platform
-## *Transforming Utility Operations Through AI-Powered Asset Intelligence*
+## *Transforming Utility Operations Through AI (Artificial Intelligence)-Powered Asset Intelligence*
 
 ---
 
@@ -10,9 +10,9 @@ Modern utilities manage complex grid infrastructure while facing unprecedented r
 
 - **Aging infrastructure** - 40% of transformers >20 years old, facing thermal stress and load growth
 - **Reactive maintenance** - 60-70% of failures occur despite calendar-based maintenance schedules
-- **Data silos** - OT sensor data trapped in SCADA, IT asset data in separate systems
+- **Data silos** - OT (Operational Technology) sensor data trapped in SCADA (Supervisory Control and Data Acquisition), IT (Information Technology) asset data in separate systems
 - **Unstructured intelligence gap** - Maintenance logs, technical manuals, and visual inspections not analyzed
-- **Regulatory pressure** - State commissions closely monitor SAIDI/SAIFI metrics with penalties for poor performance
+- **Regulatory pressure** - State commissions closely monitor SAIDI/SAIFI (System Average Interruption Duration Index / System Average Interruption Frequency Index) metrics with penalties for poor performance
 
 ### **The Business Opportunity**
 Industry studies and proven implementations indicate that **AI-powered predictive maintenance platforms** can potentially deliver:
@@ -22,13 +22,13 @@ Industry studies and proven implementations indicate that **AI-powered predictiv
 - 🔧 **40% reduction in maintenance costs** by transitioning from reactive to predictive
 - ⏱️ **5-7 year extension of asset lifespan** through condition-based maintenance
 
-> **Note:** These are industry benchmark ranges based on utility technology ROI studies and proven results from gas turbine predictive maintenance programs. Actual results vary based on asset base, current maintenance maturity, and implementation quality.
+> **Note:** These are industry benchmark ranges based on utility technology ROI (Return on Investment) studies and proven results from gas turbine predictive maintenance programs. Actual results vary based on asset base, current maintenance maturity, and implementation quality.
 
 ### **Our Solution**
 A **comprehensive AI-powered predictive maintenance platform** that:
 - 🔗 **Unifies IT and OT data** into a single source of truth on Snowflake
-- 🧠 **Predicts equipment failures** 14-30 days in advance with ML models
-- 📄 **Analyzes unstructured data** (maintenance logs, manuals, visual inspections, CV detections)
+- 🧠 **Predicts equipment failures** 14-30 days in advance with ML (Machine Learning) models
+- 📄 **Analyzes unstructured data** (maintenance logs, manuals, visual inspections, CV (Computer Vision) detections)
 - 💡 **Provides conversational analytics** through Snowflake Intelligence Agents
 - 📊 **Delivers actionable insights** for maintenance optimization and cost avoidance
 
@@ -63,7 +63,7 @@ snow connection add default
 - ✅ 100 demo assets (transformers, circuit breakers, substations)
 - ✅ 432,000+ sensor readings (30 days @ 5-min intervals)
 - ✅ 192 maintenance records + 10 failure events
-- ✅ 80 maintenance log documents (NLP-ready)
+- ✅ 80 maintenance log documents (NLP (Natural Language Processing)-ready)
 - ✅ 15 technical manuals across 4 equipment types
 - ✅ 150 visual inspection records + 281 CV detections
 - ✅ ML models (XGBoost, Isolation Forest, Linear Regression)
@@ -119,7 +119,7 @@ snow connection add default
 | Data Source | Records | Description |
 |------------|---------|-------------|
 | **Asset Master** | 100 | Transformers, circuit breakers, substations |
-| **Sensor Readings** | 432,000+ | Temperature, load, vibration, DGA, acoustic |
+| **Sensor Readings** | 432,000+ | Temperature, load, vibration, DGA (Dissolved Gas Analysis), acoustic |
 | **Maintenance History** | 192 | Work orders, inspections, repairs |
 | **Failure Events** | 10 | Historical failures with root cause analysis |
 
@@ -128,7 +128,7 @@ snow connection add default
 |------------|---------|-------------|
 | **Maintenance Logs** | 80 | Technician reports with NLP-ready text |
 | **Technical Manuals** | 15 | Equipment specs, troubleshooting guides |
-| **Visual Inspections** | 150 | Drone, thermal, visual, LiDAR imagery |
+| **Visual Inspections** | 150 | Drone, thermal, visual, LiDAR (Light Detection and Ranging) imagery |
 | **CV Detections** | 281 | Corrosion, cracks, hotspots, oil leaks |
 
 ### **ML Models**
@@ -136,7 +136,7 @@ snow connection add default
 |-------|---------|--------|
 | **XGBoost Classifier** | Failure prediction | Probability (0-100%), Alert level |
 | **Isolation Forest** | Anomaly detection | Anomaly score, Flag |
-| **Linear Regression** | Remaining useful life | Predicted RUL in days |
+| **Linear Regression** | Remaining useful life (RUL) | Predicted RUL in days |
 
 ### **AI Capabilities**
 - 🤖 **Snowflake Intelligence Agent** - Natural language queries across structured + unstructured data
@@ -305,7 +305,7 @@ Provide field technicians instant access to technical manuals and historical mai
 Track these KPIs to measure impact:
 
 **Reliability Metrics:**
-- SAIDI, SAIFI, CAIDI scores
+- SAIDI, SAIFI, CAIDI (Customer Average Interruption Duration Index) scores
 - Unplanned outage rate
 - Asset availability
 
@@ -313,12 +313,12 @@ Track these KPIs to measure impact:
 - Preventable failures detected
 - Emergency vs. planned maintenance ratio
 - Maintenance cost per asset
-- Mean time between failures (MTBF)
+- Mean time between failures (MTBF - Mean Time Between Failures)
 
 **Business Metrics:**
 - Cost avoidance (prevented failures)
 - Regulatory compliance score
-- Customer satisfaction (NPS)
+- Customer satisfaction (NPS - Net Promoter Score)
 
 ---
 
@@ -358,7 +358,7 @@ ls -lh generated_data/
 ### **Feedback**
 This is a reference implementation. Adapt it to your specific needs:
 - Modify asset types and sensor parameters
-- Integrate with your SCADA/OMS systems
+- Integrate with your SCADA/OMS (Outage Management System) systems
 - Customize ML models for your failure patterns
 - Extend Intelligence Agent with domain-specific tools
 
