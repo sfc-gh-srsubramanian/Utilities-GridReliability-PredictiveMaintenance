@@ -19,12 +19,19 @@ USE DATABASE UTILITIES_GRID_RELIABILITY;
 USE WAREHOUSE GRID_RELIABILITY_WH;
 
 -- =============================================================================
--- SECTION 1: CREATE CORTEX SEARCH SERVICE (FOR ASSET METADATA)
+-- SECTION 1: CREATE SEMANTIC MODEL STAGE (FOR CORTEX ANALYST)
 -- =============================================================================
 
 USE SCHEMA ANALYTICS;
 
--- Create a table optimized for search
+-- Create stage for semantic model if not exists
+CREATE STAGE IF NOT EXISTS SEMANTIC_MODEL_STAGE
+    COMMENT = 'Storage for semantic model YAML files for Cortex Analyst';
+
+-- Note: Upload your semantic model YAML file to this stage
+-- PUT file:///path/to/grid_reliability_semantic.yaml @SEMANTIC_MODEL_STAGE;
+
+-- Create a table optimized for search (for future Cortex Search integration)
 CREATE OR REPLACE TABLE ASSET_SEARCH_INDEX AS
 SELECT 
     a.ASSET_ID,
@@ -51,8 +58,8 @@ SELECT
         a.LOCATION_SUBSTATION,
         a.LOCATION_CITY,
         a.LOCATION_COUNTY,
-        'Risk Score: ' || p.RISK_SCORE::VARCHAR,
-        'Alert: ' || p.ALERT_LEVEL,
+        'Risk Score: ' || COALESCE(p.RISK_SCORE::VARCHAR, 'N/A'),
+        'Alert: ' || COALESCE(p.ALERT_LEVEL, 'N/A'),
         'Serves ' || a.CUSTOMERS_AFFECTED::VARCHAR || ' customers'
     ) as SEARCH_TEXT
     
@@ -60,23 +67,7 @@ FROM RAW.ASSET_MASTER a
 LEFT JOIN ML.VW_LATEST_PREDICTIONS p ON a.ASSET_ID = p.ASSET_ID
 WHERE a.STATUS = 'ACTIVE';
 
--- Create Cortex Search Service
-CREATE OR REPLACE CORTEX SEARCH SERVICE ASSET_SEARCH_SERVICE
-ON SEARCH_TEXT
-WAREHOUSE = GRID_RELIABILITY_WH
-TARGET_LAG = '1 hour'
-AS (
-    SELECT 
-        ASSET_ID,
-        SEARCH_TEXT,
-        ASSET_TYPE,
-        LOCATION_SUBSTATION,
-        LOCATION_CITY,
-        LOCATION_COUNTY,
-        RISK_SCORE,
-        ALERT_LEVEL
-    FROM ASSET_SEARCH_INDEX
-);
+SELECT 'Asset Search Index created successfully' AS STATUS;
 
 -- =============================================================================
 -- SECTION 2: CREATE SNOWFLAKE INTELLIGENCE AGENT
@@ -173,18 +164,13 @@ instructions:
 
 tools:
   - tool_spec:
-      type: "cortex_search"
-      name: "search_assets"
-  - tool_spec:
       type: "cortex_analyst_text_to_sql"
       name: "query_analytics"
+      description: "Converts natural language to SQL queries for grid reliability analysis"
 
 tool_resources:
-  search_assets:
-    id_column: "ASSET_ID"
-    name: "UTILITIES_GRID_RELIABILITY.ANALYTICS.ASSET_SEARCH_SERVICE"
   query_analytics:
-    semantic_model_file: "@UTILITIES_GRID_RELIABILITY.ANALYTICS.SEMANTIC_MODEL_STAGE/grid_reliability_semantic.yaml"
+    semantic_view: "UTILITIES_GRID_RELIABILITY.ANALYTICS.GRID_RELIABILITY_ANALYTICS"
 $$;
 
 -- =============================================================================
@@ -198,9 +184,8 @@ GRANT USAGE ON AGENT ANALYTICS."Grid Reliability Intelligence Agent" TO ROLE GRI
 GRANT USAGE ON AGENT ANALYTICS."Grid Reliability Intelligence Agent" TO ROLE GRID_ANALYST;
 GRANT USAGE ON AGENT ANALYTICS."Grid Reliability Intelligence Agent" TO ROLE GRID_ML_ENGINEER;
 
--- Grant usage on Cortex Search Service
-GRANT USAGE ON CORTEX SEARCH SERVICE ANALYTICS.ASSET_SEARCH_SERVICE TO ROLE GRID_OPERATOR;
-GRANT USAGE ON CORTEX SEARCH SERVICE ANALYTICS.ASSET_SEARCH_SERVICE TO ROLE GRID_ANALYST;
+-- Grant usage on semantic view (already granted in 08_semantic_model.sql)
+-- Additional grants can be added here if needed
 
 -- =============================================================================
 -- SECTION 4: TEST THE AGENT - SAMPLE QUESTIONS
@@ -566,8 +551,8 @@ and Miami-Dade County (most high-risk assets and customer exposure)."
 
 SELECT 'Intelligence Agent created successfully!' as STATUS;
 SELECT 'Agent Name: Grid Reliability Intelligence Agent' as AGENT;
-SELECT 'Model: Claude 4 Sonnet' as MODEL;
+SELECT 'Model: Auto (Snowflake selects best model)' as MODEL;
 SELECT 'Access: Snowflake UI → Projects → Intelligence → Agents' as HOW_TO_USE;
-SELECT 'Tools: Cortex Search + Cortex Analyst (Text-to-SQL)' as CAPABILITIES;
+SELECT 'Tools: Cortex Analyst (Text-to-SQL via Semantic View)' as CAPABILITIES;
 
 
