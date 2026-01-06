@@ -231,9 +231,17 @@ cd ../..
 # Create Cortex Search Services
 execute_sql "sql/12_load_unstructured_data.sql" "Creating Cortex Search Services"
 
+# Populate reference data (SCADA_EVENTS and WEATHER_DATA)
+echo -e "${YELLOW}▶ Populating reference data (SCADA_EVENTS, WEATHER_DATA)...${NC}"
+execute_sql "sql/13_populate_reference_data.sql" "Loading reference data"
+
 echo ""
 echo -e "${BLUE}═══ Phase 8: Streamlit Dashboard Deployment ═══${NC}"
 
+# First, create the stage and Streamlit app definition
+execute_sql "sql/10_streamlit_dashboard.sql" "Creating Streamlit Stage and App"
+
+# Then, upload the dashboard file to the stage
 echo -e "${YELLOW}▶ Uploading Streamlit dashboard file...${NC}"
 cd python/dashboard
 snow sql -c "$CONNECTION" -q "PUT file://grid_reliability_dashboard.py @UTILITIES_GRID_RELIABILITY.ANALYTICS.STREAMLIT_STAGE AUTO_COMPRESS=FALSE OVERWRITE=TRUE" --enable-templating NONE
@@ -241,11 +249,9 @@ if [ $? -eq 0 ]; then
     echo -e "${GREEN}  ✓ Dashboard file uploaded${NC}"
 else
     echo -e "${RED}  ✗ Failed to upload dashboard file${NC}"
-    echo -e "${YELLOW}  ⚠️  Continuing deployment...${NC}"
+    echo -e "${YELLOW}  ⚠️  Dashboard may not function correctly${NC}"
 fi
 cd ../..
-
-execute_sql "sql/10_streamlit_dashboard.sql" "Deploying Streamlit Dashboard"
 
 echo -e "${GREEN}  ✓ Streamlit Dashboard deployed${NC}"
 echo -e "${BLUE}  ℹ️  Access dashboard via Snowflake UI: Apps → Streamlit${NC}"
