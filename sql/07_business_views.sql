@@ -151,11 +151,11 @@ SELECT
     ROUND(p.CONFIDENCE, 4) AS CONFIDENCE,
     p.ALERT_LEVEL,
     
-    -- Risk categorization
+    -- Risk categorization (aligned with ALERT_LEVEL thresholds)
     CASE 
-        WHEN p.RISK_SCORE >= 71 THEN 'CRITICAL'
-        WHEN p.RISK_SCORE >= 51 THEN 'HIGH'
-        WHEN p.RISK_SCORE >= 31 THEN 'MEDIUM'
+        WHEN p.RISK_SCORE >= 85 THEN 'CRITICAL'
+        WHEN p.RISK_SCORE >= 70 THEN 'HIGH'
+        WHEN p.RISK_SCORE >= 40 THEN 'MEDIUM'
         ELSE 'LOW'
     END AS RISK_CATEGORY,
     
@@ -170,8 +170,7 @@ SELECT
     
     -- Financial impact
     CASE 
-        WHEN p.RISK_SCORE >= 71 THEN 450000  -- Emergency repair cost
-        WHEN p.RISK_SCORE >= 51 THEN 450000
+        WHEN p.RISK_SCORE >= 70 THEN 450000  -- Emergency repair cost for HIGH and CRITICAL
         ELSE 0
     END AS POTENTIAL_FAILURE_COST,
     
@@ -219,18 +218,18 @@ SELECT
         CURRENT_DATE()
     ) AS DAYS_SINCE_MAINTENANCE,
     
-    -- Recommendations
+    -- Recommendations (aligned with ALERT_LEVEL thresholds)
     CASE 
-        WHEN p.RISK_SCORE >= 86 THEN 'IMMEDIATE - Within 7 days'
-        WHEN p.RISK_SCORE >= 71 THEN 'URGENT - Within 14 days'
-        WHEN p.RISK_SCORE >= 51 THEN 'SCHEDULED - Within 30 days'
+        WHEN p.RISK_SCORE >= 85 THEN 'IMMEDIATE - Within 7 days'
+        WHEN p.RISK_SCORE >= 70 THEN 'URGENT - Within 14 days'
+        WHEN p.RISK_SCORE >= 40 THEN 'SCHEDULED - Within 30 days'
         ELSE 'ROUTINE - Next maintenance cycle'
     END AS RECOMMENDED_ACTION_TIMELINE,
     
     CASE 
-        WHEN p.RISK_SCORE >= 86 THEN 1
-        WHEN p.RISK_SCORE >= 71 THEN 2
-        WHEN p.RISK_SCORE >= 51 THEN 3
+        WHEN p.RISK_SCORE >= 85 THEN 1
+        WHEN p.RISK_SCORE >= 70 THEN 2
+        WHEN p.RISK_SCORE >= 40 THEN 3
         ELSE 4
     END AS WORK_ORDER_PRIORITY,
     
@@ -247,7 +246,7 @@ SELECT
     
 FROM ML.MODEL_PREDICTIONS p
 JOIN RAW.ASSET_MASTER a ON p.ASSET_ID = a.ASSET_ID
-WHERE p.RISK_SCORE >= 40  -- High risk threshold
+WHERE p.RISK_SCORE >= 70  -- High risk threshold (HIGH and CRITICAL only)
 ORDER BY p.RISK_SCORE DESC;
 
 -- ========================================================

@@ -384,7 +384,7 @@ def main():
                      delta=None, delta_color="inverse")
         
         with col3:
-            critical_count = len(asset_health_df[asset_health_df['RISK_SCORE'] >= 86])
+            critical_count = len(asset_health_df[asset_health_df['RISK_SCORE'] >= 85])
             st.metric("Critical Assets", critical_count, 
                      delta=None, delta_color="inverse")
         
@@ -519,7 +519,7 @@ def main():
             st.success("✅ No high-risk assets detected!")
         else:
             # Critical assets
-            critical_df = high_risk_df[high_risk_df['RISK_SCORE'] >= 86]
+            critical_df = high_risk_df[high_risk_df['RISK_SCORE'] >= 85]
             if not critical_df.empty:
                 st.markdown(f'<div class="critical-alert"><h3>🚨 CRITICAL: {len(critical_df)} Assets Requiring Immediate Action</h3></div>', 
                            unsafe_allow_html=True)
@@ -542,7 +542,7 @@ def main():
             
             # High risk assets
             st.markdown("---")
-            high_only_df = high_risk_df[high_risk_df['RISK_SCORE'] < 86]
+            high_only_df = high_risk_df[high_risk_df['RISK_SCORE'] < 85]
             if not high_only_df.empty:
                 st.markdown(f'<div class="high-alert"><h3>⚠️ HIGH RISK: {len(high_only_df)} Assets Requiring Attention</h3></div>', 
                            unsafe_allow_html=True)
