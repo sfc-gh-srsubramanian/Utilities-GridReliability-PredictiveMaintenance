@@ -81,3 +81,6 @@ load_unstructured_data_full.sql
 
 # Generated data files (recreated during deployment)
 generated_data/
+
+# Temporary cleanup documentation
+CLEANUP_COMPLETE.md
