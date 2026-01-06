@@ -76,9 +76,13 @@ echo -e "${RED}║              ⚠️  WARNING: CLEANUP OPERATION              
 echo -e "${RED}╚════════════════════════════════════════════════════════════════╝${NC}"
 echo ""
 echo -e "${YELLOW}This will DELETE the following:${NC}"
-echo -e "  • Database: ${RED}${DATABASE}${NC}"
-echo -e "  • Warehouse: ${RED}${WAREHOUSE}${NC}"
-echo -e "  • All data and objects within"
+echo -e "  • ${RED}Intelligence Agent${NC}: Grid Reliability Intelligence Agent"
+echo -e "  • ${RED}Cortex Search Services${NC}: 3 search services for documents"
+echo -e "  • ${RED}Semantic View${NC}: Grid Reliability Analytics"
+echo -e "  • ${RED}Database${NC}: ${DATABASE} (all schemas, tables, views, stages)"
+echo -e "  • ${RED}Warehouse${NC}: ${WAREHOUSE}"
+echo -e "  • ${RED}Roles${NC}: GRID_ADMIN, GRID_DATA_ENGINEER, GRID_ML_ENGINEER, GRID_ANALYST, GRID_OPERATOR"
+echo -e "  • ${RED}All data${NC}: Asset data, sensor readings, maintenance logs, predictions"
 echo ""
 
 if [ "$FORCE" = false ]; then
@@ -95,15 +99,37 @@ echo ""
 
 # Execute cleanup
 CLEANUP_SQL="
--- Drop agents if they exist
-USE DATABASE ${DATABASE};
-DROP AGENT IF EXISTS ANALYTICS.GRID_INTELLIGENCE_AGENT;
+-- ============================================================================
+-- CLEANUP ORDER: Drop dependent objects first, then parent objects
+-- ============================================================================
 
--- Drop database
+-- 1. Drop Intelligence Agent (depends on Cortex Search Services and Semantic View)
+USE DATABASE ${DATABASE};
+USE SCHEMA ANALYTICS;
+DROP AGENT IF EXISTS \"Grid Reliability Intelligence Agent\";
+
+-- 2. Drop Cortex Search Services (in UNSTRUCTURED schema)
+USE SCHEMA UNSTRUCTURED;
+DROP CORTEX SEARCH SERVICE IF EXISTS TECHNICAL_MANUAL_SEARCH;
+DROP CORTEX SEARCH SERVICE IF EXISTS MAINTENANCE_LOG_SEARCH;
+DROP CORTEX SEARCH SERVICE IF EXISTS DOCUMENT_SEARCH_SERVICE;
+
+-- 3. Drop Semantic View (in ANALYTICS schema)
+USE SCHEMA ANALYTICS;
+DROP SEMANTIC VIEW IF EXISTS GRID_RELIABILITY_ANALYTICS;
+
+-- 4. Drop Database (this drops all schemas, tables, views, stages, file formats)
 DROP DATABASE IF EXISTS ${DATABASE};
 
--- Drop warehouse
+-- 5. Drop Warehouse
 DROP WAREHOUSE IF EXISTS ${WAREHOUSE};
+
+-- 6. Drop Roles (these are account-level objects)
+DROP ROLE IF EXISTS GRID_OPERATOR;
+DROP ROLE IF EXISTS GRID_ANALYST;
+DROP ROLE IF EXISTS GRID_ML_ENGINEER;
+DROP ROLE IF EXISTS GRID_DATA_ENGINEER;
+DROP ROLE IF EXISTS GRID_ADMIN;
 "
 
 if [ "$SQL_CMD" = "snow sql" ]; then
@@ -117,8 +143,15 @@ echo -e "${GREEN}╔════════════════════
 echo -e "${GREEN}║              ✓ CLEANUP COMPLETED                               ║${NC}"
 echo -e "${GREEN}╚════════════════════════════════════════════════════════════════╝${NC}"
 echo ""
-echo -e "${BLUE}All resources have been removed from Snowflake${NC}"
+echo -e "${GREEN}Successfully removed:${NC}"
+echo -e "  ✓ Intelligence Agent and Cortex Search Services"
+echo -e "  ✓ Semantic Views and Analytics Objects"
+echo -e "  ✓ Database with all schemas, tables, and data"
+echo -e "  ✓ Warehouse and compute resources"
+echo -e "  ✓ Custom roles and permissions"
 echo ""
-echo -e "To redeploy: ${YELLOW}./deploy.sh${NC}"
+echo -e "${BLUE}Your Snowflake account is now clean${NC}"
+echo ""
+echo -e "To redeploy: ${YELLOW}./deploy.sh -c ${CONNECTION}${NC}"
 echo ""
 
