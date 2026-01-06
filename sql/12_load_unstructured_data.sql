@@ -204,6 +204,10 @@ SELECT
     FILE_PATH
 FROM TECHNICAL_MANUALS;
 
+-- Note: Cortex Search Services commented out - requires Cortex Intelligence features
+-- Uncomment and deploy separately when Cortex features are enabled in your account
+
+/*
 -- Create Cortex Search Service for documents
 CREATE OR REPLACE CORTEX SEARCH SERVICE DOCUMENT_SEARCH_SERVICE
 ON SEARCH_TEXT
@@ -225,7 +229,7 @@ AS (
     FROM DOCUMENT_SEARCH_INDEX
 );
 
--- Create specialized search services
+-- Create specialized search services  
 CREATE OR REPLACE CORTEX SEARCH SERVICE MAINTENANCE_LOG_SEARCH
 ON SEARCH_TEXT
 ATTRIBUTES ASSET_ID, AUTHOR, CATEGORY, SEVERITY_LEVEL, DOC_DATE
@@ -264,14 +268,15 @@ AS (
 GRANT USAGE ON CORTEX SEARCH SERVICE DOCUMENT_SEARCH_SERVICE TO ROLE GRID_ANALYST;
 GRANT USAGE ON CORTEX SEARCH SERVICE MAINTENANCE_LOG_SEARCH TO ROLE GRID_ANALYST;
 GRANT USAGE ON CORTEX SEARCH SERVICE TECHNICAL_MANUAL_SEARCH TO ROLE GRID_ANALYST;
+*/
 
 -- =============================================================================
 -- COMPLETION STATUS
 -- =============================================================================
 
 SELECT '✅ Unstructured data loading complete!' AS STATUS;
-SELECT '✅ Cortex Search services deployed!' AS SEARCH_STATUS;
+SELECT 'ℹ️  Cortex Search services commented out - enable separately when needed' AS SEARCH_STATUS;
 
--- Next Step: Intelligence Agent can now query both structured and unstructured data
--- Run: SELECT COUNT(*) FROM ANALYTICS.GRID_INTELLIGENCE_AGENT;
+-- Next Step: Deploy Cortex Search and Intelligence Agents when Cortex features are enabled
+-- Uncomment the Cortex Search Service sections above and run sql/09_intelligence_agent.sql
 
