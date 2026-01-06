@@ -399,14 +399,17 @@ SELECT
     'Agent Usage Tracking' as INFO,
     'Check Snowflake Query History for agent queries' as NOTE;
 
--- Refresh search index periodically
+-- Note: Periodic refresh task commented out - can be created manually if needed
+-- The Cortex Search Services will auto-refresh based on TARGET_LAG setting
+-- The ASSET_SEARCH_INDEX table is created once during deployment
+
+/*
+-- Refresh search index periodically (optional)
 CREATE OR REPLACE TASK TASK_REFRESH_ASSET_SEARCH_INDEX
     WAREHOUSE = GRID_RELIABILITY_WH
-    SCHEDULE = 'USING CRON 0 */6 * * * America/New_York' -- Every 6 hours
+    SCHEDULE = 'USING CRON 0 */6 * * * America/New_York'
     COMMENT = 'Refresh asset search index for Intelligence Agent'
 AS
-BEGIN
-    -- Recreate search index with latest data
     CREATE OR REPLACE TABLE ASSET_SEARCH_INDEX AS
     SELECT 
         a.ASSET_ID,
@@ -423,27 +426,14 @@ BEGIN
         p.RISK_SCORE,
         p.FAILURE_PROBABILITY,
         p.ALERT_LEVEL,
-        CONCAT_WS(' ',
-            a.ASSET_ID,
-            a.ASSET_TYPE,
-            a.MANUFACTURER,
-            a.MODEL,
-            a.LOCATION_SUBSTATION,
-            a.LOCATION_CITY,
-            a.LOCATION_COUNTY,
-            'Risk Score: ' || p.RISK_SCORE::VARCHAR,
-            'Alert: ' || p.ALERT_LEVEL,
-            'Serves ' || a.CUSTOMERS_AFFECTED::VARCHAR || ' customers'
-        ) as SEARCH_TEXT
+        COALESCE(p.RISK_SCORE::VARCHAR, 'N/A') || ' Risk' as RISK_INFO,
+        CONCAT_WS(' - ', a.ASSET_ID, a.ASSET_TYPE, a.MANUFACTURER) as SEARCH_TEXT
     FROM RAW.ASSET_MASTER a
     LEFT JOIN ML.VW_LATEST_PREDICTIONS p ON a.ASSET_ID = p.ASSET_ID
     WHERE a.STATUS = 'ACTIVE';
-    
-    -- Cortex Search Service will auto-refresh based on TARGET_LAG setting
-END;
 
--- Suspend task initially (resume after testing)
-ALTER TASK TASK_REFRESH_ASSET_SEARCH_INDEX SUSPEND;
+-- To enable: ALTER TASK TASK_REFRESH_ASSET_SEARCH_INDEX RESUME;
+*/
 
 -- =============================================================================
 -- SECTION 6: SAMPLE CONVERSATION FLOWS
