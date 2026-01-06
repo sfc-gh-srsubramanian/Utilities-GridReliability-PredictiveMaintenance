@@ -87,7 +87,7 @@ CREATE OR REPLACE AGENT ANALYTICS."Grid Reliability Intelligence Agent"
 COMMENT = 'Conversational AI agent for grid reliability and predictive maintenance queries'
 FROM SPECIFICATION $$
 models:
-  orchestration: "claude-4-sonnet"
+  orchestration: auto
 
 instructions:
   response: |
@@ -118,6 +118,58 @@ instructions:
     - The utility's target is to maintain industry-leading low SAIDI scores
     
     Always be helpful, accurate, and focused on grid reliability.
+  
+  sample_questions:
+    - question: "What's the status of our grid assets today?"
+      answer: "I'll check the current health status and risk levels of all active grid assets."
+    - question: "Which assets need immediate attention?"
+      answer: "Let me identify assets with critical and high risk scores that require urgent maintenance."
+    - question: "Show me all critical and high-risk assets"
+      answer: "I'll query for assets with risk scores of 71 or higher."
+    - question: "How many transformers have a risk score above 80?"
+      answer: "I'll count transformers exceeding the 80 risk score threshold."
+    - question: "Show me all critical assets in Miami-Dade county"
+      answer: "I'll filter critical risk assets located in Miami-Dade county."
+    - question: "Which counties have the most high-risk assets?"
+      answer: "I'll analyze asset risk distribution by county."
+    - question: "Tell me about transformer T-SS047-001"
+      answer: "I'll retrieve detailed information about this specific transformer."
+    - question: "What's the health status of asset T-SS023-001?"
+      answer: "I'll check the current risk score, failure probability, and maintenance history."
+    - question: "Which assets serve the most customers and are at high risk?"
+      answer: "I'll identify high-risk assets with the largest customer impact."
+    - question: "How many customers are affected by our critical assets?"
+      answer: "I'll sum the total customers served by all critical risk assets."
+    - question: "What's the total SAIDI impact if all high-risk assets fail?"
+      answer: "I'll calculate the potential SAIDI points from all high-risk asset failures."
+    - question: "How much SAIDI have we avoided with our predictive maintenance?"
+      answer: "I'll analyze the SAIDI impact prevented through proactive maintenance."
+    - question: "What is our predicted cost avoidance this month?"
+      answer: "I'll calculate the financial savings from prevented failures this month."
+    - question: "What's the ROI of our predictive maintenance program?"
+      answer: "I'll compare cost avoidance against preventive maintenance costs."
+    - question: "How many assets need immediate maintenance?"
+      answer: "I'll count assets requiring maintenance within 7 days based on risk scores."
+    - question: "Which assets should we schedule for maintenance next week?"
+      answer: "I'll identify assets with high priority and recommended maintenance timelines."
+    - question: "Show me all assets overdue for maintenance"
+      answer: "I'll find assets that haven't been maintained within their scheduled intervals."
+    - question: "Which transformers haven't been maintained in over 90 days?"
+      answer: "I'll search for transformers with maintenance delays exceeding 90 days."
+    - question: "Which manufacturer's equipment has the highest failure rate?"
+      answer: "I'll analyze failure patterns and risk scores grouped by manufacturer."
+    - question: "Show me all ABB transformers and their risk levels"
+      answer: "I'll filter assets by ABB manufacturer and display their risk metrics."
+    - question: "Show me assets with deteriorating health trends"
+      answer: "I'll identify assets showing increasing risk scores over time."
+    - question: "Which assets have had increasing oil temperature over the last 30 days?"
+      answer: "I'll analyze sensor trends for oil temperature anomalies."
+    - question: "What's the average age of our high-risk assets?"
+      answer: "I'll calculate the mean age of assets with risk scores above 71."
+    - question: "Compare transformer performance: GE vs Siemens vs ABB"
+      answer: "I'll analyze risk scores and failure rates across these three manufacturers."
+    - question: "Which substations should I prioritize for inspection this month?"
+      answer: "I'll rank substations by total risk exposure and customer impact."
 
 tools:
   - tool_spec:
