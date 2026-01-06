@@ -459,37 +459,44 @@ def score_assets(session: snowpark.Session) -> str:
         # =====================================================================
         
         # Get latest features for all active assets
+        # Use the most recent available feature date (not necessarily today)
+        # Column names MUST match training feature names (lowercase with underscores)
         features_df = session.sql("""
+            WITH latest_date AS (
+                SELECT MAX(FEATURE_DATE) as MAX_DATE
+                FROM ML.VW_ASSET_FEATURES_DAILY
+            )
             SELECT 
                 di.ASSET_ID,
-                di.OIL_QUALITY_INDEX,
-                di.THERMAL_STRESS_INDEX,
-                di.ELECTRICAL_STRESS_INDEX,
-                di.MECHANICAL_STRESS_INDEX,
-                di.MAINTENANCE_EFFECTIVENESS,
-                di.OVERALL_HEALTH_INDEX,
-                di.OIL_TEMP_TREND_PCT,
-                di.H2_TREND_PCT,
-                df.OIL_TEMP_DAILY_AVG,
-                df.OIL_TEMP_DAILY_MAX,
-                df.H2_DAILY_AVG,
-                df.H2_DAILY_MAX,
-                df.VIBRATION_DAILY_AVG,
-                df.LOAD_UTILIZATION_DAILY_AVG,
-                df.LOAD_UTILIZATION_DAILY_PEAK,
-                df.THERMAL_RISE_DAILY_AVG,
-                df.COMBUSTIBLE_GASES_DAILY_AVG,
-                df.OPERATING_HOURS,
-                df.ASSET_AGE_YEARS,
-                df.DAYS_SINCE_MAINTENANCE,
-                df.CAPACITY_MVA,
-                df.CRITICALITY_SCORE,
-                df.CUSTOMERS_AFFECTED
+                df.OIL_TEMP_DAILY_AVG as oil_temp_avg,
+                df.OIL_TEMP_DAILY_MAX as oil_temp_max,
+                df.H2_DAILY_AVG as h2_avg,
+                df.H2_DAILY_MAX as h2_max,
+                df.VIBRATION_DAILY_AVG as vibration_avg,
+                df.LOAD_UTILIZATION_DAILY_AVG as load_util_avg,
+                df.LOAD_UTILIZATION_DAILY_PEAK as load_util_peak,
+                df.THERMAL_RISE_DAILY_AVG as thermal_rise_avg,
+                df.COMBUSTIBLE_GASES_DAILY_AVG as combustible_gases,
+                df.OPERATING_HOURS as operating_hours,
+                df.ASSET_AGE_YEARS as asset_age_years,
+                df.DAYS_SINCE_MAINTENANCE as days_since_maintenance,
+                df.CAPACITY_MVA as capacity_mva,
+                df.CRITICALITY_SCORE as criticality_score,
+                df.CUSTOMERS_AFFECTED as customers_affected,
+                di.OIL_QUALITY_INDEX as oil_quality_index,
+                di.THERMAL_STRESS_INDEX as thermal_stress_index,
+                di.ELECTRICAL_STRESS_INDEX as electrical_stress_index,
+                di.MECHANICAL_STRESS_INDEX as mechanical_stress_index,
+                di.MAINTENANCE_EFFECTIVENESS as maintenance_effectiveness,
+                di.OVERALL_HEALTH_INDEX as overall_health_index,
+                di.OIL_TEMP_TREND_PCT as oil_temp_trend_pct,
+                di.H2_TREND_PCT as h2_trend_pct
             FROM ML.VW_DEGRADATION_INDICATORS di
             JOIN ML.VW_ASSET_FEATURES_DAILY df 
                 ON di.ASSET_ID = df.ASSET_ID 
                 AND di.INDICATOR_DATE = df.FEATURE_DATE
-            WHERE di.INDICATOR_DATE = CURRENT_DATE() - 1  -- Yesterday's data
+            CROSS JOIN latest_date ld
+            WHERE di.INDICATOR_DATE = ld.MAX_DATE  -- Use latest available date
               AND df.ASSET_ID IN (SELECT ASSET_ID FROM RAW.ASSET_MASTER WHERE STATUS = 'ACTIVE')
         """).to_pandas()
         
