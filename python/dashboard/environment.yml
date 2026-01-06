@@ -1,12 +1,12 @@
 # Snowflake Environment Specification for Streamlit App
 # This file specifies the Python packages required by the Grid Reliability Dashboard
-# Note: Using Python 3.10 as 3.11 is not available in Snowflake Streamlit
+# Note: Not specifying Python version - Snowflake will use default runtime
+# Available Python versions: 3.8, 3.9, 3.11, 3.12, 3.13
 
 name: streamlit
 channels:
   - snowflake
 dependencies:
-  - python=3.10
   - streamlit
   - snowflake-snowpark-python
   - pandas
