@@ -133,7 +133,7 @@ DROP ROLE IF EXISTS GRID_ADMIN;
 "
 
 if [ "$SQL_CMD" = "snow sql" ]; then
-    echo "$CLEANUP_SQL" | snow sql -c "$CONNECTION"
+    snow sql -c "$CONNECTION" -q "$CLEANUP_SQL" --enable-templating NONE > /dev/null 2>&1
 else
     echo "$CLEANUP_SQL" | snowsql -c "$CONNECTION"
 fi
