@@ -285,6 +285,10 @@ else
     echo -e "${YELLOW}  ⚠️  Continuing deployment...${NC}"
 fi
 
+# Generate recent sensor data for dashboard visualization
+echo -e "${YELLOW}▶ Generating recent sensor data (last 30 days)...${NC}"
+execute_sql "sql/14_generate_recent_sensor_data.sql" "Generating recent sensor data"
+
 echo ""
 echo -e "${BLUE}═══ Phase 9: Streamlit Dashboard Deployment ═══${NC}"
 
