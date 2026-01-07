@@ -26,10 +26,24 @@ wheels/
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# Environment
+# Environment & Credentials
 .env
+.env.*
 .venv
 secrets.toml
+.streamlit/secrets.toml
+
+# Security - Credentials and tokens (IMPORTANT: Never commit these!)
+*_credentials.py
+*_secrets.py
+*_token.py
+*.key
+*.pem
+*.p8
+*_password.txt
+*_token.txt
+.snowflake/
+snowsql_config
 
 # IDE
 .vscode/
