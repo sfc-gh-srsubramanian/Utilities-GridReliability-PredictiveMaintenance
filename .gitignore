@@ -110,3 +110,5 @@ solution_presentation/presentation_id.txt
 *.pptx
 solution_presentation/*.pptx
 solution_presentation/create_complete_powerpoint.py
+solution_presentation/SLIDES_GENERATOR_README.md
+solution_presentation/requirements.txt

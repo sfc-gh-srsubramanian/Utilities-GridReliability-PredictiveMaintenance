@@ -1,8 +1,0 @@
-# For PowerPoint generation (recommended - simple upload to Google Slides)
-python-pptx==0.6.23
-
-# For direct Google Slides API (requires OAuth setup - more complex)
-google-api-python-client==2.108.0
-google-auth-httplib2==0.2.0
-google-auth-oauthlib==1.2.0
-google-auth==2.25.2
