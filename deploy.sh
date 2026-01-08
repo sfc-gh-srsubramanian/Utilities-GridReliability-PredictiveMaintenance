@@ -389,45 +389,55 @@ echo -e "${BLUE}═══ Phase 8: ML Training & Scoring ═══${NC}"
 echo -e "${YELLOW}▶ Preparing training data (generating labeled samples)...${NC}"
 execute_sql "sql/05_ml_training_prep.sql" "Generating ML training data"
 
-echo -e "${YELLOW}▶ Training ML models (this may take 2-3 minutes)...${NC}"
+echo -e "${YELLOW}▶ Training ML models (this may take 2-3 minutes, max timeout: 5 min)...${NC}"
 if [ "$SQL_CMD" = "snow sql" ]; then
-    snow sql -c "$CONNECTION" -q "
+    timeout 300 snow sql -c "$CONNECTION" -q "
         USE DATABASE ${DATABASE};
         USE WAREHOUSE ${WAREHOUSE};
         CALL ML.TRAIN_FAILURE_PREDICTION_MODELS();
     " --enable-templating NONE
 else
-    snowsql -c "$CONNECTION" -q "
+    timeout 300 snowsql -c "$CONNECTION" -q "
         USE DATABASE ${DATABASE};
         USE WAREHOUSE ${WAREHOUSE};
         CALL ML.TRAIN_FAILURE_PREDICTION_MODELS();
     "
 fi
 
-if [ $? -eq 0 ]; then
+ML_TRAIN_EXIT=$?
+if [ $ML_TRAIN_EXIT -eq 0 ]; then
     echo -e "${GREEN}  ✓ ML models trained successfully${NC}"
+elif [ $ML_TRAIN_EXIT -eq 124 ]; then
+    echo -e "${RED}  ✗ ML training timed out after 5 minutes${NC}"
+    echo -e "${YELLOW}  ⚠️  You can train models manually later: CALL ML.TRAIN_FAILURE_PREDICTION_MODELS();${NC}"
+    echo -e "${YELLOW}  ⚠️  Continuing deployment...${NC}"
 else
     echo -e "${RED}  ✗ ML training failed${NC}"
     echo -e "${YELLOW}  ⚠️  Continuing deployment...${NC}"
 fi
 
-echo -e "${YELLOW}▶ Generating predictions for all assets...${NC}"
+echo -e "${YELLOW}▶ Generating predictions for all assets (max timeout: 3 min)...${NC}"
 if [ "$SQL_CMD" = "snow sql" ]; then
-    snow sql -c "$CONNECTION" -q "
+    timeout 180 snow sql -c "$CONNECTION" -q "
         USE DATABASE ${DATABASE};
         USE WAREHOUSE ${WAREHOUSE};
         CALL ML.SCORE_ASSETS();
     " --enable-templating NONE
 else
-    snowsql -c "$CONNECTION" -q "
+    timeout 180 snowsql -c "$CONNECTION" -q "
         USE DATABASE ${DATABASE};
         USE WAREHOUSE ${WAREHOUSE};
         CALL ML.SCORE_ASSETS();
     "
 fi
 
-if [ $? -eq 0 ]; then
+ML_SCORE_EXIT=$?
+if [ $ML_SCORE_EXIT -eq 0 ]; then
     echo -e "${GREEN}  ✓ Predictions generated successfully${NC}"
+elif [ $ML_SCORE_EXIT -eq 124 ]; then
+    echo -e "${RED}  ✗ Prediction scoring timed out after 3 minutes${NC}"
+    echo -e "${YELLOW}  ⚠️  You can score assets manually later: CALL ML.SCORE_ASSETS();${NC}"
+    echo -e "${YELLOW}  ⚠️  Continuing deployment...${NC}"
 else
     echo -e "${RED}  ✗ Prediction generation failed${NC}"
     echo -e "${YELLOW}  ⚠️  Continuing deployment...${NC}"
@@ -438,51 +448,101 @@ echo -e "${YELLOW}▶ Generating recent sensor data (last 30 days)...${NC}"
 execute_sql "sql/14_generate_recent_sensor_data.sql" "Generating recent sensor data"
 
 echo ""
-echo -e "${BLUE}═══ Phase 9: Streamlit Dashboard Deployment ═══${NC}"
+echo -e "${BLUE}╔════════════════════════════════════════════════════════════════╗${NC}"
+echo -e "${BLUE}║         Phase 9: Streamlit Dashboard Deployment               ║${NC}"
+echo -e "${BLUE}╚════════════════════════════════════════════════════════════════╝${NC}"
+echo ""
 
 # First, create the stage and Streamlit app definition
+echo -e "${YELLOW}▶ Step 1: Creating Streamlit infrastructure...${NC}"
 execute_sql "sql/10_streamlit_dashboard.sql" "Creating Streamlit Stage and App"
 
 # Then, upload the environment file and dashboard file to the stage
-echo -e "${YELLOW}▶ Uploading Streamlit environment and dashboard files...${NC}"
+echo -e "${YELLOW}▶ Step 2: Uploading dashboard files to Snowflake...${NC}"
 cd python/dashboard
 
 # Upload environment.yml (contains package dependencies like plotly, numpy)
-snow sql -c "$CONNECTION" -q "PUT file://environment.yml @UTILITIES_GRID_RELIABILITY.ANALYTICS.STREAMLIT_STAGE AUTO_COMPRESS=FALSE OVERWRITE=TRUE" --enable-templating NONE
+echo -e "${YELLOW}  → Uploading environment.yml (Python dependencies)...${NC}"
+snow sql -c "$CONNECTION" -q "PUT file://environment.yml @UTILITIES_GRID_RELIABILITY.ANALYTICS.STREAMLIT_STAGE AUTO_COMPRESS=FALSE OVERWRITE=TRUE" --enable-templating NONE > /dev/null 2>&1
 if [ $? -eq 0 ]; then
-    echo -e "${GREEN}  ✓ Environment file uploaded${NC}"
+    echo -e "${GREEN}    ✓ Environment file uploaded${NC}"
 else
-    echo -e "${RED}  ✗ Failed to upload environment file${NC}"
-    echo -e "${YELLOW}  ⚠️  Dashboard may not have required packages${NC}"
+    echo -e "${RED}    ✗ Failed to upload environment file${NC}"
+    echo -e "${YELLOW}    ⚠️  Dashboard may not have required packages${NC}"
 fi
 
 # Upload Python dashboard file
-snow sql -c "$CONNECTION" -q "PUT file://grid_reliability_dashboard.py @UTILITIES_GRID_RELIABILITY.ANALYTICS.STREAMLIT_STAGE AUTO_COMPRESS=FALSE OVERWRITE=TRUE" --enable-templating NONE
+echo -e "${YELLOW}  → Uploading grid_reliability_dashboard.py (29KB)...${NC}"
+snow sql -c "$CONNECTION" -q "PUT file://grid_reliability_dashboard.py @UTILITIES_GRID_RELIABILITY.ANALYTICS.STREAMLIT_STAGE AUTO_COMPRESS=FALSE OVERWRITE=TRUE" --enable-templating NONE > /dev/null 2>&1
 if [ $? -eq 0 ]; then
-    echo -e "${GREEN}  ✓ Dashboard file uploaded${NC}"
+    echo -e "${GREEN}    ✓ Dashboard file uploaded${NC}"
 else
-    echo -e "${RED}  ✗ Failed to upload dashboard file${NC}"
-    echo -e "${YELLOW}  ⚠️  Dashboard may not function correctly${NC}"
+    echo -e "${RED}    ✗ Failed to upload dashboard file${NC}"
+    echo -e "${YELLOW}    ⚠️  Dashboard may not function correctly${NC}"
 fi
 cd ../..
 
-echo -e "${GREEN}  ✓ Streamlit Dashboard deployed${NC}"
-echo -e "${BLUE}  ℹ️  Access dashboard via Snowflake UI: Apps → Streamlit${NC}"
+echo ""
+echo -e "${GREEN}╔════════════════════════════════════════════════════════════════╗${NC}"
+echo -e "${GREEN}║       ✓ STREAMLIT DASHBOARD DEPLOYED SUCCESSFULLY!            ║${NC}"
+echo -e "${GREEN}╚════════════════════════════════════════════════════════════════╝${NC}"
+echo ""
+echo -e "${BLUE}📊 Dashboard Features:${NC}"
+echo -e "  ${GREEN}✓${NC} Overview - Executive KPIs and metrics"
+echo -e "  ${GREEN}✓${NC} High Risk Assets - Critical transformer alerts"
+echo -e "  ${GREEN}✓${NC} Asset Health - Detailed asset monitoring"
+echo -e "  ${GREEN}✓${NC} Cost Avoidance - Financial impact analysis"
+echo -e "  ${GREEN}✓${NC} Reliability Metrics - SAIDI/SAIFI tracking"
+echo -e "  ${GREEN}✓${NC} Sensor Trends - Real-time data visualization"
+echo ""
 
 echo ""
 echo -e "${GREEN}╔════════════════════════════════════════════════════════════════╗${NC}"
 echo -e "${GREEN}║              ✓ DEPLOYMENT COMPLETED SUCCESSFULLY               ║${NC}"
 echo -e "${GREEN}╚════════════════════════════════════════════════════════════════╝${NC}"
 echo ""
-echo -e "${BLUE}Next Steps:${NC}"
-echo -e "  1. Validate deployment:  ${YELLOW}./run.sh validate${NC}"
-echo -e "  2. Check status:         ${YELLOW}./run.sh status${NC}"
-echo -e "  3. Test agents:          ${YELLOW}./run.sh test-agents${NC}"
-echo -e "  4. Run sample queries:   ${YELLOW}./run.sh query 'SELECT COUNT(*) FROM RAW.ASSET_MASTER'${NC}"
+
+# Get and display Streamlit URL
+if [ "$SQL_CMD" = "snow sql" ]; then
+    ACCOUNT_NAME=$(snow sql -c "$CONNECTION" -q "SELECT CURRENT_ACCOUNT_NAME();" --enable-templating NONE 2>/dev/null | grep -v "CURRENT_ACCOUNT_NAME" | grep -v "^$" | grep -v "^\-" | tail -1 | tr -d ' ')
+    if [ -n "$ACCOUNT_NAME" ]; then
+        DASHBOARD_URL="https://${ACCOUNT_NAME}.snowflakecomputing.com/streamlit/${DATABASE}.ANALYTICS.GRID_RELIABILITY_DASHBOARD"
+        echo -e "${BLUE}╔════════════════════════════════════════════════════════════════╗${NC}"
+        echo -e "${BLUE}║           🎨 ACCESS YOUR STREAMLIT DASHBOARD                  ║${NC}"
+        echo -e "${BLUE}╚════════════════════════════════════════════════════════════════╝${NC}"
+        echo ""
+        echo -e "${YELLOW}📊 Direct URL:${NC}"
+        echo -e "   ${GREEN}${DASHBOARD_URL}${NC}"
+        echo ""
+        echo -e "${YELLOW}📋 Via Snowflake UI:${NC}"
+        echo -e "   ${GREEN}Projects → Streamlit → GRID_RELIABILITY_DASHBOARD${NC}"
+        echo ""
+    fi
+fi
+
+echo -e "${BLUE}╔════════════════════════════════════════════════════════════════╗${NC}"
+echo -e "${BLUE}║                    NEXT STEPS                                  ║${NC}"
+echo -e "${BLUE}╚════════════════════════════════════════════════════════════════╝${NC}"
 echo ""
-echo -e "${BLUE}Documentation:${NC}"
-echo -e "  • Quick Start:    ${YELLOW}docs/guides/QUICK_START.md${NC}"
-echo -e "  • Full Guide:     ${YELLOW}docs/guides/DEPLOYMENT_GUIDE.md${NC}"
-echo -e "  • Architecture:   ${YELLOW}docs/architecture/ARCHITECTURE.md${NC}"
+echo -e "${YELLOW}1. Validate deployment:${NC}"
+echo -e "   ${GREEN}./run.sh validate -c ${CONNECTION}${NC}"
+echo ""
+echo -e "${YELLOW}2. Check system status:${NC}"
+echo -e "   ${GREEN}./run.sh status -c ${CONNECTION}${NC}"
+echo ""
+echo -e "${YELLOW}3. Test Intelligence Agent:${NC}"
+echo -e "   ${GREEN}./run.sh test-agents -c ${CONNECTION}${NC}"
+echo ""
+echo -e "${YELLOW}4. Run sample queries:${NC}"
+echo -e "   ${GREEN}./run.sh query 'SELECT COUNT(*) FROM RAW.ASSET_MASTER' -c ${CONNECTION}${NC}"
+echo ""
+echo -e "${BLUE}╔════════════════════════════════════════════════════════════════╗${NC}"
+echo -e "${BLUE}║                   DOCUMENTATION                                ║${NC}"
+echo -e "${BLUE}╚════════════════════════════════════════════════════════════════╝${NC}"
+echo ""
+echo -e "  📖 Quick Start:    ${YELLOW}docs/guides/QUICKSTART.md${NC}"
+echo -e "  📖 Full Guide:     ${YELLOW}docs/guides/DEPLOYMENT_GUIDE.md${NC}"
+echo -e "  📖 Architecture:   ${YELLOW}docs/architecture/ARCHITECTURE.md${NC}"
+echo -e "  📖 Dashboard Guide: ${YELLOW}docs/guides/STREAMLIT_DASHBOARD_GUIDE.md${NC}"
 echo ""
 
