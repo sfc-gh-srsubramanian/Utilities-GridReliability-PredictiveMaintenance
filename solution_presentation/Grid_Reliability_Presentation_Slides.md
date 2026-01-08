@@ -752,7 +752,7 @@ Transforming Utility Operations Through Intelligence-Driven Maintenance
 **UNSTRUCTURED Layer**
 - MAINTENANCE_LOG_DOCUMENTS (80 docs)
 - TECHNICAL_MANUALS (15 manuals)
-- VISUAL_INSPECTION_RECORDS (150 inspections)
+- VISUAL_INSPECTIONS (150 inspections)
 - CV_DETECTIONS (281 detections)
 
 ---
