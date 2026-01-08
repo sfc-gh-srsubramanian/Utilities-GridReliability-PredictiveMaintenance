@@ -171,6 +171,25 @@ execute_sql "sql/10_security_roles.sql" "Configuring security roles"
 
 echo -e "${BLUE}═══ Phase 7: Data Loading ═══${NC}"
 
+# Generate structured data files FIRST
+echo -e "${YELLOW}▶ Generating structured data files (CSV/JSON)...${NC}"
+if [ ! -d "generated_data" ]; then
+    mkdir -p generated_data
+fi
+
+cd python/data_generators
+python3 generate_asset_data.py
+cd ../..
+
+if [ -f "generated_data/asset_master.csv" ]; then
+    echo -e "${GREEN}  ✓ Structured data files generated${NC}"
+    echo -e "${YELLOW}    → asset_master.csv, maintenance_history.csv, failure_events.csv${NC}"
+    echo -e "${YELLOW}    → sensor_readings_batch_*.json (5 files)${NC}"
+else
+    echo -e "${RED}  ✗ Failed to generate structured data files${NC}"
+    exit 1
+fi
+
 # Upload structured data files to Snowflake stages
 echo -e "${YELLOW}▶ Uploading structured data files to Snowflake stages...${NC}"
 if [ "$SQL_CMD" = "snow sql" ]; then
@@ -180,6 +199,14 @@ if [ "$SQL_CMD" = "snow sql" ]; then
         PUT file://generated_data/*.csv @ASSET_DATA_STAGE AUTO_COMPRESS=TRUE OVERWRITE=TRUE;
         PUT file://generated_data/*.json @SENSOR_DATA_STAGE AUTO_COMPRESS=TRUE OVERWRITE=TRUE;
     " --enable-templating NONE > /dev/null 2>&1
+else
+    # For snowsql, execute PUT commands
+    snowsql -c "$CONNECTION" -q "
+        USE DATABASE ${DATABASE};
+        USE SCHEMA RAW;
+        PUT file://generated_data/*.csv @ASSET_DATA_STAGE AUTO_COMPRESS=TRUE OVERWRITE=TRUE;
+        PUT file://generated_data/*.json @SENSOR_DATA_STAGE AUTO_COMPRESS=TRUE OVERWRITE=TRUE;
+    " > /dev/null 2>&1
 fi
 
 if [ $? -eq 0 ]; then
@@ -190,6 +217,21 @@ else
 fi
 
 execute_sql "sql/11_load_structured_data.sql" "Loading structured data"
+
+# Verify structured data was loaded
+echo -e "${YELLOW}▶ Verifying structured data loaded...${NC}"
+if [ "$SQL_CMD" = "snow sql" ]; then
+    ASSET_COUNT=$(snow sql -c "$CONNECTION" -q "USE DATABASE ${DATABASE}; SELECT COUNT(*) FROM RAW.ASSET_MASTER;" --enable-templating NONE 2>/dev/null | grep -o '[0-9]\+' | tail -1)
+else
+    ASSET_COUNT=$(snowsql -c "$CONNECTION" -d "${DATABASE}" -q "SELECT COUNT(*) FROM RAW.ASSET_MASTER;" -o output_format=tsv -o friendly=false -o timing=false 2>/dev/null | grep -o '[0-9]\+' | tail -1)
+fi
+
+if [ -n "$ASSET_COUNT" ] && [ "$ASSET_COUNT" -gt 0 ]; then
+    echo -e "${GREEN}  ✓ Verified: ${ASSET_COUNT} assets loaded${NC}"
+else
+    echo -e "${RED}  ✗ Warning: No data loaded into ASSET_MASTER${NC}"
+    echo -e "${YELLOW}  ⚠️  Deployment will continue, but tables may be empty${NC}"
+fi
 
 # Generate and load unstructured data using Python
 echo -e "${YELLOW}▶ Generating unstructured data files...${NC}"
