@@ -34,9 +34,9 @@ fi
 exec_sql() {
     local sql="$1"
     if [ "$SQL_CMD" = "snow sql" ]; then
-        echo "$sql" | snow sql -c "$CONNECTION" -D "database=${DATABASE}" -D "warehouse=${WAREHOUSE}"
+        snow sql -c "$CONNECTION" -D "database=${DATABASE}" -D "warehouse=${WAREHOUSE}" -q "$sql"
     else
-        echo "$sql" | snowsql -c "$CONNECTION" -d "$DATABASE" -w "$WAREHOUSE"
+        echo "$sql" | snowsql -c "$CONNECTION" -d "$DATABASE" -w "$WAREHOUSE" -o output_format=psql -o friendly=false -o timing=false
     fi
 }
 
@@ -82,14 +82,15 @@ check_status() {
     echo -e "${BLUE}╚════════════════════════════════════════════════════════════════╝${NC}"
     echo ""
     
-    echo -e "${YELLOW}Checking infrastructure...${NC}"
-    exec_sql "
-    USE DATABASE ${DATABASE};
-    SHOW SCHEMAS;
-    "
+    echo -e "${YELLOW}Database & Warehouse Status:${NC}"
+    exec_sql "SELECT '${DATABASE}' AS DATABASE_NAME, '${WAREHOUSE}' AS WAREHOUSE_NAME, CURRENT_USER() AS USER;"
     echo ""
     
-    echo -e "${YELLOW}Checking data counts...${NC}"
+    echo -e "${YELLOW}Schema Status:${NC}"
+    exec_sql "USE DATABASE ${DATABASE}; SELECT SCHEMA_NAME, CREATED FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME IN ('RAW', 'FEATURES', 'ML', 'ANALYTICS', 'UNSTRUCTURED') ORDER BY SCHEMA_NAME;"
+    echo ""
+    
+    echo -e "${YELLOW}Data Counts - Structured Tables:${NC}"
     exec_sql "
     USE DATABASE ${DATABASE};
     SELECT 'ASSET_MASTER' AS TABLE_NAME, COUNT(*) AS ROW_COUNT FROM RAW.ASSET_MASTER
@@ -98,15 +99,35 @@ check_status() {
     UNION ALL
     SELECT 'MAINTENANCE_HISTORY', COUNT(*) FROM RAW.MAINTENANCE_HISTORY
     UNION ALL
-    SELECT 'MAINTENANCE_LOGS', COUNT(*) FROM UNSTRUCTURED.MAINTENANCE_LOG_DOCUMENTS
+    SELECT 'FAILURE_EVENTS', COUNT(*) FROM RAW.FAILURE_EVENTS
+    ORDER BY TABLE_NAME;
+    "
+    echo ""
+    
+    echo -e "${YELLOW}Data Counts - Unstructured Tables:${NC}"
+    exec_sql "
+    USE DATABASE ${DATABASE};
+    SELECT 'MAINTENANCE_LOGS' AS TABLE_NAME, COUNT(*) AS ROW_COUNT FROM UNSTRUCTURED.MAINTENANCE_LOG_DOCUMENTS
     UNION ALL
     SELECT 'TECHNICAL_MANUALS', COUNT(*) FROM UNSTRUCTURED.TECHNICAL_MANUALS
     UNION ALL
     SELECT 'VISUAL_INSPECTIONS', COUNT(*) FROM UNSTRUCTURED.VISUAL_INSPECTION_RECORDS
     UNION ALL
     SELECT 'CV_DETECTIONS', COUNT(*) FROM UNSTRUCTURED.CV_DETECTIONS
-    UNION ALL
-    SELECT 'MODEL_PREDICTIONS', COUNT(*) FROM ML.MODEL_PREDICTIONS;
+    ORDER BY TABLE_NAME;
+    "
+    echo ""
+    
+    echo -e "${YELLOW}ML Predictions Summary:${NC}"
+    exec_sql "
+    USE DATABASE ${DATABASE};
+    SELECT 
+        COUNT(*) AS TOTAL_ASSETS,
+        SUM(CASE WHEN ALERT_LEVEL = 'CRITICAL' THEN 1 ELSE 0 END) AS CRITICAL_COUNT,
+        SUM(CASE WHEN ALERT_LEVEL = 'HIGH' THEN 1 ELSE 0 END) AS HIGH_COUNT,
+        SUM(CASE WHEN ALERT_LEVEL = 'MEDIUM' THEN 1 ELSE 0 END) AS MEDIUM_COUNT,
+        SUM(CASE WHEN ALERT_LEVEL = 'LOW' THEN 1 ELSE 0 END) AS LOW_COUNT
+    FROM ML.MODEL_PREDICTIONS;
     "
     echo ""
     
@@ -120,11 +141,58 @@ run_validation() {
     echo -e "${BLUE}╚════════════════════════════════════════════════════════════════╝${NC}"
     echo ""
     
-    if [ -f "sql/99_sample_queries.sql" ]; then
-        exec_sql_file "sql/99_sample_queries.sql"
-    else
-        echo -e "${YELLOW}No validation queries file found${NC}"
-    fi
+    echo -e "${YELLOW}Validating structured data...${NC}"
+    exec_sql "
+    USE DATABASE ${DATABASE};
+    SELECT 'RAW Data Check' AS VALIDATION_TYPE, 
+           COUNT(*) AS TABLES_WITH_DATA
+    FROM (
+        SELECT COUNT(*) AS cnt FROM RAW.ASSET_MASTER
+        UNION ALL SELECT COUNT(*) FROM RAW.SENSOR_READINGS
+        UNION ALL SELECT COUNT(*) FROM RAW.MAINTENANCE_HISTORY
+        UNION ALL SELECT COUNT(*) FROM RAW.FAILURE_EVENTS
+    ) WHERE cnt > 0;
+    "
+    echo ""
+    
+    echo -e "${YELLOW}Validating unstructured data...${NC}"
+    exec_sql "
+    USE DATABASE ${DATABASE};
+    SELECT 'Maintenance Logs' AS TABLE_NAME, COUNT(*) AS RECORD_COUNT 
+    FROM UNSTRUCTURED.MAINTENANCE_LOG_DOCUMENTS
+    UNION ALL
+    SELECT 'Technical Manuals', COUNT(*) 
+    FROM UNSTRUCTURED.TECHNICAL_MANUALS
+    UNION ALL
+    SELECT 'Visual Inspections', COUNT(*) 
+    FROM UNSTRUCTURED.VISUAL_INSPECTION_RECORDS
+    UNION ALL
+    SELECT 'CV Detections', COUNT(*) 
+    FROM UNSTRUCTURED.CV_DETECTIONS;
+    "
+    echo ""
+    
+    echo -e "${YELLOW}Validating ML predictions...${NC}"
+    exec_sql "
+    USE DATABASE ${DATABASE};
+    SELECT 
+        COUNT(*) AS TOTAL_PREDICTIONS,
+        SUM(CASE WHEN ALERT_LEVEL = 'CRITICAL' THEN 1 ELSE 0 END) AS CRITICAL_ASSETS,
+        SUM(CASE WHEN ALERT_LEVEL = 'HIGH' THEN 1 ELSE 0 END) AS HIGH_RISK_ASSETS,
+        AVG(FAILURE_PROBABILITY) AS AVG_FAILURE_PROB
+    FROM ML.MODEL_PREDICTIONS;
+    "
+    echo ""
+    
+    echo -e "${YELLOW}Validating business views...${NC}"
+    exec_sql "
+    USE DATABASE ${DATABASE};
+    SELECT 
+        COUNT(*) AS HIGH_RISK_ASSET_COUNT
+    FROM ANALYTICS.VW_HIGH_RISK_ASSETS
+    WHERE RISK_CATEGORY IN ('HIGH', 'CRITICAL');
+    "
+    echo ""
     
     echo -e "${GREEN}✓ Validation complete${NC}"
 }
