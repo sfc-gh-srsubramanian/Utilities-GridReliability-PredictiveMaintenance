@@ -190,7 +190,7 @@ run_validation() {
     SELECT 
         COUNT(*) AS HIGH_RISK_ASSET_COUNT
     FROM ANALYTICS.VW_HIGH_RISK_ASSETS
-    WHERE RISK_CATEGORY IN ('HIGH', 'CRITICAL');
+    WHERE ALERT_LEVEL IN ('HIGH', 'CRITICAL');
     "
     echo ""
     
