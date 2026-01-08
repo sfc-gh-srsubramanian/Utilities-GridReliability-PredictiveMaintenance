@@ -105,3 +105,8 @@ solution_presentation/generate_all_slides.py
 solution_presentation/token.pickle
 solution_presentation/credentials.json
 solution_presentation/presentation_id.txt
+
+# Generated PowerPoint presentations (keep local only)
+*.pptx
+solution_presentation/*.pptx
+solution_presentation/create_complete_powerpoint.py
