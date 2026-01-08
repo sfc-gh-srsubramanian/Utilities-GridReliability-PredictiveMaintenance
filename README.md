@@ -40,10 +40,13 @@ A **comprehensive AI-powered predictive maintenance platform** that:
 
 **Prerequisites:**
 ```bash
-# Install Snowflake CLI or SnowSQL
+# 1. Install Snowflake CLI or SnowSQL
 pip install snowflake-cli-labs
 
-# Configure your Snowflake connection
+# 2. Install Python dependencies (for data generation)
+pip install -r requirements.txt
+
+# 3. Configure your Snowflake connection
 snow connection add default
 ```
 

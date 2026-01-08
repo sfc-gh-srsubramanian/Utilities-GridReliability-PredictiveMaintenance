@@ -171,6 +171,28 @@ execute_sql "sql/10_security_roles.sql" "Configuring security roles"
 
 echo -e "${BLUE}═══ Phase 7: Data Loading ═══${NC}"
 
+# Check Python dependencies
+echo -e "${YELLOW}▶ Checking Python dependencies...${NC}"
+if ! python3 -c "import numpy, pandas, reportlab" 2>/dev/null; then
+    echo -e "${YELLOW}  Required Python packages not found. Installing...${NC}"
+    if [ -f "requirements.txt" ]; then
+        python3 -m pip install -q -r requirements.txt
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}  ✓ Python dependencies installed${NC}"
+        else
+            echo -e "${RED}  ✗ Failed to install Python dependencies${NC}"
+            echo -e "${YELLOW}  Please run: pip3 install -r requirements.txt${NC}"
+            exit 1
+        fi
+    else
+        echo -e "${RED}  ✗ requirements.txt not found${NC}"
+        echo -e "${YELLOW}  Please run: pip3 install numpy pandas reportlab${NC}"
+        exit 1
+    fi
+else
+    echo -e "${GREEN}  ✓ Python dependencies OK (numpy, pandas, reportlab)${NC}"
+fi
+
 # Generate structured data files FIRST
 echo -e "${YELLOW}▶ Generating structured data files (CSV/JSON)...${NC}"
 if [ ! -d "generated_data" ]; then
