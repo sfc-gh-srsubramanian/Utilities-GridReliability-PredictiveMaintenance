@@ -237,38 +237,105 @@ fi
 echo -e "${YELLOW}▶ Generating unstructured data files...${NC}"
 cd python/data_generators
 
-# Run all data generators
+# Run all data generators with error checking
 echo -e "${YELLOW}  → Generating maintenance logs...${NC}"
-python3 generate_maintenance_logs.py > /dev/null 2>&1
+if python3 generate_maintenance_logs.py > /tmp/maint_logs_gen.log 2>&1; then
+    MAINT_COUNT=$(ls -1 generated_maintenance_logs/*.pdf 2>/dev/null | wc -l)
+    echo -e "${GREEN}    ✓ Generated ${MAINT_COUNT} maintenance logs${NC}"
+else
+    echo -e "${RED}    ✗ Failed to generate maintenance logs${NC}"
+    cat /tmp/maint_logs_gen.log
+    exit 1
+fi
+
 echo -e "${YELLOW}  → Generating technical manuals...${NC}"
-python3 generate_technical_manuals.py > /dev/null 2>&1
+if python3 generate_technical_manuals.py > /tmp/tech_manuals_gen.log 2>&1; then
+    MANUAL_COUNT=$(ls -1 generated_technical_manuals/*.pdf 2>/dev/null | wc -l)
+    echo -e "${GREEN}    ✓ Generated ${MANUAL_COUNT} technical manuals${NC}"
+else
+    echo -e "${RED}    ✗ Failed to generate technical manuals${NC}"
+    cat /tmp/tech_manuals_gen.log
+    exit 1
+fi
+
 echo -e "${YELLOW}  → Generating visual inspections...${NC}"
-python3 generate_visual_inspections.py > /dev/null 2>&1
-echo -e "${GREEN}  ✓ Data files generated${NC}"
+if python3 generate_visual_inspections.py > /tmp/visual_insp_gen.log 2>&1; then
+    echo -e "${GREEN}    ✓ Generated visual inspections & CV detections${NC}"
+else
+    echo -e "${RED}    ✗ Failed to generate visual inspections${NC}"
+    cat /tmp/visual_insp_gen.log
+    exit 1
+fi
 
 echo -e "${YELLOW}  → Creating SQL loading script...${NC}"
-python3 load_unstructured_full.py > /dev/null 2>&1
-if [ $? -eq 0 ]; then
-    echo -e "${GREEN}  ✓ Generated unstructured data SQL${NC}"
-    
-    echo -e "${YELLOW}▶ Loading unstructured data into Snowflake...${NC}"
-    if [ "$SQL_CMD" = "snow sql" ]; then
-        snow sql -f load_unstructured_data_full.sql -c "$CONNECTION" --enable-templating NONE
+if python3 load_unstructured_full.py > /tmp/unstruct_sql_gen.log 2>&1; then
+    if [ -f "load_unstructured_data_full.sql" ]; then
+        SQL_SIZE=$(wc -l < load_unstructured_data_full.sql)
+        echo -e "${GREEN}    ✓ Generated SQL script (${SQL_SIZE} lines)${NC}"
     else
-        snowsql -c "$CONNECTION" -f load_unstructured_data_full.sql
-    fi
-    
-    if [ $? -eq 0 ]; then
-        echo -e "${GREEN}  ✓ Unstructured data loaded${NC}"
-    else
-        echo -e "${RED}  ✗ Failed to load unstructured data${NC}"
+        echo -e "${RED}    ✗ SQL script not created${NC}"
         exit 1
     fi
 else
     echo -e "${RED}  ✗ Failed to generate unstructured data SQL${NC}"
+    cat /tmp/unstruct_sql_gen.log
     exit 1
 fi
+
+echo -e "${YELLOW}▶ Loading unstructured data into Snowflake...${NC}"
+if [ "$SQL_CMD" = "snow sql" ]; then
+    snow sql -f load_unstructured_data_full.sql -c "$CONNECTION" -D "database=${DATABASE}" -D "warehouse=${WAREHOUSE}" --enable-templating NONE
+else
+    snowsql -c "$CONNECTION" -d "${DATABASE}" -w "${WAREHOUSE}" -f load_unstructured_data_full.sql
+fi
+
+if [ $? -eq 0 ]; then
+    echo -e "${GREEN}  ✓ Unstructured data loaded${NC}"
+else
+    echo -e "${RED}  ✗ Failed to load unstructured data${NC}"
+    exit 1
+fi
+
 cd ../..
+
+# Verify unstructured data was loaded
+echo -e "${YELLOW}▶ Verifying unstructured data loaded...${NC}"
+if [ "$SQL_CMD" = "snow sql" ]; then
+    MAINT_LOGS_COUNT=$(snow sql -c "$CONNECTION" -q "USE DATABASE ${DATABASE}; SELECT COUNT(*) FROM UNSTRUCTURED.MAINTENANCE_LOG_DOCUMENTS;" --enable-templating NONE 2>/dev/null | grep -o '[0-9]\+' | tail -1)
+    TECH_MANUAL_COUNT=$(snow sql -c "$CONNECTION" -q "USE DATABASE ${DATABASE}; SELECT COUNT(*) FROM UNSTRUCTURED.TECHNICAL_MANUALS;" --enable-templating NONE 2>/dev/null | grep -o '[0-9]\+' | tail -1)
+    VISUAL_INSP_COUNT=$(snow sql -c "$CONNECTION" -q "USE DATABASE ${DATABASE}; SELECT COUNT(*) FROM UNSTRUCTURED.VISUAL_INSPECTIONS;" --enable-templating NONE 2>/dev/null | grep -o '[0-9]\+' | tail -1)
+    CV_DETECT_COUNT=$(snow sql -c "$CONNECTION" -q "USE DATABASE ${DATABASE}; SELECT COUNT(*) FROM UNSTRUCTURED.CV_DETECTIONS;" --enable-templating NONE 2>/dev/null | grep -o '[0-9]\+' | tail -1)
+else
+    MAINT_LOGS_COUNT=$(snowsql -c "$CONNECTION" -d "${DATABASE}" -q "SELECT COUNT(*) FROM UNSTRUCTURED.MAINTENANCE_LOG_DOCUMENTS;" -o output_format=tsv -o friendly=false -o timing=false 2>/dev/null | grep -o '[0-9]\+' | tail -1)
+    TECH_MANUAL_COUNT=$(snowsql -c "$CONNECTION" -d "${DATABASE}" -q "SELECT COUNT(*) FROM UNSTRUCTURED.TECHNICAL_MANUALS;" -o output_format=tsv -o friendly=false -o timing=false 2>/dev/null | grep -o '[0-9]\+' | tail -1)
+    VISUAL_INSP_COUNT=$(snowsql -c "$CONNECTION" -d "${DATABASE}" -q "SELECT COUNT(*) FROM UNSTRUCTURED.VISUAL_INSPECTIONS;" -o output_format=tsv -o friendly=false -o timing=false 2>/dev/null | grep -o '[0-9]\+' | tail -1)
+    CV_DETECT_COUNT=$(snowsql -c "$CONNECTION" -d "${DATABASE}" -q "SELECT COUNT(*) FROM UNSTRUCTURED.CV_DETECTIONS;" -o output_format=tsv -o friendly=false -o timing=false 2>/dev/null | grep -o '[0-9]\+' | tail -1)
+fi
+
+echo -e "${YELLOW}  Unstructured data counts:${NC}"
+if [ -n "$MAINT_LOGS_COUNT" ] && [ "$MAINT_LOGS_COUNT" -gt 0 ]; then
+    echo -e "${GREEN}    ✓ Maintenance logs: ${MAINT_LOGS_COUNT}${NC}"
+else
+    echo -e "${RED}    ✗ Maintenance logs: 0 (expected ~80)${NC}"
+fi
+
+if [ -n "$TECH_MANUAL_COUNT" ] && [ "$TECH_MANUAL_COUNT" -gt 0 ]; then
+    echo -e "${GREEN}    ✓ Technical manuals: ${TECH_MANUAL_COUNT}${NC}"
+else
+    echo -e "${RED}    ✗ Technical manuals: 0 (expected ~15)${NC}"
+fi
+
+if [ -n "$VISUAL_INSP_COUNT" ] && [ "$VISUAL_INSP_COUNT" -gt 0 ]; then
+    echo -e "${GREEN}    ✓ Visual inspections: ${VISUAL_INSP_COUNT}${NC}"
+else
+    echo -e "${RED}    ✗ Visual inspections: 0 (expected ~150)${NC}"
+fi
+
+if [ -n "$CV_DETECT_COUNT" ] && [ "$CV_DETECT_COUNT" -gt 0 ]; then
+    echo -e "${GREEN}    ✓ CV detections: ${CV_DETECT_COUNT}${NC}"
+else
+    echo -e "${RED}    ✗ CV detections: 0 (expected ~281)${NC}"
+fi
 
 # Create Cortex Search Services
 execute_sql "sql/12_load_unstructured_data.sql" "Creating Cortex Search Services"
