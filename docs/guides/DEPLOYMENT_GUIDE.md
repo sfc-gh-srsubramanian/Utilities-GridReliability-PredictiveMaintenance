@@ -16,10 +16,46 @@ This guide provides step-by-step instructions to deploy the complete Grid Reliab
 - [ ] Git repository cloned/files available
 - [ ] Snowflake CLI (`snowsql`) or SnowSQL installed
 - [ ] Text editor for configuration
+- [ ] Python virtual environment created and activated (RECOMMENDED)
 
 ---
 
 ## 🚀 Step-by-Step Deployment
+
+### **Phase 0: Environment Setup (5 minutes)**
+
+**Create and activate a Python virtual environment:**
+
+```bash
+# Navigate to project directory
+cd "AI-driven Grid Reliability & Predictive Maintenance-Solution Page Ready"
+
+# Create virtual environment
+python3 -m venv venv
+
+# Activate virtual environment
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install Python dependencies
+pip install -r requirements.txt
+```
+
+**✅ Verification:**
+```bash
+# Check that venv is active (should show venv path)
+which python
+
+# Verify packages installed
+pip list | grep -E "numpy|pandas|reportlab|snowflake"
+```
+
+**Why use a virtual environment?**
+- **Isolation**: Keeps project dependencies separate from system Python
+- **Reproducibility**: Ensures consistent package versions
+- **Safety**: Prevents conflicts with other Python projects
+- **Best Practice**: Industry standard for Python development
+
+---
 
 ### **Phase 1: Database Setup (30 minutes)**
 

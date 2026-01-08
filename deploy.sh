@@ -171,6 +171,23 @@ execute_sql "sql/10_security_roles.sql" "Configuring security roles"
 
 echo -e "${BLUE}═══ Phase 7: Data Loading ═══${NC}"
 
+# Check if running in a virtual environment (best practice)
+if [[ -z "$VIRTUAL_ENV" ]]; then
+    echo -e "${YELLOW}⚠️  WARNING: Not running in a Python virtual environment${NC}"
+    echo -e "${YELLOW}   It's recommended to use a virtual environment to avoid package conflicts:${NC}"
+    echo -e "${YELLOW}   $ python3 -m venv venv${NC}"
+    echo -e "${YELLOW}   $ source venv/bin/activate  # On Windows: venv\\Scripts\\activate${NC}"
+    echo -e "${YELLOW}   $ pip install -r requirements.txt${NC}"
+    echo ""
+    read -p "Continue anyway? (y/n) " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo -e "${RED}Deployment cancelled${NC}"
+        exit 1
+    fi
+    echo ""
+fi
+
 # Check Python dependencies
 echo -e "${YELLOW}▶ Checking Python dependencies...${NC}"
 if ! python3 -c "import numpy, pandas, reportlab" 2>/dev/null; then

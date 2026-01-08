@@ -14,6 +14,29 @@ This guide gets you a working demo environment quickly. For production deploymen
 
 ---
 
+## Step 0: Environment Setup (2 minutes)
+
+**Create a Python virtual environment (RECOMMENDED):**
+
+```bash
+# Create virtual environment
+python3 -m venv venv
+
+# Activate it
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+**Why use a virtual environment?**
+- Avoids conflicts with system Python packages
+- Isolates project dependencies
+- Makes deployment reproducible
+- Industry best practice
+
+---
+
 ## Step 1: Database Setup (5 minutes)
 
 ```bash
