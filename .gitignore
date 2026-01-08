@@ -98,3 +98,10 @@ generated_data/
 
 # Temporary cleanup documentation
 CLEANUP_COMPLETE.md
+# Presentation generator scripts (keep local only)
+solution_presentation/create_powerpoint.py
+solution_presentation/create_google_slides.py
+solution_presentation/generate_all_slides.py
+solution_presentation/token.pickle
+solution_presentation/credentials.json
+solution_presentation/presentation_id.txt
