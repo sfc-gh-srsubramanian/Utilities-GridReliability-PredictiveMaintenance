@@ -40,29 +40,18 @@ A **comprehensive AI-powered predictive maintenance platform** that:
 
 **Prerequisites:**
 ```bash
-# 1. Create and activate a Python virtual environment (RECOMMENDED)
-# Option A: Use the convenience script
-./setup_venv.sh
-
-# Option B: Manual setup
-python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# 2. Install Snowflake CLI or SnowSQL
+# 1. Install Snowflake CLI or SnowSQL
 pip install snowflake-cli-labs
 
-# 3. Install Python dependencies (for data generation)
-pip install -r requirements.txt
-
-# 4. Configure your Snowflake connection
+# 2. Configure your Snowflake connection
 snow connection add default
 ```
 
-**Note:** Using a virtual environment is **strongly recommended** to:
-- Avoid package conflicts with your system Python
-- Isolate project dependencies
-- Ensure reproducible deployments
-- Follow Python development best practices
+**Note:** Python dependencies are **automatically managed**:
+- ✅ Auto-detects Python 3.8+ on your system
+- ✅ Creates and activates virtual environment automatically
+- ✅ Installs all required packages (numpy, pandas, reportlab)
+- ✅ No manual setup needed - just run `./deploy.sh`!
 
 **Step 1: Deploy the Platform** (15-20 minutes)
 ```bash

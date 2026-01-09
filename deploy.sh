@@ -194,44 +194,96 @@ execute_sql "sql/10_security_roles.sql" "Configuring security roles"
 
 echo -e "${BLUE}═══ Phase 7: Data Loading ═══${NC}"
 
-# Check if running in a virtual environment (best practice)
-if [[ -z "$VIRTUAL_ENV" ]]; then
-    echo -e "${YELLOW}⚠️  WARNING: Not running in a Python virtual environment${NC}"
-    echo -e "${YELLOW}   It's recommended to use a virtual environment to avoid package conflicts:${NC}"
-    echo -e "${YELLOW}   $ python3 -m venv venv${NC}"
-    echo -e "${YELLOW}   $ source venv/bin/activate  # On Windows: venv\\Scripts\\activate${NC}"
-    echo -e "${YELLOW}   $ pip install -r requirements.txt${NC}"
-    echo ""
-    read -p "Continue anyway? (y/n) " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        echo -e "${RED}Deployment cancelled${NC}"
-        exit 1
-    fi
-    echo ""
+# =============================================================================
+# AUTO-DETECT PYTHON ENVIRONMENT & SETUP VIRTUAL ENVIRONMENT
+# =============================================================================
+
+echo -e "${YELLOW}▶ Setting up Python environment...${NC}"
+
+# Function to detect best available Python version
+detect_python() {
+    for cmd in python3.11 python3.10 python3.9 python3.8 python3 python; do
+        if command -v $cmd &> /dev/null; then
+            version=$($cmd --version 2>&1 | grep -oE '[0-9]+\.[0-9]+' | head -1)
+            major=$(echo $version | cut -d. -f1)
+            minor=$(echo $version | cut -d. -f2)
+            if [ "$major" -eq 3 ] && [ "$minor" -ge 8 ]; then
+                echo "$cmd"
+                return 0
+            fi
+        fi
+    done
+    return 1
+}
+
+# Detect Python
+PYTHON_CMD=$(detect_python)
+if [ -z "$PYTHON_CMD" ]; then
+    echo -e "${RED}  ✗ Python 3.8+ not found${NC}"
+    echo -e "${YELLOW}  Please install Python 3.8 or higher${NC}"
+    exit 1
 fi
 
-# Check Python dependencies
-echo -e "${YELLOW}▶ Checking Python dependencies...${NC}"
-if ! python3 -c "import numpy, pandas, reportlab" 2>/dev/null; then
-    echo -e "${YELLOW}  Required Python packages not found. Installing...${NC}"
-    if [ -f "requirements.txt" ]; then
-        python3 -m pip install -q -r requirements.txt
-        if [ $? -eq 0 ]; then
-            echo -e "${GREEN}  ✓ Python dependencies installed${NC}"
+PYTHON_VERSION=$($PYTHON_CMD --version 2>&1)
+echo -e "${GREEN}  ✓ Detected: ${PYTHON_VERSION}${NC}"
+
+# Check if already in a virtual environment
+if [[ -n "$VIRTUAL_ENV" ]]; then
+    echo -e "${GREEN}  ✓ Using active virtual environment: ${VIRTUAL_ENV}${NC}"
+    PYTHON_CMD="python3"  # Use the venv's python
+else
+    # Auto-create venv if it doesn't exist
+    if [ ! -d "venv" ]; then
+        echo -e "${YELLOW}  → Creating virtual environment...${NC}"
+        if $PYTHON_CMD -m venv venv; then
+            echo -e "${GREEN}    ✓ Virtual environment created${NC}"
         else
-            echo -e "${RED}  ✗ Failed to install Python dependencies${NC}"
-            echo -e "${YELLOW}  Please run: pip3 install -r requirements.txt${NC}"
+            echo -e "${YELLOW}    ⚠️  Could not create venv, using system Python${NC}"
+        fi
+    fi
+    
+    # Try to activate venv (non-blocking)
+    if [ -d "venv" ]; then
+        if [ -f "venv/bin/activate" ]; then
+            echo -e "${YELLOW}  → Activating virtual environment...${NC}"
+            source venv/bin/activate
+            PYTHON_CMD="python3"
+            echo -e "${GREEN}    ✓ Virtual environment activated${NC}"
+        elif [ -f "venv/Scripts/activate" ]; then
+            # Windows
+            source venv/Scripts/activate
+            PYTHON_CMD="python3"
+            echo -e "${GREEN}    ✓ Virtual environment activated${NC}"
+        fi
+    fi
+fi
+
+# Auto-install dependencies
+echo -e "${YELLOW}▶ Checking Python dependencies...${NC}"
+if ! $PYTHON_CMD -c "import numpy, pandas, reportlab" 2>/dev/null; then
+    echo -e "${YELLOW}  → Installing required packages (numpy, pandas, reportlab)...${NC}"
+    if [ -f "requirements.txt" ]; then
+        if $PYTHON_CMD -m pip install -q -r requirements.txt; then
+            echo -e "${GREEN}    ✓ Dependencies installed${NC}"
+        else
+            echo -e "${RED}    ✗ Failed to install dependencies${NC}"
+            echo -e "${YELLOW}    Manual install: pip install -r requirements.txt${NC}"
             exit 1
         fi
     else
-        echo -e "${RED}  ✗ requirements.txt not found${NC}"
-        echo -e "${YELLOW}  Please run: pip3 install numpy pandas reportlab${NC}"
-        exit 1
+        if $PYTHON_CMD -m pip install -q numpy pandas reportlab; then
+            echo -e "${GREEN}    ✓ Dependencies installed${NC}"
+        else
+            echo -e "${RED}    ✗ Failed to install dependencies${NC}"
+            exit 1
+        fi
     fi
 else
-    echo -e "${GREEN}  ✓ Python dependencies OK (numpy, pandas, reportlab)${NC}"
+    echo -e "${GREEN}  ✓ All Python dependencies available${NC}"
 fi
+
+# Use detected Python for all subsequent commands
+alias python3="$PYTHON_CMD"
 
 # Generate structured data files FIRST
 echo -e "${YELLOW}▶ Generating structured data files (CSV/JSON)...${NC}"
