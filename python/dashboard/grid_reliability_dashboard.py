@@ -182,7 +182,6 @@ def create_risk_heatmap(df):
         return go.Figure()
     
     # Calculate geographic centers from actual data
-    # Extract unique cities with their coordinates
     city_locations = df.groupby('LOCATION_CITY').agg({
         'LOCATION_LAT': 'mean',
         'LOCATION_LON': 'mean',
@@ -190,110 +189,91 @@ def create_risk_heatmap(df):
     }).reset_index()
     city_locations.columns = ['CITY', 'LAT', 'LON', 'ASSET_COUNT']
     
-    # Extract county statistics
     county_stats = df.groupby('LOCATION_COUNTY').agg({
         'LOCATION_LAT': 'mean',
         'LOCATION_LON': 'mean',
         'RISK_SCORE': 'mean',
-        'ASSET_ID': 'count',
-        'CUSTOMERS_AFFECTED': 'sum'
+        'ASSET_ID': 'count'
     }).reset_index()
     
-    # Create base scatter mapbox with enhanced styling
-    fig = px.scatter_mapbox(
-        df,
-        lat='LOCATION_LAT',
-        lon='LOCATION_LON',
-        color='RISK_SCORE',
-        size='CUSTOMERS_AFFECTED',
-        hover_name='ASSET_ID',
-        hover_data={
-            'LOCATION_SUBSTATION': True,
-            'LOCATION_CITY': True,
-            'LOCATION_COUNTY': True,
-            'RISK_SCORE': ':.1f',
-            'CUSTOMERS_AFFECTED': ':,',
-            'ALERT_LEVEL': True,
-            'LOCATION_LAT': False,
-            'LOCATION_LON': False
-        },
-        color_continuous_scale=[
-            [0, 'green'],
-            [0.40, 'yellow'],
-            [0.70, 'orange'],
-            [0.85, 'red']
-        ],
-        range_color=[0, 100],
-        zoom=6,
-        height=600,
-        title="Florida Grid Assets - Risk Score Heatmap"
-    )
+    # Create figure from scratch for better control
+    fig = go.Figure()
     
-    # Enhance asset markers for better visibility
-    fig.update_traces(
-        marker=dict(
-            sizemode='diameter',
-            sizemin=4,
-            opacity=0.8
-        ),
-        selector=dict(type='scattermapbox')
-    )
+    # Add asset markers with fixed sizes (not sized by customers - that causes huge circles)
+    for risk_cat in ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL']:
+        cat_df = df[df['RISK_CATEGORY'] == risk_cat]
+        if not cat_df.empty:
+            # Map risk categories to colors
+            colors = {'LOW': 'green', 'MEDIUM': 'gold', 'HIGH': 'orange', 'CRITICAL': 'red'}
+            sizes = {'LOW': 6, 'MEDIUM': 8, 'HIGH': 10, 'CRITICAL': 12}
+            
+            fig.add_trace(go.Scattermapbox(
+                lat=cat_df['LOCATION_LAT'],
+                lon=cat_df['LOCATION_LON'],
+                mode='markers',
+                marker=dict(
+                    size=sizes[risk_cat],
+                    color=colors[risk_cat],
+                    opacity=0.7
+                ),
+                text=cat_df['ASSET_ID'],
+                customdata=cat_df[['LOCATION_SUBSTATION', 'LOCATION_CITY', 'RISK_SCORE', 
+                                   'CUSTOMERS_AFFECTED', 'ALERT_LEVEL']],
+                hovertemplate='<b>%{text}</b><br>' +
+                             'Substation: %{customdata[0]}<br>' +
+                             'City: %{customdata[1]}<br>' +
+                             'Risk Score: %{customdata[2]:.1f}<br>' +
+                             'Customers: %{customdata[3]:,}<br>' +
+                             'Alert: %{customdata[4]}<extra></extra>',
+                name=f'{risk_cat} Risk',
+                showlegend=True
+            ))
     
-    # Add city markers layer (data-driven)
+    # Add city labels (smaller markers)
     fig.add_trace(go.Scattermapbox(
         lat=city_locations['LAT'],
         lon=city_locations['LON'],
-        mode='markers+text',
-        marker=dict(
-            size=12,
-            color='navy',
-            symbol='circle',
-            opacity=0.9
-        ),
+        mode='text',
         text=city_locations['CITY'],
-        textposition='top center',
         textfont=dict(
-            size=11,
+            size=10,
             color='darkblue',
             family='Arial Black'
         ),
         name='Cities',
-        hovertemplate='<b>%{text}</b><br>Assets: %{customdata}<extra></extra>',
-        customdata=city_locations['ASSET_COUNT'],
-        showlegend=True
+        showlegend=False,
+        hoverinfo='skip'
     ))
     
-    # Add county labels layer (background, larger text)
-    county_labels = [
-        f"{row['LOCATION_COUNTY']}<br>({row['ASSET_ID']} assets, Avg Risk: {row['RISK_SCORE']:.1f})"
-        for _, row in county_stats.iterrows()
-    ]
-    
+    # Add county labels (very subtle, background)
+    county_labels = [f"{row['LOCATION_COUNTY']}" for _, row in county_stats.iterrows()]
     fig.add_trace(go.Scattermapbox(
         lat=county_stats['LOCATION_LAT'],
         lon=county_stats['LOCATION_LON'],
         mode='text',
         text=county_labels,
         textfont=dict(
-            size=9,
-            color='rgba(60,60,60,0.5)',
+            size=8,
+            color='rgba(100,100,100,0.4)',
             family='Arial'
         ),
         name='Counties',
-        showlegend=True,
-        hovertemplate='<b>%{text}</b><extra></extra>'
+        showlegend=False,
+        hoverinfo='skip'
     ))
     
-    # Use white-bg style - works without external tile servers
-    # Shows white background with lat/lon grid lines
+    # Configure layout with proper zoom controls
     fig.update_layout(
-        mapbox_style="white-bg",
-        mapbox_center={
-            "lat": df['LOCATION_LAT'].mean(),
-            "lon": df['LOCATION_LON'].mean()
-        },
-        mapbox_zoom=5.5,
-        margin={"r": 0, "t": 40, "l": 0, "b": 0},
+        mapbox=dict(
+            style="white-bg",
+            center=dict(
+                lat=df['LOCATION_LAT'].mean(),
+                lon=df['LOCATION_LON'].mean()
+            ),
+            zoom=5.5
+        ),
+        margin={"r": 0, "t": 0, "l": 0, "b": 0},
+        height=600,
         legend=dict(
             yanchor="top",
             y=0.99,
