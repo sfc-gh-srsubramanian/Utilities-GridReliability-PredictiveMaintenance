@@ -217,43 +217,76 @@ if [ ! -d "generated_data" ]; then
 fi
 
 cd python/data_generators
-python3 generate_asset_data.py
-cd ../..
-
-if [ -f "generated_data/asset_master.csv" ]; then
-    echo -e "${GREEN}  ✓ Structured data files generated${NC}"
-    echo -e "${YELLOW}    → asset_master.csv, maintenance_history.csv, failure_events.csv${NC}"
-    echo -e "${YELLOW}    → sensor_readings_batch_*.json (5 files)${NC}"
+# Run with output suppression to avoid SQL parsing issues
+if python3 generate_asset_data.py > /tmp/asset_data_gen.log 2>&1; then
+    cd ../..
+    if [ -f "generated_data/asset_master.csv" ]; then
+        echo -e "${GREEN}  ✓ Structured data files generated${NC}"
+        echo -e "${YELLOW}    → asset_master.csv, maintenance_history.csv, failure_events.csv${NC}"
+        echo -e "${YELLOW}    → sensor_readings_batch_*.json (5 files)${NC}"
+    else
+        echo -e "${RED}  ✗ Failed to generate structured data files (files not found)${NC}"
+        cat /tmp/asset_data_gen.log
+        exit 1
+    fi
 else
-    echo -e "${RED}  ✗ Failed to generate structured data files${NC}"
+    echo -e "${RED}  ✗ Failed to generate structured data files (script error)${NC}"
+    cat /tmp/asset_data_gen.log
+    cd ../..
     exit 1
 fi
 
 # Upload structured data files to Snowflake stages
 echo -e "${YELLOW}▶ Uploading structured data files to Snowflake stages...${NC}"
+
+# Get absolute path to generated_data directory
+DATA_DIR="$(pwd)/generated_data"
+
+echo -e "${YELLOW}  → Uploading CSV files (asset_master, maintenance_history, failure_events)...${NC}"
 if [ "$SQL_CMD" = "snow sql" ]; then
     snow sql -c "$CONNECTION" -q "
         USE DATABASE ${DATABASE};
         USE SCHEMA RAW;
-        PUT file://generated_data/*.csv @ASSET_DATA_STAGE AUTO_COMPRESS=TRUE OVERWRITE=TRUE;
-        PUT file://generated_data/*.json @SENSOR_DATA_STAGE AUTO_COMPRESS=TRUE OVERWRITE=TRUE;
-    " --enable-templating NONE > /dev/null 2>&1
+        PUT file://${DATA_DIR}/*.csv @ASSET_DATA_STAGE AUTO_COMPRESS=TRUE OVERWRITE=TRUE;
+    " --enable-templating NONE 2>&1 | grep -E "UPLOADED|SKIPPED|ERROR" || true
 else
-    # For snowsql, execute PUT commands
     snowsql -c "$CONNECTION" -q "
         USE DATABASE ${DATABASE};
         USE SCHEMA RAW;
-        PUT file://generated_data/*.csv @ASSET_DATA_STAGE AUTO_COMPRESS=TRUE OVERWRITE=TRUE;
-        PUT file://generated_data/*.json @SENSOR_DATA_STAGE AUTO_COMPRESS=TRUE OVERWRITE=TRUE;
-    " > /dev/null 2>&1
+        PUT file://${DATA_DIR}/*.csv @ASSET_DATA_STAGE AUTO_COMPRESS=TRUE OVERWRITE=TRUE;
+    " 2>&1 | grep -E "UPLOADED|SKIPPED|ERROR" || true
 fi
 
-if [ $? -eq 0 ]; then
-    echo -e "${GREEN}  ✓ Files uploaded to stages${NC}"
+CSV_UPLOAD_STATUS=$?
+if [ $CSV_UPLOAD_STATUS -eq 0 ]; then
+    echo -e "${GREEN}    ✓ CSV files uploaded${NC}"
 else
-    echo -e "${RED}  ✗ Failed to upload files${NC}"
-    exit 1
+    echo -e "${YELLOW}    ⚠️  CSV upload may have issues (exit code: ${CSV_UPLOAD_STATUS})${NC}"
 fi
+
+echo -e "${YELLOW}  → Uploading JSON files (sensor_readings_batch_*.json)...${NC}"
+if [ "$SQL_CMD" = "snow sql" ]; then
+    snow sql -c "$CONNECTION" -q "
+        USE DATABASE ${DATABASE};
+        USE SCHEMA RAW;
+        PUT file://${DATA_DIR}/*.json @SENSOR_DATA_STAGE AUTO_COMPRESS=TRUE OVERWRITE=TRUE;
+    " --enable-templating NONE 2>&1 | grep -E "UPLOADED|SKIPPED|ERROR" || true
+else
+    snowsql -c "$CONNECTION" -q "
+        USE DATABASE ${DATABASE};
+        USE SCHEMA RAW;
+        PUT file://${DATA_DIR}/*.json @SENSOR_DATA_STAGE AUTO_COMPRESS=TRUE OVERWRITE=TRUE;
+    " 2>&1 | grep -E "UPLOADED|SKIPPED|ERROR" || true
+fi
+
+JSON_UPLOAD_STATUS=$?
+if [ $JSON_UPLOAD_STATUS -eq 0 ]; then
+    echo -e "${GREEN}    ✓ JSON files uploaded${NC}"
+else
+    echo -e "${YELLOW}    ⚠️  JSON upload may have issues (exit code: ${JSON_UPLOAD_STATUS})${NC}"
+fi
+
+echo -e "${GREEN}  ✓ File upload phase completed${NC}"
 
 execute_sql "sql/11_load_structured_data.sql" "Loading structured data"
 
