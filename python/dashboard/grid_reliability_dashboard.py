@@ -205,11 +205,34 @@ def create_risk_heatmap(df):
         title="Florida Grid Assets - Risk Score Heatmap"
     )
     
+    # Use carto-positron style which works better in Snowflake environment
+    # Falls back to basic style if external tiles are blocked
     fig.update_layout(
-        mapbox_style="open-street-map",
+        mapbox_style="carto-positron",
         mapbox_center={"lat": 28.0, "lon": -81.5},
         margin={"r": 0, "t": 40, "l": 0, "b": 0}
     )
+    
+    # Add city labels for geographic context
+    major_cities = {
+        'Miami': (25.7617, -80.1918),
+        'Orlando': (28.5383, -81.3792),
+        'Tampa': (27.9506, -82.4572),
+        'Jacksonville': (30.3322, -81.6557),
+        'West Palm Beach': (26.7153, -80.0534)
+    }
+    
+    for city, (lat, lon) in major_cities.items():
+        fig.add_annotation(
+            x=lon,
+            y=lat,
+            text=city,
+            showarrow=False,
+            font=dict(size=10, color="darkblue"),
+            bgcolor="rgba(255,255,255,0.7)",
+            xref="x",
+            yref="y"
+        )
     
     return fig
 
