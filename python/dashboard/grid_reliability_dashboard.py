@@ -234,9 +234,9 @@ def create_risk_heatmap(df):
         marker=dict(
             sizemode='diameter',
             sizemin=4,
-            opacity=0.8,
-            line=dict(width=1, color='white')
-        )
+            opacity=0.8
+        ),
+        selector=dict(type='scattermapbox')
     )
     
     # Add city markers layer (data-driven)
