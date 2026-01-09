@@ -603,12 +603,15 @@ def main():
         # Map
         fig_map = create_risk_heatmap(filtered_df)
         
-        # Configure map controls to be more prominent
+        # Configure map controls - only essential controls
         config = {
             'displayModeBar': True,
             'displaylogo': False,
-            'modeBarButtonsToAdd': ['drawrect', 'eraseshape'],
-            'modeBarButtonsToRemove': [],
+            'modeBarButtonsToRemove': [
+                'select2d', 'lasso2d', 'autoScale2d', 
+                'hoverClosestCartesian', 'hoverCompareCartesian',
+                'toggleSpikelines', 'resetScale2d'
+            ],
             'toImageButtonOptions': {
                 'format': 'png',
                 'filename': 'grid_asset_map',
