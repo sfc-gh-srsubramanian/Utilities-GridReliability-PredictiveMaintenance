@@ -96,6 +96,7 @@ load_unstructured_data_full.sql
 
 # Generated data files (recreated during deployment)
 generated_data/
+python/data_generators/generated_data/  # Should not exist - if present, it's stale/wrong location
 
 # Temporary cleanup documentation
 CLEANUP_COMPLETE.md

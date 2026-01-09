@@ -216,6 +216,12 @@ if [ ! -d "generated_data" ]; then
     mkdir -p generated_data
 fi
 
+# Clean up any stale/duplicate generated_data folder in wrong location
+if [ -d "python/data_generators/generated_data" ]; then
+    echo -e "${YELLOW}  → Removing stale data folder in wrong location...${NC}"
+    rm -rf python/data_generators/generated_data
+fi
+
 cd python/data_generators
 # Run with output suppression to avoid SQL parsing issues
 # Output to ../../generated_data to ensure files are at PROJECT_ROOT/generated_data
