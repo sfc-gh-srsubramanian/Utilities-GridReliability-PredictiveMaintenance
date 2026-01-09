@@ -218,54 +218,40 @@ def create_risk_heatmap(df):
     # Create figure from scratch for better control
     fig = go.Figure()
     
-    # Add Florida state outline for geographic context (simplified but accurate)
-    # Coordinates trace Florida's actual boundary
-    florida_outline_lon = [
-        -87.63, -87.42, -87.31, -87.22, -87.13, -87.06, -86.95, -86.82, -86.66, -86.50,
-        -86.36, -86.29, -86.15, -86.08, -85.99, -85.89, -85.74, -85.63, -85.53, -85.43,
-        -85.31, -85.18, -85.05, -84.87, -84.70, -84.56, -84.47, -84.43, -84.40, -84.29,
-        -84.18, -84.09, -84.05, -83.92, -83.84, -83.73, -83.61, -83.47, -83.35, -83.22,
-        -83.11, -83.04, -82.93, -82.85, -82.78, -82.71, -82.64, -82.59, -82.52, -82.45,
-        -82.36, -82.26, -82.18, -82.12, -82.05, -81.97, -81.90, -81.85, -81.77, -81.71,
-        -81.64, -81.58, -81.48, -81.35, -81.26, -81.17, -81.10, -81.06, -80.96, -80.88,
-        -80.81, -80.74, -80.59, -80.48, -80.42, -80.38, -80.35, -80.32, -80.29, -80.24,
-        -80.18, -80.13, -80.10, -80.07, -80.05, -80.03, -80.01, -80.04, -80.08, -80.14,
-        -80.22, -80.26, -80.31, -80.35, -80.39, -80.46, -80.53, -80.63, -80.75, -80.84,
-        -80.96, -81.03, -81.13, -81.24, -81.35, -81.48, -81.60, -81.76, -81.90, -82.04,
-        -82.18, -82.28, -82.38, -82.47, -82.60, -82.75, -82.87, -82.95, -83.07, -83.18,
-        -83.29, -83.41, -83.53, -83.66, -83.80, -83.95, -84.11, -84.31, -84.67, -84.85,
-        -85.00, -85.18, -85.39, -85.56, -85.74, -85.85, -86.08, -86.27, -86.47, -86.66,
-        -86.88, -87.10, -87.33, -87.50, -87.63
-    ]
-    florida_outline_lat = [
-        31.00, 30.95, 30.92, 30.89, 30.86, 30.83, 30.79, 30.75, 30.71, 30.67,
-        30.63, 30.59, 30.54, 30.50, 30.46, 30.42, 30.36, 30.32, 30.28, 30.24,
-        30.20, 30.15, 30.09, 30.02, 29.95, 29.88, 29.82, 29.77, 29.73, 29.67,
-        29.61, 29.56, 29.50, 29.44, 29.39, 29.32, 29.26, 29.18, 29.10, 29.03,
-        28.96, 28.90, 28.82, 28.75, 28.68, 28.60, 28.53, 28.46, 28.38, 28.31,
-        28.24, 28.16, 28.09, 28.02, 27.94, 27.87, 27.80, 27.73, 27.65, 27.58,
-        27.51, 27.43, 27.34, 27.26, 27.18, 27.10, 27.02, 26.95, 26.87, 26.79,
-        26.71, 26.63, 26.47, 26.32, 26.20, 26.14, 26.09, 26.03, 25.97, 25.94,
-        25.94, 25.95, 25.96, 25.97, 25.98, 25.99, 26.01, 26.05, 26.09, 26.14,
-        26.23, 26.32, 26.42, 26.53, 26.63, 26.74, 26.85, 26.96, 27.07, 27.18,
-        27.30, 27.42, 27.54, 27.65, 27.77, 27.89, 28.01, 28.13, 28.25, 28.37,
-        28.49, 28.61, 28.73, 28.85, 28.96, 29.08, 29.20, 29.32, 29.44, 29.56,
-        29.68, 29.79, 29.91, 30.02, 30.15, 30.28, 30.44, 30.71, 30.71, 30.71,
-        30.71, 30.71, 30.71, 30.71, 30.71, 30.71, 30.71, 30.71, 30.71, 30.71,
-        30.71, 30.71, 30.71, 30.71, 31.00
-    ]
+    # Add geographic reference grid (works for any region)
+    # Calculate data bounds for dynamic grid
+    lat_min, lat_max = df['LOCATION_LAT'].min(), df['LOCATION_LAT'].max()
+    lon_min, lon_max = df['LOCATION_LON'].min(), df['LOCATION_LON'].max()
     
-    fig.add_trace(go.Scattermapbox(
-        lat=florida_outline_lat,
-        lon=florida_outline_lon,
-        mode='lines',
-        line=dict(width=3, color='#1f77b4'),
-        fill='toself',
-        fillcolor='rgba(31, 119, 180, 0.05)',
-        name='Florida',
-        hoverinfo='skip',
-        showlegend=False
-    ))
+    # Add subtle lat/lon grid lines for geographic context
+    lat_range = lat_max - lat_min
+    lon_range = lon_max - lon_min
+    
+    # Determine grid spacing based on data extent (approximately 4-6 lines)
+    lat_step = max(1, int(lat_range / 4))
+    lon_step = max(1, int(lon_range / 4))
+    
+    # Add horizontal grid lines (latitude)
+    for lat in range(int(lat_min), int(lat_max) + 1, lat_step):
+        fig.add_trace(go.Scattermapbox(
+            lat=[lat, lat],
+            lon=[lon_min - 0.5, lon_max + 0.5],
+            mode='lines',
+            line=dict(width=1, color='rgba(150, 150, 150, 0.2)'),
+            hoverinfo='skip',
+            showlegend=False
+        ))
+    
+    # Add vertical grid lines (longitude)
+    for lon in range(int(lon_min), int(lon_max) + 1, lon_step):
+        fig.add_trace(go.Scattermapbox(
+            lat=[lat_min - 0.5, lat_max + 0.5],
+            lon=[lon, lon],
+            mode='lines',
+            line=dict(width=1, color='rgba(150, 150, 150, 0.2)'),
+            hoverinfo='skip',
+            showlegend=False
+        ))
     
     # Add asset markers with fixed sizes (not sized by customers - that causes huge circles)
     for risk_cat in ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL']:
@@ -330,7 +316,22 @@ def create_risk_heatmap(df):
         hoverinfo='skip'
     ))
     
-    # Configure layout with proper zoom controls
+    # Configure layout with proper zoom controls (dynamic based on data extent)
+    # Calculate optimal zoom level based on data spread
+    lat_range = df['LOCATION_LAT'].max() - df['LOCATION_LAT'].min()
+    lon_range = df['LOCATION_LON'].max() - df['LOCATION_LON'].min()
+    max_range = max(lat_range, lon_range)
+    
+    # Determine zoom level dynamically
+    if max_range > 10:
+        zoom_level = 4.5
+    elif max_range > 5:
+        zoom_level = 5.5
+    elif max_range > 2:
+        zoom_level = 6.5
+    else:
+        zoom_level = 7.5
+    
     fig.update_layout(
         mapbox=dict(
             style="white-bg",
@@ -338,7 +339,7 @@ def create_risk_heatmap(df):
                 lat=df['LOCATION_LAT'].mean(),
                 lon=df['LOCATION_LON'].mean()
             ),
-            zoom=5.5
+            zoom=zoom_level
         ),
         margin={"r": 0, "t": 0, "l": 0, "b": 0},
         height=650,
