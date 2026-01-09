@@ -176,7 +176,9 @@ def load_sensor_history(_session, asset_id, days=30):
 # =============================================================================
 
 def create_risk_heatmap(df):
-    """Create geographic heatmap of asset risk scores"""
+    """Create geographic heatmap of asset risk scores with enhanced geospatial visualization"""
+    
+    # Create scatter mapbox with improved styling
     fig = px.scatter_mapbox(
         df,
         lat='LOCATION_LAT',
@@ -187,6 +189,7 @@ def create_risk_heatmap(df):
         hover_data={
             'LOCATION_SUBSTATION': True,
             'LOCATION_CITY': True,
+            'LOCATION_COUNTY': True,
             'RISK_SCORE': ':.1f',
             'CUSTOMERS_AFFECTED': ':,',
             'ALERT_LEVEL': True,
@@ -195,9 +198,9 @@ def create_risk_heatmap(df):
         },
         color_continuous_scale=[
             [0, 'green'],
-            [0.41, 'yellow'],
-            [0.71, 'orange'],
-            [0.86, 'red']
+            [0.40, 'yellow'],
+            [0.70, 'orange'],
+            [0.85, 'red']
         ],
         range_color=[0, 100],
         zoom=6,
@@ -206,33 +209,33 @@ def create_risk_heatmap(df):
     )
     
     # Use carto-positron style which works better in Snowflake environment
-    # Falls back to basic style if external tiles are blocked
     fig.update_layout(
         mapbox_style="carto-positron",
-        mapbox_center={"lat": 28.0, "lon": -81.5},
+        mapbox_center={"lat": 27.8, "lon": -81.5},  # Centered on Florida
         margin={"r": 0, "t": 40, "l": 0, "b": 0}
     )
     
-    # Add city labels for geographic context
-    major_cities = {
-        'Miami': (25.7617, -80.1918),
-        'Orlando': (28.5383, -81.3792),
-        'Tampa': (27.9506, -82.4572),
-        'Jacksonville': (30.3322, -81.6557),
-        'West Palm Beach': (26.7153, -80.0534)
-    }
-    
-    for city, (lat, lon) in major_cities.items():
-        fig.add_annotation(
-            x=lon,
-            y=lat,
-            text=city,
-            showarrow=False,
-            font=dict(size=10, color="darkblue"),
-            bgcolor="rgba(255,255,255,0.7)",
-            xref="x",
-            yref="y"
-        )
+    # Add county-level aggregation as a layer for better geographic context
+    if not df.empty:
+        # Group by county to show county-level risk
+        county_stats = df.groupby(['LOCATION_COUNTY']).agg({
+            'RISK_SCORE': 'mean',
+            'LOCATION_LAT': 'mean',
+            'LOCATION_LON': 'mean',
+            'CUSTOMERS_AFFECTED': 'sum'
+        }).reset_index()
+        
+        # Add county labels as text annotations on the map
+        for _, row in county_stats.iterrows():
+            fig.add_trace(go.Scattermapbox(
+                lat=[row['LOCATION_LAT']],
+                lon=[row['LOCATION_LON']],
+                mode='text',
+                text=[f"{row['LOCATION_COUNTY']}<br>Avg Risk: {row['RISK_SCORE']:.1f}"],
+                textfont=dict(size=9, color='rgba(0,0,0,0.6)'),
+                showlegend=False,
+                hoverinfo='skip'
+            ))
     
     return fig
 
