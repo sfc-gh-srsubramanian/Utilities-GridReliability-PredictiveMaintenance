@@ -103,29 +103,6 @@ echo -e "${GREEN}Starting deployment...${NC}"
 echo -e "${BLUE}────────────────────────────────────────────────────────────────${NC}"
 echo ""
 
-# Cross-platform timeout function
-# Works on both macOS and Linux
-run_with_timeout() {
-    local timeout_duration=$1
-    shift
-    # Use "$@" to preserve arguments and quoting
-    
-    # Check if timeout command exists (Linux/GNU)
-    if command -v timeout &> /dev/null; then
-        timeout "$timeout_duration" "$@"
-        return $?
-    # Check if gtimeout exists (macOS with brew install coreutils)
-    elif command -v gtimeout &> /dev/null; then
-        gtimeout "$timeout_duration" "$@"
-        return $?
-    else
-        # Fallback: Run without timeout (macOS without coreutils)
-        echo -e "${YELLOW}  ⚠️  timeout command not available, running without timeout limit${NC}" >&2
-        "$@"
-        return $?
-    fi
-}
-
 # Function to execute SQL file
 execute_sql() {
     local file=$1
@@ -562,57 +539,49 @@ echo -e "${BLUE}═══ Phase 8: ML Training & Scoring ═══${NC}"
 echo -e "${YELLOW}▶ Preparing training data (generating labeled samples)...${NC}"
 execute_sql "sql/05_ml_training_prep.sql" "Generating ML training data"
 
-echo -e "${YELLOW}▶ Training ML models (this may take 2-3 minutes, max timeout: 5 min)...${NC}"
+echo -e "${YELLOW}▶ Training ML models (this may take 2-3 minutes)...${NC}"
 if [ "$SQL_CMD" = "snow sql" ]; then
-    run_with_timeout 300 snow sql -c "$CONNECTION" -q "
+    snow sql -c "$CONNECTION" -q "
         USE DATABASE ${DATABASE};
         USE WAREHOUSE ${WAREHOUSE};
         CALL ML.TRAIN_FAILURE_PREDICTION_MODELS();
     " --enable-templating NONE
 else
-    run_with_timeout 300 snowsql -c "$CONNECTION" -q "
+    snowsql -c "$CONNECTION" -q "
         USE DATABASE ${DATABASE};
         USE WAREHOUSE ${WAREHOUSE};
         CALL ML.TRAIN_FAILURE_PREDICTION_MODELS();
     "
 fi
 
-ML_TRAIN_EXIT=$?
-if [ $ML_TRAIN_EXIT -eq 0 ]; then
+if [ $? -eq 0 ]; then
     echo -e "${GREEN}  ✓ ML models trained successfully${NC}"
-elif [ $ML_TRAIN_EXIT -eq 124 ]; then
-    echo -e "${RED}  ✗ ML training timed out after 5 minutes${NC}"
-    echo -e "${YELLOW}  ⚠️  You can train models manually later: CALL ML.TRAIN_FAILURE_PREDICTION_MODELS();${NC}"
-    echo -e "${YELLOW}  ⚠️  Continuing deployment...${NC}"
 else
     echo -e "${RED}  ✗ ML training failed${NC}"
+    echo -e "${YELLOW}  ⚠️  You can train models manually later: CALL ML.TRAIN_FAILURE_PREDICTION_MODELS();${NC}"
     echo -e "${YELLOW}  ⚠️  Continuing deployment...${NC}"
 fi
 
-echo -e "${YELLOW}▶ Generating predictions for all assets (max timeout: 3 min)...${NC}"
+echo -e "${YELLOW}▶ Generating predictions for all assets...${NC}"
 if [ "$SQL_CMD" = "snow sql" ]; then
-    run_with_timeout 180 snow sql -c "$CONNECTION" -q "
+    snow sql -c "$CONNECTION" -q "
         USE DATABASE ${DATABASE};
         USE WAREHOUSE ${WAREHOUSE};
         CALL ML.SCORE_ASSETS();
     " --enable-templating NONE
 else
-    run_with_timeout 180 snowsql -c "$CONNECTION" -q "
+    snowsql -c "$CONNECTION" -q "
         USE DATABASE ${DATABASE};
         USE WAREHOUSE ${WAREHOUSE};
         CALL ML.SCORE_ASSETS();
     "
 fi
 
-ML_SCORE_EXIT=$?
-if [ $ML_SCORE_EXIT -eq 0 ]; then
+if [ $? -eq 0 ]; then
     echo -e "${GREEN}  ✓ Predictions generated successfully${NC}"
-elif [ $ML_SCORE_EXIT -eq 124 ]; then
-    echo -e "${RED}  ✗ Prediction scoring timed out after 3 minutes${NC}"
-    echo -e "${YELLOW}  ⚠️  You can score assets manually later: CALL ML.SCORE_ASSETS();${NC}"
-    echo -e "${YELLOW}  ⚠️  Continuing deployment...${NC}"
 else
     echo -e "${RED}  ✗ Prediction generation failed${NC}"
+    echo -e "${YELLOW}  ⚠️  You can score assets manually later: CALL ML.SCORE_ASSETS();${NC}"
     echo -e "${YELLOW}  ⚠️  Continuing deployment...${NC}"
 fi
 
