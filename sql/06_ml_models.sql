@@ -259,7 +259,7 @@ def train_models(session: snowpark.Session) -> str:
             
             lr_metrics = {
                 "mae": float(mean_absolute_error(y_test_rul, y_pred_rul)),
-                "rmse": float(mean_squared_error(y_test_rul, y_pred_rul, squared=False)),
+                "rmse": float(np.sqrt(mean_squared_error(y_test_rul, y_pred_rul))),
                 "r2_score": float(r2_score(y_test_rul, y_pred_rul))
             }
             
