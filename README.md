@@ -146,6 +146,8 @@ snow connection add default
 
 ### **AI Capabilities**
 - 🤖 **Snowflake Intelligence Agent** - Natural language queries across structured + unstructured data
+  - **Access**: Navigate to `Projects → Intelligence` in Snowflake UI (automatically registered)
+  - Combines Cortex Analyst (text-to-SQL) with Cortex Search (document retrieval)
 - 🔍 **Cortex Search Services** - Semantic search across maintenance logs and technical manuals
 - 📊 **Semantic Views** - Business-friendly data model for analytics
 

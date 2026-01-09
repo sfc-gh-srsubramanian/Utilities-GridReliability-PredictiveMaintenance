@@ -114,34 +114,44 @@ CLEANUP_SQL="
 -- CLEANUP ORDER: Drop dependent objects first, then parent objects
 -- ============================================================================
 
--- 1. Drop Intelligence Agent (depends on Cortex Search Services and Semantic View)
+-- Note: Agent removal from Intelligence object handled separately below
+
+-- 2. Drop Intelligence Agent (depends on Cortex Search Services and Semantic View)
 USE DATABASE ${DATABASE};
 USE SCHEMA ANALYTICS;
 DROP AGENT IF EXISTS \"Grid Reliability Intelligence Agent\";
 
--- 2. Drop Cortex Search Services (in UNSTRUCTURED schema)
+-- 3. Drop Cortex Search Services (in UNSTRUCTURED schema)
 USE SCHEMA UNSTRUCTURED;
 DROP CORTEX SEARCH SERVICE IF EXISTS TECHNICAL_MANUAL_SEARCH;
 DROP CORTEX SEARCH SERVICE IF EXISTS MAINTENANCE_LOG_SEARCH;
 DROP CORTEX SEARCH SERVICE IF EXISTS DOCUMENT_SEARCH_SERVICE;
 
--- 3. Drop Semantic View (in ANALYTICS schema)
+-- 4. Drop Semantic View (in ANALYTICS schema)
 USE SCHEMA ANALYTICS;
 DROP SEMANTIC VIEW IF EXISTS GRID_RELIABILITY_ANALYTICS;
 
--- 4. Drop Database (this drops all schemas, tables, views, stages, file formats)
+-- 5. Drop Database (this drops all schemas, tables, views, stages, file formats)
 DROP DATABASE IF EXISTS ${DATABASE};
 
--- 5. Drop Warehouse
+-- 6. Drop Warehouse
 DROP WAREHOUSE IF EXISTS ${WAREHOUSE};
 
--- 6. Drop Roles (these are account-level objects)
+-- 7. Drop Roles (these are account-level objects)
 DROP ROLE IF EXISTS GRID_OPERATOR;
 DROP ROLE IF EXISTS GRID_ANALYST;
 DROP ROLE IF EXISTS GRID_ML_ENGINEER;
 DROP ROLE IF EXISTS GRID_DATA_ENGINEER;
 DROP ROLE IF EXISTS GRID_ADMIN;
 "
+
+echo -e "${YELLOW}▶ Unregistering Agent from Intelligence UI...${NC}"
+# Remove agent from Intelligence object first (may fail if not registered, that's OK)
+if [ "$SQL_CMD" = "snow sql" ]; then
+    snow sql -c "$CONNECTION" -q "ALTER SNOWFLAKE INTELLIGENCE IDENTIFIER('SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT') REMOVE AGENT IDENTIFIER('UTILITIES_GRID_RELIABILITY.ANALYTICS.\"Grid Reliability Intelligence Agent\"');" --enable-templating NONE 2>/dev/null || true
+else
+    snowsql -c "$CONNECTION" -q "ALTER SNOWFLAKE INTELLIGENCE IDENTIFIER('SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT') REMOVE AGENT IDENTIFIER('UTILITIES_GRID_RELIABILITY.ANALYTICS.\"Grid Reliability Intelligence Agent\"');" 2>/dev/null || true
+fi
 
 echo -e "${YELLOW}▶ Removing Intelligence Agent...${NC}"
 echo -e "${YELLOW}▶ Removing Cortex Search Services...${NC}"

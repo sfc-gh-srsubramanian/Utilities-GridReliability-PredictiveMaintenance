@@ -284,16 +284,22 @@ SELECT * FROM GRID_RELIABILITY_ANALYTICS.ASSET_HEALTH WHERE RISK_SCORE > 70;
 ```sql
 !source agents/create_grid_intelligence_agent.sql
 
--- Verify: Agent created
--- Navigate to Snowflake UI → Projects → Intelligence → Agents
+-- Verify: Agent created and registered
+-- Navigate to Snowflake UI → Projects → Intelligence (not just Agents page)
 -- You should see "Grid Reliability Intelligence Agent"
 ```
+
+**What Happens Automatically:**
+- ✅ Agent is created with Claude 4 Sonnet orchestration
+- ✅ Agent is registered to `SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT`
+- ✅ Agent appears in the Intelligence UI for all authorized users
+- ✅ Permissions granted to GRID_OPERATOR, GRID_ANALYST, and GRID_ML_ENGINEER roles
 
 **Checkpoint**: You should now have:
 - ✅ Semantic model YAML uploaded
 - ✅ Semantic view `GRID_RELIABILITY_ANALYTICS` created
 - ✅ Cortex Search Service for assets
-- ✅ Intelligence Agent deployed and ready
+- ✅ Intelligence Agent deployed, registered, and ready
 
 ---
 
@@ -431,10 +437,11 @@ SELECT * FROM ANALYTICS.VW_HIGH_RISK_ASSETS;
 - Test filters and interactions
 
 #### Test 4: Intelligence Agent
-- Open Snowflake UI → Projects → Intelligence
+- Open Snowflake UI → Projects → Intelligence (should be automatically visible)
 - Find "Grid Reliability Intelligence Agent"
 - Ask: "Which 5 substations have the highest risk?"
 - Verify agent responds with accurate data
+- **Note**: Agent is automatically registered to appear in Intelligence UI (no manual setup needed)
 
 ---
 

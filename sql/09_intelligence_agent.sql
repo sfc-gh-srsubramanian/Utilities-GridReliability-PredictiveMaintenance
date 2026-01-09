@@ -567,8 +567,34 @@ and Miami-Dade County (most high-risk assets and customer exposure)."
 */
 
 -- =============================================================================
+-- SECTION 6: REGISTER AGENT WITH SNOWFLAKE INTELLIGENCE UI
+-- =============================================================================
+
+-- Create Snowflake Intelligence object (curated list of agents for Intelligence UI)
+-- Note: This is a SHARED account-level object - may already exist from other projects
+-- If the object already exists (e.g., from LOAD_FORECASTING or other projects), this is safe
+CREATE SNOWFLAKE INTELLIGENCE IF NOT EXISTS SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT
+    COMMENT = 'Curates which agents appear in the Snowflake Intelligence UI across all projects';
+
+-- Register this agent to appear in Intelligence UI
+-- This makes the agent visible in: Projects → Intelligence (not just Agents page)
+ALTER SNOWFLAKE INTELLIGENCE IF EXISTS 
+    IDENTIFIER('SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT') 
+    ADD AGENT IF NOT EXISTS IDENTIFIER('UTILITIES_GRID_RELIABILITY.ANALYTICS."Grid Reliability Intelligence Agent"');
+
+-- Grant usage to relevant roles so they can see the agent in Intelligence UI
+GRANT USAGE ON SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT 
+    TO ROLE GRID_OPERATOR;
+GRANT USAGE ON SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT 
+    TO ROLE GRID_ANALYST;
+GRANT USAGE ON SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT 
+    TO ROLE GRID_ML_ENGINEER;
+
+SELECT 'Intelligence Agent registered successfully - will appear in Intelligence UI' AS STATUS;
+
+-- =============================================================================
 -- Intelligence Agent Deployment Complete
--- Access: Snowflake UI > Projects > Intelligence > Agents
+-- Access: Snowflake UI > Projects > Intelligence (registered to Intelligence object)
 -- Agent: Grid Reliability Intelligence Agent
 -- =============================================================================
 
