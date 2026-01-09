@@ -284,21 +284,27 @@ def create_risk_heatmap(df):
         hovertemplate='<b>%{text}</b><extra></extra>'
     ))
     
-    # Try stamen-terrain for better geographic context, fallback to carto-positron
+    # Use white-bg style - works without external tile servers
+    # Shows white background with lat/lon grid lines
     fig.update_layout(
-        mapbox_style="stamen-terrain",
+        mapbox_style="white-bg",
         mapbox_center={
             "lat": df['LOCATION_LAT'].mean(),
             "lon": df['LOCATION_LON'].mean()
         },
+        mapbox_zoom=5.5,
         margin={"r": 0, "t": 40, "l": 0, "b": 0},
         legend=dict(
             yanchor="top",
             y=0.99,
             xanchor="left",
             x=0.01,
-            bgcolor="rgba(255,255,255,0.8)"
-        )
+            bgcolor="rgba(255,255,255,0.9)",
+            bordercolor="gray",
+            borderwidth=1
+        ),
+        paper_bgcolor='#f8f9fa',
+        plot_bgcolor='#ffffff'
     )
     
     return fig
