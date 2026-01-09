@@ -67,6 +67,25 @@ st.markdown("""
         border-radius: 0.5rem;
         border-left: 4px solid #f57c00;
     }
+    /* Make Plotly map controls more prominent */
+    .modebar {
+        background-color: rgba(31, 119, 180, 0.1) !important;
+        border: 2px solid #1f77b4 !important;
+        border-radius: 8px !important;
+        padding: 4px !important;
+    }
+    .modebar-btn {
+        background-color: white !important;
+        border: 1px solid #1f77b4 !important;
+        border-radius: 4px !important;
+        margin: 2px !important;
+    }
+    .modebar-btn:hover {
+        background-color: #1f77b4 !important;
+    }
+    .modebar-btn svg {
+        filter: brightness(0) saturate(100%) invert(36%) sepia(84%) saturate(1200%) hue-rotate(189deg) brightness(95%) contrast(90%);
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -273,7 +292,7 @@ def create_risk_heatmap(df):
             zoom=5.5
         ),
         margin={"r": 0, "t": 0, "l": 0, "b": 0},
-        height=600,
+        height=650,
         legend=dict(
             yanchor="top",
             y=0.99,
@@ -281,10 +300,18 @@ def create_risk_heatmap(df):
             x=0.01,
             bgcolor="rgba(255,255,255,0.9)",
             bordercolor="gray",
-            borderwidth=1
+            borderwidth=1,
+            font=dict(size=12)
         ),
         paper_bgcolor='#f8f9fa',
-        plot_bgcolor='#ffffff'
+        plot_bgcolor='#ffffff',
+        # Make modebar (toolbar) more prominent
+        modebar=dict(
+            bgcolor='rgba(255, 255, 255, 0.95)',
+            color='#1f77b4',
+            activecolor='#ff7f0e',
+            orientation='h'
+        )
     )
     
     return fig
@@ -575,7 +602,23 @@ def main():
         
         # Map
         fig_map = create_risk_heatmap(filtered_df)
-        st.plotly_chart(fig_map, use_container_width=True)
+        
+        # Configure map controls to be more prominent
+        config = {
+            'displayModeBar': True,
+            'displaylogo': False,
+            'modeBarButtonsToAdd': ['drawrect', 'eraseshape'],
+            'modeBarButtonsToRemove': [],
+            'toImageButtonOptions': {
+                'format': 'png',
+                'filename': 'grid_asset_map',
+                'height': 1000,
+                'width': 1600,
+                'scale': 2
+            }
+        }
+        
+        st.plotly_chart(fig_map, use_container_width=True, config=config)
         
         # Asset table
         st.subheader("Asset List")
