@@ -218,6 +218,32 @@ def create_risk_heatmap(df):
     # Create figure from scratch for better control
     fig = go.Figure()
     
+    # Add Florida state outline for geographic context
+    florida_outline_lat = [
+        31.0, 30.8, 30.5, 30.2, 30.0, 29.8, 29.5, 29.2, 28.9, 28.5,
+        28.0, 27.5, 27.0, 26.5, 26.0, 25.5, 25.2, 25.0, 24.8, 24.6,
+        24.7, 24.9, 25.2, 25.5, 26.0, 26.5, 27.0, 27.5, 28.0, 28.5,
+        29.0, 29.5, 29.8, 30.0, 30.2, 30.4, 30.6, 30.8, 31.0, 31.0
+    ]
+    florida_outline_lon = [
+        -87.6, -87.5, -87.3, -86.8, -86.3, -85.8, -85.3, -84.8, -84.3, -83.8,
+        -83.3, -82.8, -82.5, -82.2, -81.8, -81.5, -81.2, -81.0, -80.5, -80.0,
+        -80.2, -80.5, -81.0, -81.5, -81.8, -82.0, -82.3, -82.5, -82.8, -83.0,
+        -83.5, -84.0, -84.5, -85.0, -85.5, -86.0, -86.5, -87.0, -87.6, -87.6
+    ]
+    
+    fig.add_trace(go.Scattermapbox(
+        lat=florida_outline_lat,
+        lon=florida_outline_lon,
+        mode='lines',
+        line=dict(width=3, color='#1f77b4'),
+        fill='toself',
+        fillcolor='rgba(31, 119, 180, 0.05)',
+        name='Florida',
+        hoverinfo='skip',
+        showlegend=False
+    ))
+    
     # Add asset markers with fixed sizes (not sized by customers - that causes huge circles)
     for risk_cat in ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL']:
         cat_df = df[df['RISK_CATEGORY'] == risk_cat]
@@ -303,8 +329,8 @@ def create_risk_heatmap(df):
             borderwidth=1,
             font=dict(size=12)
         ),
-        paper_bgcolor='#f8f9fa',
-        plot_bgcolor='#ffffff',
+        paper_bgcolor='#e8f4f8',
+        plot_bgcolor='#e8f4f8',
         # Make modebar (toolbar) more prominent
         modebar=dict(
             bgcolor='rgba(255, 255, 255, 0.95)',
