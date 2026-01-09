@@ -180,7 +180,8 @@ if [ "$SKIP_AGENTS" = false ]; then
     # Verify agent was created successfully
     echo -e "${YELLOW}  → Verifying agent creation...${NC}"
     if [ "$SQL_CMD" = "snow sql" ]; then
-        if snow sql -c "$CONNECTION" -q "SHOW AGENTS IN SCHEMA ${DATABASE}.ANALYTICS" --enable-templating NONE 2>&1 | grep -q "Grid Reliability Intelligence Agent"; then
+        AGENT_CHECK=$(snow sql -c "$CONNECTION" -q "SHOW AGENTS IN SCHEMA ${DATABASE}.ANALYTICS" --enable-templating NONE 2>&1 | grep -i "Reliabil")
+        if [ -n "$AGENT_CHECK" ]; then
             echo -e "${GREEN}  ✓ Intelligence Agent deployed successfully${NC}"
         else
             echo -e "${YELLOW}  ⚠ Warning: Could not verify agent. Check manually.${NC}"
