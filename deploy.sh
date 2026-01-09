@@ -108,20 +108,20 @@ echo ""
 run_with_timeout() {
     local timeout_duration=$1
     shift
-    local command="$@"
+    # Use "$@" to preserve arguments and quoting
     
     # Check if timeout command exists (Linux/GNU)
     if command -v timeout &> /dev/null; then
-        timeout "$timeout_duration" $command
+        timeout "$timeout_duration" "$@"
         return $?
     # Check if gtimeout exists (macOS with brew install coreutils)
     elif command -v gtimeout &> /dev/null; then
-        gtimeout "$timeout_duration" $command
+        gtimeout "$timeout_duration" "$@"
         return $?
     else
         # Fallback: Run without timeout (macOS without coreutils)
         echo -e "${YELLOW}  ⚠️  timeout command not available, running without timeout limit${NC}" >&2
-        $command
+        "$@"
         return $?
     fi
 }
