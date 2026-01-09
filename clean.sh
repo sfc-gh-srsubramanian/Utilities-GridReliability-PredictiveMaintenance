@@ -86,8 +86,10 @@ echo -e "  • ${RED}All data${NC}: Asset data, sensor readings, maintenance log
 echo ""
 
 if [ "$FORCE" = false ]; then
-    read -p "Are you sure you want to continue? (type 'YES' to confirm): " CONFIRM
-    if [ "$CONFIRM" != "YES" ]; then
+    read -p "Are you sure you want to continue? (type 'YES' or 'yes' to confirm): " CONFIRM
+    # Convert to uppercase for case-insensitive comparison
+    CONFIRM_UPPER=$(echo "$CONFIRM" | tr '[:lower:]' '[:upper:]')
+    if [ "$CONFIRM_UPPER" != "YES" ]; then
         echo -e "${YELLOW}Cleanup cancelled${NC}"
         exit 0
     fi
