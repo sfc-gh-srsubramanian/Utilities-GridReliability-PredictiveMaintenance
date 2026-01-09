@@ -218,7 +218,8 @@ fi
 
 cd python/data_generators
 # Run with output suppression to avoid SQL parsing issues
-if python3 generate_asset_data.py > /tmp/asset_data_gen.log 2>&1; then
+# Output to ../../generated_data to ensure files are at PROJECT_ROOT/generated_data
+if python3 generate_asset_data.py --output-dir ../../generated_data > /tmp/asset_data_gen.log 2>&1; then
     cd ../..
     if [ -f "generated_data/asset_master.csv" ]; then
         echo -e "${GREEN}  ✓ Structured data files generated${NC}"
@@ -226,6 +227,7 @@ if python3 generate_asset_data.py > /tmp/asset_data_gen.log 2>&1; then
         echo -e "${YELLOW}    → sensor_readings_batch_*.json (5 files)${NC}"
     else
         echo -e "${RED}  ✗ Failed to generate structured data files (files not found)${NC}"
+        echo -e "${YELLOW}  Expected location: $(pwd)/generated_data/${NC}"
         cat /tmp/asset_data_gen.log
         exit 1
     fi
