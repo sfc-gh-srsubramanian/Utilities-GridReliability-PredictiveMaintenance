@@ -9,6 +9,15 @@
 
 set -e
 
+# Disable exit on error for cleanup section (some objects may not exist)
+cleanup_with_status() {
+    set +e
+    "$@"
+    local exit_code=$?
+    set -e
+    return $exit_code
+}
+
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -134,10 +143,18 @@ DROP ROLE IF EXISTS GRID_DATA_ENGINEER;
 DROP ROLE IF EXISTS GRID_ADMIN;
 "
 
+echo -e "${YELLOW}▶ Removing Intelligence Agent...${NC}"
+echo -e "${YELLOW}▶ Removing Cortex Search Services...${NC}"
+echo -e "${YELLOW}▶ Removing Semantic Views...${NC}"
+echo -e "${YELLOW}▶ Removing Database and all data...${NC}"
+echo -e "${YELLOW}▶ Removing Warehouse...${NC}"
+echo -e "${YELLOW}▶ Removing Custom Roles...${NC}"
+echo ""
+
 if [ "$SQL_CMD" = "snow sql" ]; then
-    snow sql -c "$CONNECTION" -q "$CLEANUP_SQL" --enable-templating NONE > /dev/null 2>&1
+    cleanup_with_status snow sql -c "$CONNECTION" -q "$CLEANUP_SQL" --enable-templating NONE
 else
-    echo "$CLEANUP_SQL" | snowsql -c "$CONNECTION"
+    cleanup_with_status sh -c "echo \"$CLEANUP_SQL\" | snowsql -c \"$CONNECTION\""
 fi
 
 echo ""
