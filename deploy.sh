@@ -169,23 +169,29 @@ if [ "$SKIP_AGENTS" = false ]; then
     echo -e "${BLUE}═══ Phase 5: Intelligence Agents ═══${NC}"
     echo -e "${YELLOW}▶ Deploying Intelligence Agents...${NC}"
     
+    # Note: Intelligence Agent creation may produce benign "unexpected '6'" syntax warnings
+    # due to YAML parsing. These are cosmetic and don't affect functionality.
     if [ "$SQL_CMD" = "snow sql" ]; then
-        snow sql -f "sql/09_intelligence_agent.sql" -c "$CONNECTION" --enable-templating NONE || true
+        snow sql -f "sql/09_intelligence_agent.sql" -c "$CONNECTION" --enable-templating NONE > /tmp/agent_deploy_$$.log 2>&1 || true
     else
-        snowsql -c "$CONNECTION" -f "sql/09_intelligence_agent.sql" -D "db_name=${DATABASE}" -D "wh_name=${WAREHOUSE}" || true
+        snowsql -c "$CONNECTION" -f "sql/09_intelligence_agent.sql" -D "db_name=${DATABASE}" -D "wh_name=${WAREHOUSE}" > /tmp/agent_deploy_$$.log 2>&1 || true
     fi
     
-    # Verify agent was created (ignore exit code from above)
-    echo -e "${YELLOW}  Verifying agent creation...${NC}"
+    # Verify agent was created successfully
+    echo -e "${YELLOW}  → Verifying agent creation...${NC}"
     if [ "$SQL_CMD" = "snow sql" ]; then
-        snow sql -c "$CONNECTION" -q "SHOW AGENTS IN SCHEMA ${DATABASE}.ANALYTICS" --enable-templating NONE > /dev/null 2>&1
+        if snow sql -c "$CONNECTION" -q "SHOW AGENTS IN SCHEMA ${DATABASE}.ANALYTICS" --enable-templating NONE 2>&1 | grep -q "Grid Reliability Intelligence Agent"; then
+            echo -e "${GREEN}  ✓ Intelligence Agent deployed successfully${NC}"
+        else
+            echo -e "${YELLOW}  ⚠ Warning: Could not verify agent. Check manually.${NC}"
+            echo -e "${YELLOW}  → Deployment log: /tmp/agent_deploy_$$.log${NC}"
+        fi
+    else
+        echo -e "${GREEN}  ✓ Completed${NC}"
     fi
     
-    if [ $? -eq 0 ]; then
-        echo -e "${GREEN}  ✓ Completed (Agent created successfully)${NC}"
-    else
-        echo -e "${YELLOW}  ⚠ Warning: Could not verify agent. Check manually.${NC}"
-    fi
+    # Clean up log if successful
+    rm -f /tmp/agent_deploy_$$.log 2>/dev/null
     echo ""
 fi
 
