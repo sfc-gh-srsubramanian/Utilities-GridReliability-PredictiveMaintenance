@@ -176,9 +176,30 @@ def load_sensor_history(_session, asset_id, days=30):
 # =============================================================================
 
 def create_risk_heatmap(df):
-    """Create geographic heatmap of asset risk scores with enhanced geospatial visualization"""
+    """Create geographic heatmap of asset risk scores with data-driven geographic context"""
     
-    # Create scatter mapbox with improved styling
+    if df.empty:
+        return go.Figure()
+    
+    # Calculate geographic centers from actual data
+    # Extract unique cities with their coordinates
+    city_locations = df.groupby('LOCATION_CITY').agg({
+        'LOCATION_LAT': 'mean',
+        'LOCATION_LON': 'mean',
+        'ASSET_ID': 'count'
+    }).reset_index()
+    city_locations.columns = ['CITY', 'LAT', 'LON', 'ASSET_COUNT']
+    
+    # Extract county statistics
+    county_stats = df.groupby('LOCATION_COUNTY').agg({
+        'LOCATION_LAT': 'mean',
+        'LOCATION_LON': 'mean',
+        'RISK_SCORE': 'mean',
+        'ASSET_ID': 'count',
+        'CUSTOMERS_AFFECTED': 'sum'
+    }).reset_index()
+    
+    # Create base scatter mapbox with enhanced styling
     fig = px.scatter_mapbox(
         df,
         lat='LOCATION_LAT',
@@ -208,34 +229,77 @@ def create_risk_heatmap(df):
         title="Florida Grid Assets - Risk Score Heatmap"
     )
     
-    # Use carto-positron style which works better in Snowflake environment
-    fig.update_layout(
-        mapbox_style="carto-positron",
-        mapbox_center={"lat": 27.8, "lon": -81.5},  # Centered on Florida
-        margin={"r": 0, "t": 40, "l": 0, "b": 0}
+    # Enhance asset markers for better visibility
+    fig.update_traces(
+        marker=dict(
+            sizemode='diameter',
+            sizemin=4,
+            opacity=0.8,
+            line=dict(width=1, color='white')
+        )
     )
     
-    # Add county-level aggregation as a layer for better geographic context
-    if not df.empty:
-        # Group by county to show county-level risk
-        county_stats = df.groupby(['LOCATION_COUNTY']).agg({
-            'RISK_SCORE': 'mean',
-            'LOCATION_LAT': 'mean',
-            'LOCATION_LON': 'mean',
-            'CUSTOMERS_AFFECTED': 'sum'
-        }).reset_index()
-        
-        # Add county labels as text annotations on the map
-        for _, row in county_stats.iterrows():
-            fig.add_trace(go.Scattermapbox(
-                lat=[row['LOCATION_LAT']],
-                lon=[row['LOCATION_LON']],
-                mode='text',
-                text=[f"{row['LOCATION_COUNTY']}<br>Avg Risk: {row['RISK_SCORE']:.1f}"],
-                textfont=dict(size=9, color='rgba(0,0,0,0.6)'),
-                showlegend=False,
-                hoverinfo='skip'
-            ))
+    # Add city markers layer (data-driven)
+    fig.add_trace(go.Scattermapbox(
+        lat=city_locations['LAT'],
+        lon=city_locations['LON'],
+        mode='markers+text',
+        marker=dict(
+            size=12,
+            color='navy',
+            symbol='circle',
+            opacity=0.9
+        ),
+        text=city_locations['CITY'],
+        textposition='top center',
+        textfont=dict(
+            size=11,
+            color='darkblue',
+            family='Arial Black'
+        ),
+        name='Cities',
+        hovertemplate='<b>%{text}</b><br>Assets: %{customdata}<extra></extra>',
+        customdata=city_locations['ASSET_COUNT'],
+        showlegend=True
+    ))
+    
+    # Add county labels layer (background, larger text)
+    county_labels = [
+        f"{row['LOCATION_COUNTY']}<br>({row['ASSET_ID']} assets, Avg Risk: {row['RISK_SCORE']:.1f})"
+        for _, row in county_stats.iterrows()
+    ]
+    
+    fig.add_trace(go.Scattermapbox(
+        lat=county_stats['LOCATION_LAT'],
+        lon=county_stats['LOCATION_LON'],
+        mode='text',
+        text=county_labels,
+        textfont=dict(
+            size=9,
+            color='rgba(60,60,60,0.5)',
+            family='Arial'
+        ),
+        name='Counties',
+        showlegend=True,
+        hovertemplate='<b>%{text}</b><extra></extra>'
+    ))
+    
+    # Try stamen-terrain for better geographic context, fallback to carto-positron
+    fig.update_layout(
+        mapbox_style="stamen-terrain",
+        mapbox_center={
+            "lat": df['LOCATION_LAT'].mean(),
+            "lon": df['LOCATION_LON'].mean()
+        },
+        margin={"r": 0, "t": 40, "l": 0, "b": 0},
+        legend=dict(
+            yanchor="top",
+            y=0.99,
+            xanchor="left",
+            x=0.01,
+            bgcolor="rgba(255,255,255,0.8)"
+        )
+    )
     
     return fig
 
