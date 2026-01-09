@@ -103,6 +103,29 @@ echo -e "${GREEN}Starting deployment...${NC}"
 echo -e "${BLUE}────────────────────────────────────────────────────────────────${NC}"
 echo ""
 
+# Cross-platform timeout function
+# Works on both macOS and Linux
+run_with_timeout() {
+    local timeout_duration=$1
+    shift
+    local command="$@"
+    
+    # Check if timeout command exists (Linux/GNU)
+    if command -v timeout &> /dev/null; then
+        timeout "$timeout_duration" $command
+        return $?
+    # Check if gtimeout exists (macOS with brew install coreutils)
+    elif command -v gtimeout &> /dev/null; then
+        gtimeout "$timeout_duration" $command
+        return $?
+    else
+        # Fallback: Run without timeout (macOS without coreutils)
+        echo -e "${YELLOW}  ⚠️  timeout command not available, running without timeout limit${NC}" >&2
+        $command
+        return $?
+    fi
+}
+
 # Function to execute SQL file
 execute_sql() {
     local file=$1
@@ -432,13 +455,13 @@ execute_sql "sql/05_ml_training_prep.sql" "Generating ML training data"
 
 echo -e "${YELLOW}▶ Training ML models (this may take 2-3 minutes, max timeout: 5 min)...${NC}"
 if [ "$SQL_CMD" = "snow sql" ]; then
-    timeout 300 snow sql -c "$CONNECTION" -q "
+    run_with_timeout 300 snow sql -c "$CONNECTION" -q "
         USE DATABASE ${DATABASE};
         USE WAREHOUSE ${WAREHOUSE};
         CALL ML.TRAIN_FAILURE_PREDICTION_MODELS();
     " --enable-templating NONE
 else
-    timeout 300 snowsql -c "$CONNECTION" -q "
+    run_with_timeout 300 snowsql -c "$CONNECTION" -q "
         USE DATABASE ${DATABASE};
         USE WAREHOUSE ${WAREHOUSE};
         CALL ML.TRAIN_FAILURE_PREDICTION_MODELS();
@@ -459,13 +482,13 @@ fi
 
 echo -e "${YELLOW}▶ Generating predictions for all assets (max timeout: 3 min)...${NC}"
 if [ "$SQL_CMD" = "snow sql" ]; then
-    timeout 180 snow sql -c "$CONNECTION" -q "
+    run_with_timeout 180 snow sql -c "$CONNECTION" -q "
         USE DATABASE ${DATABASE};
         USE WAREHOUSE ${WAREHOUSE};
         CALL ML.SCORE_ASSETS();
     " --enable-templating NONE
 else
-    timeout 180 snowsql -c "$CONNECTION" -q "
+    run_with_timeout 180 snowsql -c "$CONNECTION" -q "
         USE DATABASE ${DATABASE};
         USE WAREHOUSE ${WAREHOUSE};
         CALL ML.SCORE_ASSETS();
