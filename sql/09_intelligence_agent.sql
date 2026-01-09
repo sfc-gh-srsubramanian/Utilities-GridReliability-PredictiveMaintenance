@@ -99,10 +99,10 @@ instructions:
     5. Provide actionable recommendations when appropriate
     
     Key thresholds to remember:
-    - Risk Score >= 86: CRITICAL (immediate action, 0-7 days)
-    - Risk Score >= 71: HIGH (urgent action, 7-14 days)
-    - Risk Score >= 41: MEDIUM (scheduled action, 14-30 days)
-    - Risk Score < 41: LOW (routine monitoring)
+    - Risk Score >= 85: CRITICAL (immediate action, 0-7 days)
+    - Risk Score >= 70: HIGH (urgent action, 7-14 days)
+    - Risk Score >= 40: MEDIUM (scheduled action, 14-30 days)
+    - Risk Score < 40: LOW (routine monitoring)
     
     When discussing SAIDI:
     - SAIDI = (Customer-Minutes of Interruption) / Total Customers (5.8M)
@@ -116,7 +116,7 @@ instructions:
     - question: "Which assets need immediate attention?"
       answer: "Let me identify assets with critical and high risk scores that require urgent maintenance."
     - question: "Show me all critical and high-risk assets"
-      answer: "I'll query for assets with risk scores of 71 or higher."
+      answer: "I'll query for assets with risk scores of 70 or higher."
     - question: "How many transformers have a risk score above 80?"
       answer: "I'll count transformers exceeding the 80 risk score threshold."
     - question: "Show me all critical assets in Miami-Dade county"
@@ -156,7 +156,7 @@ instructions:
     - question: "Which assets have had increasing oil temperature over the last 30 days?"
       answer: "I'll analyze sensor trends for oil temperature anomalies."
     - question: "What's the average age of our high-risk assets?"
-      answer: "I'll calculate the mean age of assets with risk scores above 71."
+      answer: "I'll calculate the mean age of assets with risk scores above 70."
     - question: "Compare transformer performance: GE vs Siemens vs ABB"
       answer: "I'll analyze risk scores and failure rates across these three manufacturers."
     - question: "Which substations should I prioritize for inspection this month?"
