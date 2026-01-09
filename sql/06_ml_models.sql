@@ -35,6 +35,7 @@ from sklearn.ensemble import IsolationForest, RandomForestClassifier
 from xgboost import XGBClassifier
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, mean_absolute_error, mean_squared_error, r2_score
+import numpy as np
 import json
 import pickle
 import base64
