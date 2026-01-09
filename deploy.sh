@@ -273,48 +273,98 @@ echo -e "${YELLOW}▶ Uploading structured data files to Snowflake stages...${NC
 # Get absolute path to generated_data directory
 DATA_DIR="$(pwd)/generated_data"
 
-echo -e "${YELLOW}  → Uploading CSV files (asset_master, maintenance_history, failure_events)...${NC}"
-if [ "$SQL_CMD" = "snow sql" ]; then
-    snow sql -c "$CONNECTION" -q "
-        USE DATABASE ${DATABASE};
-        USE SCHEMA RAW;
-        PUT file://${DATA_DIR}/*.csv @ASSET_DATA_STAGE AUTO_COMPRESS=TRUE OVERWRITE=TRUE;
-    " --enable-templating NONE 2>&1 | grep -E "UPLOADED|SKIPPED|ERROR" || true
+# Upload CSV files individually (avoids wildcard issues with spaces in paths)
+echo -e "${YELLOW}  → Uploading CSV files...${NC}"
+CSV_UPLOAD_SUCCESS=true
+
+for csv_file in "asset_master.csv" "maintenance_history.csv" "failure_events.csv"; do
+    if [ -f "${DATA_DIR}/${csv_file}" ]; then
+        echo -e "${YELLOW}    Uploading ${csv_file}...${NC}"
+        if [ "$SQL_CMD" = "snow sql" ]; then
+            if snow sql -c "$CONNECTION" -q "
+                USE DATABASE ${DATABASE};
+                USE SCHEMA RAW;
+                PUT 'file://${DATA_DIR}/${csv_file}' @ASSET_DATA_STAGE AUTO_COMPRESS=TRUE OVERWRITE=TRUE;
+            " --enable-templating NONE > /tmp/upload_${csv_file}.log 2>&1; then
+                echo -e "${GREEN}      ✓ ${csv_file} uploaded${NC}"
+            else
+                echo -e "${RED}      ✗ Failed to upload ${csv_file}${NC}"
+                cat /tmp/upload_${csv_file}.log
+                CSV_UPLOAD_SUCCESS=false
+            fi
+        else
+            if snowsql -c "$CONNECTION" -q "
+                USE DATABASE ${DATABASE};
+                USE SCHEMA RAW;
+                PUT 'file://${DATA_DIR}/${csv_file}' @ASSET_DATA_STAGE AUTO_COMPRESS=TRUE OVERWRITE=TRUE;
+            " > /tmp/upload_${csv_file}.log 2>&1; then
+                echo -e "${GREEN}      ✓ ${csv_file} uploaded${NC}"
+            else
+                echo -e "${RED}      ✗ Failed to upload ${csv_file}${NC}"
+                cat /tmp/upload_${csv_file}.log
+                CSV_UPLOAD_SUCCESS=false
+            fi
+        fi
+    else
+        echo -e "${RED}      ✗ File not found: ${csv_file}${NC}"
+        CSV_UPLOAD_SUCCESS=false
+    fi
+done
+
+if [ "$CSV_UPLOAD_SUCCESS" = true ]; then
+    echo -e "${GREEN}    ✓ All CSV files uploaded${NC}"
 else
-    snowsql -c "$CONNECTION" -q "
-        USE DATABASE ${DATABASE};
-        USE SCHEMA RAW;
-        PUT file://${DATA_DIR}/*.csv @ASSET_DATA_STAGE AUTO_COMPRESS=TRUE OVERWRITE=TRUE;
-    " 2>&1 | grep -E "UPLOADED|SKIPPED|ERROR" || true
+    echo -e "${RED}    ✗ Some CSV uploads failed${NC}"
+    exit 1
 fi
 
-CSV_UPLOAD_STATUS=$?
-if [ $CSV_UPLOAD_STATUS -eq 0 ]; then
-    echo -e "${GREEN}    ✓ CSV files uploaded${NC}"
-else
-    echo -e "${YELLOW}    ⚠️  CSV upload may have issues (exit code: ${CSV_UPLOAD_STATUS})${NC}"
-fi
+# Upload JSON files individually (sensor_readings batches)
+echo -e "${YELLOW}  → Uploading JSON files (sensor readings batches)...${NC}"
+JSON_UPLOAD_SUCCESS=true
+JSON_COUNT=0
 
-echo -e "${YELLOW}  → Uploading JSON files (sensor_readings_batch_*.json)...${NC}"
-if [ "$SQL_CMD" = "snow sql" ]; then
-    snow sql -c "$CONNECTION" -q "
-        USE DATABASE ${DATABASE};
-        USE SCHEMA RAW;
-        PUT file://${DATA_DIR}/*.json @SENSOR_DATA_STAGE AUTO_COMPRESS=TRUE OVERWRITE=TRUE;
-    " --enable-templating NONE 2>&1 | grep -E "UPLOADED|SKIPPED|ERROR" || true
-else
-    snowsql -c "$CONNECTION" -q "
-        USE DATABASE ${DATABASE};
-        USE SCHEMA RAW;
-        PUT file://${DATA_DIR}/*.json @SENSOR_DATA_STAGE AUTO_COMPRESS=TRUE OVERWRITE=TRUE;
-    " 2>&1 | grep -E "UPLOADED|SKIPPED|ERROR" || true
-fi
+for json_file in "${DATA_DIR}"/sensor_readings_batch_*.json; do
+    if [ -f "$json_file" ]; then
+        json_basename=$(basename "$json_file")
+        echo -e "${YELLOW}    Uploading ${json_basename}...${NC}"
+        if [ "$SQL_CMD" = "snow sql" ]; then
+            if snow sql -c "$CONNECTION" -q "
+                USE DATABASE ${DATABASE};
+                USE SCHEMA RAW;
+                PUT 'file://${json_file}' @SENSOR_DATA_STAGE AUTO_COMPRESS=TRUE OVERWRITE=TRUE;
+            " --enable-templating NONE > /tmp/upload_${json_basename}.log 2>&1; then
+                echo -e "${GREEN}      ✓ ${json_basename} uploaded${NC}"
+                JSON_COUNT=$((JSON_COUNT + 1))
+            else
+                echo -e "${RED}      ✗ Failed to upload ${json_basename}${NC}"
+                cat /tmp/upload_${json_basename}.log
+                JSON_UPLOAD_SUCCESS=false
+            fi
+        else
+            if snowsql -c "$CONNECTION" -q "
+                USE DATABASE ${DATABASE};
+                USE SCHEMA RAW;
+                PUT 'file://${json_file}' @SENSOR_DATA_STAGE AUTO_COMPRESS=TRUE OVERWRITE=TRUE;
+            " > /tmp/upload_${json_basename}.log 2>&1; then
+                echo -e "${GREEN}      ✓ ${json_basename} uploaded${NC}"
+                JSON_COUNT=$((JSON_COUNT + 1))
+            else
+                echo -e "${RED}      ✗ Failed to upload ${json_basename}${NC}"
+                cat /tmp/upload_${json_basename}.log
+                JSON_UPLOAD_SUCCESS=false
+            fi
+        fi
+    fi
+done
 
-JSON_UPLOAD_STATUS=$?
-if [ $JSON_UPLOAD_STATUS -eq 0 ]; then
-    echo -e "${GREEN}    ✓ JSON files uploaded${NC}"
+if [ "$JSON_UPLOAD_SUCCESS" = true ] && [ $JSON_COUNT -gt 0 ]; then
+    echo -e "${GREEN}    ✓ All ${JSON_COUNT} JSON files uploaded${NC}"
+elif [ $JSON_COUNT -eq 0 ]; then
+    echo -e "${RED}    ✗ No JSON files found to upload${NC}"
+    exit 1
 else
-    echo -e "${YELLOW}    ⚠️  JSON upload may have issues (exit code: ${JSON_UPLOAD_STATUS})${NC}"
+    echo -e "${RED}    ✗ Some JSON uploads failed${NC}"
+    exit 1
 fi
 
 echo -e "${GREEN}  ✓ File upload phase completed${NC}"
