@@ -205,7 +205,7 @@ def create_risk_heatmap(df):
         if not cat_df.empty:
             # Map risk categories to colors
             colors = {'LOW': 'green', 'MEDIUM': 'gold', 'HIGH': 'orange', 'CRITICAL': 'red'}
-            sizes = {'LOW': 10, 'MEDIUM': 12, 'HIGH': 14, 'CRITICAL': 16}
+            sizes = {'LOW': 14, 'MEDIUM': 16, 'HIGH': 18, 'CRITICAL': 20}
             
             fig.add_trace(go.Scattermapbox(
                 lat=cat_df['LOCATION_LAT'],
