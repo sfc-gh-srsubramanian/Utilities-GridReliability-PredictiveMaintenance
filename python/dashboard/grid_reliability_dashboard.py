@@ -175,6 +175,17 @@ def load_cost_avoidance(_session):
 def generate_work_order_pdf(asset_data):
     """Generate a work order PDF document as downloadable bytes"""
     
+    # Derive risk category from risk score (matching system thresholds)
+    risk_score = asset_data['RISK_SCORE']
+    if risk_score >= 85:
+        risk_category = 'CRITICAL'
+    elif risk_score >= 70:
+        risk_category = 'HIGH'
+    elif risk_score >= 40:
+        risk_category = 'MEDIUM'
+    else:
+        risk_category = 'LOW'
+    
     # Create formatted text content
     content = f"""
 ╔══════════════════════════════════════════════════════════════════════════════╗
@@ -208,7 +219,7 @@ RISK ASSESSMENT
 ═══════════════════════════════════════════════════════════════════════════════
 
 Risk Score:            {asset_data['RISK_SCORE']:.1f}/100
-Risk Category:         {asset_data['RISK_CATEGORY']}
+Risk Category:         {risk_category}
 Failure Probability:   {asset_data['FAILURE_PROBABILITY']*100:.1f}%
 Predicted RUL:         {asset_data['PREDICTED_RUL_DAYS']:.0f} days
 Anomaly Score:         {asset_data.get('ANOMALY_SCORE', 0):.2f}
