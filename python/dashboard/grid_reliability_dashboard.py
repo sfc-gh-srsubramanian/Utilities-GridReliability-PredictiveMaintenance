@@ -698,7 +698,8 @@ def main():
         
         with col1:
             fig_dist = create_risk_distribution(asset_health_df)
-            st.plotly_chart(fig_dist, use_container_width=True)
+            # Hide the modebar to prevent overlap issues
+            st.plotly_chart(fig_dist, use_container_width=True, config={'displayModeBar': False})
         
         with col2:
             # Top 5 high-risk assets
