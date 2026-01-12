@@ -702,7 +702,7 @@ def main():
         
         with col2:
             # Top 5 high-risk assets
-            st.subheader("Top 5 High-Risk Assets")
+            st.markdown("**Top 5 High-Risk Assets**")
             top_5 = asset_health_df.nlargest(5, 'RISK_SCORE')[
                 ['ASSET_ID', 'LOCATION_SUBSTATION', 'RISK_SCORE', 'ALERT_LEVEL']
             ]
