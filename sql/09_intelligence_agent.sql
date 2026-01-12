@@ -578,9 +578,10 @@ CREATE SNOWFLAKE INTELLIGENCE IF NOT EXISTS SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAUL
 
 -- Register this agent to appear in Intelligence UI
 -- This makes the agent visible in: Projects → Intelligence (not just Agents page)
+-- Note: ADD AGENT does not support IF NOT EXISTS clause
 ALTER SNOWFLAKE INTELLIGENCE IF EXISTS 
     IDENTIFIER('SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT') 
-    ADD AGENT IF NOT EXISTS IDENTIFIER('UTILITIES_GRID_RELIABILITY.ANALYTICS."Grid Reliability Intelligence Agent"');
+    ADD AGENT IDENTIFIER('UTILITIES_GRID_RELIABILITY.ANALYTICS."Grid Reliability Intelligence Agent"');
 
 -- Grant usage to relevant roles so they can see the agent in Intelligence UI
 GRANT USAGE ON SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT 
