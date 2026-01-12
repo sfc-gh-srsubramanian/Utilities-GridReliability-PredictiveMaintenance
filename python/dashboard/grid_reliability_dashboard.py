@@ -336,52 +336,72 @@ def load_sensor_history(_session, asset_id, days=30):
 # =============================================================================
 
 def create_risk_heatmap(df):
-    """
-    Create geographic heatmap showing asset concentration with density visualization.
-    
-    Uses Plotly's density_mapbox for concentration hotspots overlaid with individual
-    asset markers color-coded by risk category. Includes dynamic zoom and full 
-    interactive controls (zoom, pan, reset).
-    
-    Map Style: Uses 'open-street-map' by default. If this appears blank in Snowflake
-    (due to network restrictions), try changing mapbox_style to:
-    - 'carto-positron' (light, clean)
-    - 'stamen-terrain' (topographic)  
-    - 'white-bg' (plain but guaranteed to work)
-    """
+    """Create geographic heatmap of asset risk scores with data-driven geographic context"""
     
     if df.empty:
         return go.Figure()
     
-    # =========================================================================
-    # LAYER 1: DENSITY HEATMAP (Asset Concentration)
-    # =========================================================================
-    # Create base density heatmap showing where assets are concentrated
-    fig = px.density_mapbox(
-        df, 
-        lat='LOCATION_LAT', 
-        lon='LOCATION_LON',
-        z='RISK_SCORE',  # Weight density by risk score
-        radius=25,  # Smooth radius for density calculation
-        mapbox_style='open-street-map',
-        color_continuous_scale='Viridis',  # Green (low) -> Yellow -> Red (high)
-        opacity=0.6,
-        labels={'RISK_SCORE': 'Risk Score'},
-        hover_data={'LOCATION_LAT': False, 'LOCATION_LON': False}
-    )
+    # Calculate geographic centers from actual data
+    city_locations = df.groupby('LOCATION_CITY').agg({
+        'LOCATION_LAT': 'mean',
+        'LOCATION_LON': 'mean',
+        'ASSET_ID': 'count'
+    }).reset_index()
+    city_locations.columns = ['CITY', 'LAT', 'LON', 'ASSET_COUNT']
     
-    # =========================================================================
-    # LAYER 2: INDIVIDUAL ASSET MARKERS (Risk-Based)
-    # =========================================================================
-    # Add scatter markers on top of density layer for individual assets
-    # Color-coded by risk category with fixed sizes to avoid overlap
+    county_stats = df.groupby('LOCATION_COUNTY').agg({
+        'LOCATION_LAT': 'mean',
+        'LOCATION_LON': 'mean',
+        'RISK_SCORE': 'mean',
+        'ASSET_ID': 'count'
+    }).reset_index()
     
-    colors = {'LOW': 'green', 'MEDIUM': 'gold', 'HIGH': 'orange', 'CRITICAL': 'red'}
-    sizes = {'LOW': 10, 'MEDIUM': 12, 'HIGH': 14, 'CRITICAL': 16}
+    # Create figure from scratch for better control
+    fig = go.Figure()
     
+    # Add geographic reference grid (works for any region)
+    # Calculate data bounds for dynamic grid
+    lat_min, lat_max = df['LOCATION_LAT'].min(), df['LOCATION_LAT'].max()
+    lon_min, lon_max = df['LOCATION_LON'].min(), df['LOCATION_LON'].max()
+    
+    # Add subtle lat/lon grid lines for geographic context
+    lat_range = lat_max - lat_min
+    lon_range = lon_max - lon_min
+    
+    # Determine grid spacing based on data extent (approximately 4-6 lines)
+    lat_step = max(1, int(lat_range / 4))
+    lon_step = max(1, int(lon_range / 4))
+    
+    # Add horizontal grid lines (latitude)
+    for lat in range(int(lat_min), int(lat_max) + 1, lat_step):
+        fig.add_trace(go.Scattermapbox(
+            lat=[lat, lat],
+            lon=[lon_min - 0.5, lon_max + 0.5],
+            mode='lines',
+            line=dict(width=1, color='rgba(150, 150, 150, 0.2)'),
+            hoverinfo='skip',
+            showlegend=False
+        ))
+    
+    # Add vertical grid lines (longitude)
+    for lon in range(int(lon_min), int(lon_max) + 1, lon_step):
+        fig.add_trace(go.Scattermapbox(
+            lat=[lat_min - 0.5, lat_max + 0.5],
+            lon=[lon, lon],
+            mode='lines',
+            line=dict(width=1, color='rgba(150, 150, 150, 0.2)'),
+            hoverinfo='skip',
+            showlegend=False
+        ))
+    
+    # Add asset markers with fixed sizes (not sized by customers - that causes huge circles)
     for risk_cat in ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL']:
         cat_df = df[df['RISK_CATEGORY'] == risk_cat]
         if not cat_df.empty:
+            # Map risk categories to colors
+            colors = {'LOW': 'green', 'MEDIUM': 'gold', 'HIGH': 'orange', 'CRITICAL': 'red'}
+            sizes = {'LOW': 14, 'MEDIUM': 16, 'HIGH': 18, 'CRITICAL': 20}
+            
             fig.add_trace(go.Scattermapbox(
                 lat=cat_df['LOCATION_LAT'],
                 lon=cat_df['LOCATION_LON'],
@@ -389,82 +409,100 @@ def create_risk_heatmap(df):
                 marker=dict(
                     size=sizes[risk_cat],
                     color=colors[risk_cat],
-                    opacity=0.8
+                    opacity=0.7
                 ),
                 text=cat_df['ASSET_ID'],
-                customdata=cat_df[['LOCATION_SUBSTATION', 'LOCATION_CITY', 'LOCATION_COUNTY',
-                                   'RISK_SCORE', 'CUSTOMERS_AFFECTED', 'ALERT_LEVEL']],
-                hovertemplate='<b>Asset: %{text}</b><br>' +
+                customdata=cat_df[['LOCATION_SUBSTATION', 'LOCATION_CITY', 'RISK_SCORE', 
+                                   'CUSTOMERS_AFFECTED', 'ALERT_LEVEL']],
+                hovertemplate='<b>%{text}</b><br>' +
                              'Substation: %{customdata[0]}<br>' +
                              'City: %{customdata[1]}<br>' +
-                             'County: %{customdata[2]}<br>' +
-                             'Risk Score: %{customdata[3]:.1f}<br>' +
-                             'Customers Affected: %{customdata[4]:,}<br>' +
-                             'Alert Level: %{customdata[5]}<extra></extra>',
+                             'Risk Score: %{customdata[2]:.1f}<br>' +
+                             'Customers: %{customdata[3]:,}<br>' +
+                             'Alert: %{customdata[4]}<extra></extra>',
                 name=f'{risk_cat} Risk',
                 showlegend=True
             ))
     
-    # =========================================================================
-    # DYNAMIC ZOOM & CENTER CALCULATION
-    # =========================================================================
-    # Auto-calculate center and zoom based on data geographic extent
-    lat_center = df['LOCATION_LAT'].mean()
-    lon_center = df['LOCATION_LON'].mean()
+    # Add city labels (smaller markers)
+    fig.add_trace(go.Scattermapbox(
+        lat=city_locations['LAT'],
+        lon=city_locations['LON'],
+        mode='text',
+        text=city_locations['CITY'],
+        textfont=dict(
+            size=10,
+            color='darkblue',
+            family='Arial Black'
+        ),
+        name='Cities',
+        showlegend=False,
+        hoverinfo='skip'
+    ))
     
+    # Add county labels (very subtle, background)
+    county_labels = [f"{row['LOCATION_COUNTY']}" for _, row in county_stats.iterrows()]
+    fig.add_trace(go.Scattermapbox(
+        lat=county_stats['LOCATION_LAT'],
+        lon=county_stats['LOCATION_LON'],
+        mode='text',
+        text=county_labels,
+        textfont=dict(
+            size=8,
+            color='rgba(100,100,100,0.4)',
+            family='Arial'
+        ),
+        name='Counties',
+        showlegend=False,
+        hoverinfo='skip'
+    ))
+    
+    # Configure layout with proper zoom controls (dynamic based on data extent)
+    # Calculate optimal zoom level based on data spread
     lat_range = df['LOCATION_LAT'].max() - df['LOCATION_LAT'].min()
     lon_range = df['LOCATION_LON'].max() - df['LOCATION_LON'].min()
     max_range = max(lat_range, lon_range)
     
-    # Determine optimal zoom level based on data spread
+    # Determine zoom level dynamically
     if max_range > 10:
-        zoom_level = 4.5  # Wide area (multiple states)
+        zoom_level = 4.5
     elif max_range > 5:
-        zoom_level = 5.5  # Large state or region
+        zoom_level = 5.5
     elif max_range > 2:
-        zoom_level = 6.5  # Single state
+        zoom_level = 6.5
     else:
-        zoom_level = 7.5  # Focused region/county
+        zoom_level = 7.5
     
-    # =========================================================================
-    # MAP CONFIGURATION & CONTROLS
-    # =========================================================================
     fig.update_layout(
         mapbox=dict(
-            style='open-street-map',  # Try 'carto-positron' or 'white-bg' if blank
-            center=dict(lat=lat_center, lon=lon_center),
+            style="white-bg",
+            center=dict(
+                lat=df['LOCATION_LAT'].mean(),
+                lon=df['LOCATION_LON'].mean()
+            ),
             zoom=zoom_level
         ),
         margin={"r": 0, "t": 0, "l": 0, "b": 0},
         height=650,
-        showlegend=True,
         legend=dict(
             yanchor="top",
             y=0.99,
             xanchor="left",
             x=0.01,
-            bgcolor="rgba(255, 255, 255, 0.9)",
+            bgcolor="rgba(255,255,255,0.9)",
             bordercolor="gray",
             borderwidth=1,
-            font=dict(size=11)
+            font=dict(size=12)
         ),
-        # Color bar for density heatmap
-        coloraxis_colorbar=dict(
-            title="Asset<br>Density",
-            yanchor="top",
-            y=0.99,
-            xanchor="right",
-            x=0.99,
-            bgcolor="rgba(255, 255, 255, 0.9)",
-            bordercolor="gray",
-            borderwidth=1,
-            len=0.6
+        paper_bgcolor='#e8f4f8',
+        plot_bgcolor='#e8f4f8',
+        # Make modebar (toolbar) more prominent
+        modebar=dict(
+            bgcolor='rgba(255, 255, 255, 0.95)',
+            color='#1f77b4',
+            activecolor='#ff7f0e',
+            orientation='h'
         )
-    )
-    
-    # Enable full interactive controls (zoom, pan, reset)
-    fig.update_layout(
-        dragmode='zoom',  # Default to zoom mode
     )
     
     return fig
