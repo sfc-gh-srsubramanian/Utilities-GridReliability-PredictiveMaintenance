@@ -336,176 +336,84 @@ def load_sensor_history(_session, asset_id, days=30):
 # =============================================================================
 
 def create_risk_heatmap(df):
-    """Create geographic heatmap of asset risk scores with data-driven geographic context"""
+    """Create geographic heatmap of asset risk scores using PyDeck (no token required)"""
+    import pydeck as pdk
     
-    if df.empty:
-        return go.Figure()
+    plot_df = df.dropna(subset=['LOCATION_LAT', 'LOCATION_LON']).copy()
     
-    # Calculate geographic centers from actual data
-    city_locations = df.groupby('LOCATION_CITY').agg({
-        'LOCATION_LAT': 'mean',
-        'LOCATION_LON': 'mean',
-        'ASSET_ID': 'count'
-    }).reset_index()
-    city_locations.columns = ['CITY', 'LAT', 'LON', 'ASSET_COUNT']
+    if plot_df.empty:
+        st.warning("No location data available for map")
+        return None
     
-    county_stats = df.groupby('LOCATION_COUNTY').agg({
-        'LOCATION_LAT': 'mean',
-        'LOCATION_LON': 'mean',
-        'RISK_SCORE': 'mean',
-        'ASSET_ID': 'count'
-    }).reset_index()
-    
-    # Create figure from scratch for better control
-    fig = go.Figure()
-    
-    # Add geographic reference grid (works for any region)
-    # Calculate data bounds for dynamic grid
-    lat_min, lat_max = df['LOCATION_LAT'].min(), df['LOCATION_LAT'].max()
-    lon_min, lon_max = df['LOCATION_LON'].min(), df['LOCATION_LON'].max()
-    
-    # Add subtle lat/lon grid lines for geographic context
-    lat_range = lat_max - lat_min
-    lon_range = lon_max - lon_min
-    
-    # Determine grid spacing based on data extent (approximately 4-6 lines)
-    lat_step = max(1, int(lat_range / 4))
-    lon_step = max(1, int(lon_range / 4))
-    
-    # Add horizontal grid lines (latitude)
-    for lat in range(int(lat_min), int(lat_max) + 1, lat_step):
-        fig.add_trace(go.Scattermapbox(
-            lat=[lat, lat],
-            lon=[lon_min - 0.5, lon_max + 0.5],
-            mode='lines',
-            line=dict(width=1, color='rgba(150, 150, 150, 0.2)'),
-            hoverinfo='skip',
-            showlegend=False
-        ))
-    
-    # Add vertical grid lines (longitude)
-    for lon in range(int(lon_min), int(lon_max) + 1, lon_step):
-        fig.add_trace(go.Scattermapbox(
-            lat=[lat_min - 0.5, lat_max + 0.5],
-            lon=[lon, lon],
-            mode='lines',
-            line=dict(width=1, color='rgba(150, 150, 150, 0.2)'),
-            hoverinfo='skip',
-            showlegend=False
-        ))
-    
-    # Add asset markers with fixed sizes (not sized by customers - that causes huge circles)
-    for risk_cat in ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL']:
-        cat_df = df[df['RISK_CATEGORY'] == risk_cat]
-        if not cat_df.empty:
-            # Map risk categories to colors
-            colors = {'LOW': 'green', 'MEDIUM': 'gold', 'HIGH': 'orange', 'CRITICAL': 'red'}
-            sizes = {'LOW': 14, 'MEDIUM': 16, 'HIGH': 18, 'CRITICAL': 20}
-            
-            fig.add_trace(go.Scattermapbox(
-                lat=cat_df['LOCATION_LAT'],
-                lon=cat_df['LOCATION_LON'],
-                mode='markers',
-                marker=dict(
-                    size=sizes[risk_cat],
-                    color=colors[risk_cat],
-                    opacity=0.7
-                ),
-                text=cat_df['ASSET_ID'],
-                customdata=cat_df[['LOCATION_SUBSTATION', 'LOCATION_CITY', 'RISK_SCORE', 
-                                   'CUSTOMERS_AFFECTED', 'ALERT_LEVEL']],
-                hovertemplate='<b>%{text}</b><br>' +
-                             'Substation: %{customdata[0]}<br>' +
-                             'City: %{customdata[1]}<br>' +
-                             'Risk Score: %{customdata[2]:.1f}<br>' +
-                             'Customers: %{customdata[3]:,}<br>' +
-                             'Alert: %{customdata[4]}<extra></extra>',
-                name=f'{risk_cat} Risk',
-                showlegend=True
-            ))
-    
-    # Add city labels (smaller markers)
-    fig.add_trace(go.Scattermapbox(
-        lat=city_locations['LAT'],
-        lon=city_locations['LON'],
-        mode='text',
-        text=city_locations['CITY'],
-        textfont=dict(
-            size=10,
-            color='darkblue',
-            family='Arial Black'
-        ),
-        name='Cities',
-        showlegend=False,
-        hoverinfo='skip'
-    ))
-    
-    # Add county labels (very subtle, background)
-    county_labels = [f"{row['LOCATION_COUNTY']}" for _, row in county_stats.iterrows()]
-    fig.add_trace(go.Scattermapbox(
-        lat=county_stats['LOCATION_LAT'],
-        lon=county_stats['LOCATION_LON'],
-        mode='text',
-        text=county_labels,
-        textfont=dict(
-            size=8,
-            color='rgba(100,100,100,0.4)',
-            family='Arial'
-        ),
-        name='Counties',
-        showlegend=False,
-        hoverinfo='skip'
-    ))
-    
-    # Configure layout with proper zoom controls (dynamic based on data extent)
-    # Calculate optimal zoom level based on data spread
-    lat_range = df['LOCATION_LAT'].max() - df['LOCATION_LAT'].min()
-    lon_range = df['LOCATION_LON'].max() - df['LOCATION_LON'].min()
-    max_range = max(lat_range, lon_range)
-    
-    # Determine zoom level dynamically
-    if max_range > 10:
-        zoom_level = 4.5
-    elif max_range > 5:
-        zoom_level = 5.5
-    elif max_range > 2:
-        zoom_level = 6.5
+    # Calculate dynamic marker sizing based on customers affected
+    max_customers = plot_df['CUSTOMERS_AFFECTED'].max()
+    if max_customers > 0:
+        plot_df['radius'] = plot_df['CUSTOMERS_AFFECTED'] / max_customers * 15 + 8
     else:
-        zoom_level = 7.5
+        plot_df['radius'] = 10
     
-    fig.update_layout(
-        mapbox=dict(
-            style="white-bg",
-            center=dict(
-                lat=df['LOCATION_LAT'].mean(),
-                lon=df['LOCATION_LON'].mean()
-            ),
-            zoom=zoom_level
-        ),
-        margin={"r": 0, "t": 0, "l": 0, "b": 0},
-        height=650,
-        legend=dict(
-            yanchor="top",
-            y=0.99,
-            xanchor="left",
-            x=0.01,
-            bgcolor="rgba(255,255,255,0.9)",
-            bordercolor="gray",
-            borderwidth=1,
-            font=dict(size=12)
-        ),
-        paper_bgcolor='#e8f4f8',
-        plot_bgcolor='#e8f4f8',
-        # Make modebar (toolbar) more prominent
-        modebar=dict(
-            bgcolor='rgba(255, 255, 255, 0.95)',
-            color='#1f77b4',
-            activecolor='#ff7f0e',
-            orientation='h'
+    # Define risk levels with colors (RGBA format)
+    risk_levels = [
+        {'name': 'Low', 'min': 0, 'max': 40, 'color': [0, 128, 0, 200]},         # Green
+        {'name': 'Medium', 'min': 41, 'max': 70, 'color': [255, 165, 0, 200]},   # Orange
+        {'name': 'High', 'min': 71, 'max': 85, 'color': [255, 0, 0, 200]},       # Red
+        {'name': 'Critical', 'min': 86, 'max': 100, 'color': [139, 0, 0, 200]},  # Dark Red
+    ]
+    
+    # Create layers for each risk level
+    layers = []
+    for level in risk_levels:
+        level_df = plot_df[
+            (plot_df['RISK_SCORE'] >= level['min']) & 
+            (plot_df['RISK_SCORE'] <= level['max'])
+        ].copy()
+        
+        if level_df.empty:
+            continue
+        
+        level_df['color'] = [level['color']] * len(level_df)
+        
+        layer = pdk.Layer(
+            'ScatterplotLayer',
+            data=level_df,
+            get_position=['LOCATION_LON', 'LOCATION_LAT'],
+            get_color='color',
+            get_radius='radius',
+            pickable=True,
+            opacity=0.8,
+            stroked=True,
+            filled=True,
+            line_width_min_pixels=1,
+            radius_units='pixels',
+            radius_min_pixels=5,
+            radius_max_pixels=30,
         )
+        layers.append(layer)
+    
+    # Calculate map center from data
+    center_lat = plot_df['LOCATION_LAT'].mean()
+    center_lon = plot_df['LOCATION_LON'].mean()
+    
+    # Set view state
+    view_state = pdk.ViewState(
+        latitude=center_lat,
+        longitude=center_lon,
+        zoom=6,
+        pitch=0,
     )
     
-    return fig
+    # Create PyDeck map
+    deck = pdk.Deck(
+        layers=layers,
+        initial_view_state=view_state,
+        tooltip={
+            "html": "<b>{ASSET_ID}</b><br/>Risk Score: {RISK_SCORE}<br/>Customers: {CUSTOMERS_AFFECTED}<br/>City: {LOCATION_CITY}<br/>Alert: {ALERT_LEVEL}",
+            "style": {"backgroundColor": "steelblue", "color": "white"}
+        },
+        map_style='road',  # Built-in road map style (no token required)
+    )
+    
+    return deck
 
 def create_risk_distribution(df):
     """Create risk score distribution chart"""
@@ -793,27 +701,12 @@ def main():
         st.info(f"Showing {len(filtered_df)} assets")
         
         # Map
-        fig_map = create_risk_heatmap(filtered_df)
+        deck = create_risk_heatmap(filtered_df)
         
-        # Configure map controls - only essential controls
-        config = {
-            'displayModeBar': True,
-            'displaylogo': False,
-            'modeBarButtonsToRemove': [
-                'select2d', 'lasso2d', 'autoScale2d', 
-                'hoverClosestCartesian', 'hoverCompareCartesian',
-                'toggleSpikelines', 'resetScale2d'
-            ],
-            'toImageButtonOptions': {
-                'format': 'png',
-                'filename': 'grid_asset_map',
-                'height': 1000,
-                'width': 1600,
-                'scale': 2
-            }
-        }
-        
-        st.plotly_chart(fig_map, use_container_width=True, config=config)
+        if deck is not None:
+            st.pydeck_chart(deck, use_container_width=True)
+        else:
+            st.warning("Unable to display map - no location data available")
         
         # Asset table
         st.subheader("Asset List")
